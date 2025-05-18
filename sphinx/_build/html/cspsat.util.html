@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.util module &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c033477b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=4dbe4bdc"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="cspsat" href="modules.html" />
+    <link rel="prev" title="cspsat.sat module" href="cspsat.sat.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cspsat.util module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.CspsatException"><code class="docutils literal notranslate"><span class="pre">CspsatException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.CspsatTimeout"><code class="docutils literal notranslate"><span class="pre">CspsatTimeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.Bool"><code class="docutils literal notranslate"><span class="pre">Bool</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.TRUE"><code class="docutils literal notranslate"><span class="pre">TRUE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.FALSE"><code class="docutils literal notranslate"><span class="pre">FALSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.Var"><code class="docutils literal notranslate"><span class="pre">Var</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.Wsum"><code class="docutils literal notranslate"><span class="pre">Wsum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.Binary"><code class="docutils literal notranslate"><span class="pre">Binary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.BinaryEquation"><code class="docutils literal notranslate"><span class="pre">BinaryEquation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.SeqCounter"><code class="docutils literal notranslate"><span class="pre">SeqCounter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.util.Preprocessor"><code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cspsat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cspsat.html">cspsat package</a></li>
+      <li class="breadcrumb-item active">cspsat.util module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cspsat.util.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cspsat.util">
+<span id="cspsat-util-module"></span><h1>cspsat.util module<a class="headerlink" href="#module-cspsat.util" title="Link to this heading"></a></h1>
+<p>cspsat のユーティリティー．</p>
+<p>以下の定義からなる．</p>
+<ul class="simple">
+<li><p>CspsatException例外: 例外を表すクラス．</p></li>
+<li><p>CspsatTimeout例外: タイムアイト例外を表すクラス．</p></li>
+<li><p>Boolクラス: 命題変数およびリテラルを表すクラス．</p></li>
+<li><p>TRUEオブジェクト: 真を表す命題定数．</p></li>
+<li><p>FALSEオブジェクト: 偽を表す命題定数．</p></li>
+<li><p>Varクラス: 整数変数を表すクラス．</p></li>
+<li><p>Wsumクラス: 線形和を表すクラス．</p></li>
+<li><p>Binaryクラス: ビット列演算を符号化するためのクラス．クラスメソッドを含む．</p></li>
+<li><p>SeqCounterクラス: 基数制約を符号化するためのクラス．クラスメソッドからなる．</p></li>
+<li><p>Preprocessorクラス: 制約のSAT符号化の前処理のためのクラス．</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>本プログラムは学習用の目的で作成されている．
+実用上の問題への適用は想定していない．</p>
+</div>
+<dl class="py exception">
+<dt class="sig sig-object py" id="cspsat.util.CspsatException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">CspsatException</span></span><a class="reference internal" href="_modules/cspsat/util.html#CspsatException"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.CspsatException" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>cspsatモジュールの例外を表すクラス．</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="cspsat.util.CspsatTimeout">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">CspsatTimeout</span></span><a class="reference internal" href="_modules/cspsat/util.html#CspsatTimeout"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.CspsatTimeout" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><code class="xref py py-class docutils literal notranslate"><span class="pre">CspsatException</span></code></a></p>
+<p>cspsatモジュールのタイムアウト例外を表すクラス．</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.Bool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">Bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Bool"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Bool" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>命題変数およびリテラルを表すクラス．</p>
+<p>同じ命題変数名と同じ符号を持つBoolオブジェクトは同一とみなされる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) -- 命題変数名の文字列．命題変数名を指定しなければ新たな名前を付けた補助変数を生成する．
+変数名が &quot;TRUE&quot; あるいは &quot;FALSE&quot; は命題定数とみなされる．
+変数名が &quot;?&quot; から始まる場合，補助変数とみなされる．
+変数名に &quot;#&quot;, &quot;~&quot;, &quot;=&quot;, &quot;&#64;&quot; を含んではならない (内部的に利用しているため)．</p></li>
+<li><p><strong>positive</strong> (<em>bool</em><em>, </em><em>optional</em>) -- リテラルの符号．Trueなら正リテラル，Falseなら負リテラルである．指定しなければTrue．</p></li>
+<li><p><strong>internal</strong> (<em>bool</em><em>, </em><em>optional</em>) -- 内部的に作成することを表すフラグ．指定しなければFalse．</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="c1"># 命題変数名が&quot;p&quot;のBoolオブジェクトを返す</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">()</span> <span class="c1"># 新たな補助変数を生成して返す</span>
+<span class="go">?1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">==</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">~</span><span class="n">p</span> <span class="c1"># 負リテラル</span>
+<span class="go">~p</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="o">~</span><span class="n">p</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">==</span> <span class="o">~~</span><span class="n">p</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="o">~</span><span class="n">p</span><span class="p">)</span> <span class="c1"># 符号を除いた命題変数を返す</span>
+<span class="go">p</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TRUE</span> <span class="c1"># 真の命題定数</span>
+<span class="go">TRUE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FALSE</span> <span class="c1"># 偽の命題定数</span>
+<span class="go">FALSE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TRUE</span> <span class="o">==</span> <span class="o">~</span><span class="n">FALSE</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 命題変数名が&quot;p(1,2)&quot;のBoolオブジェクトを生成する</span>
+<span class="go">p(1,2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">p</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="c1"># どちらの命題変数名も&quot;p(1)&quot;になり，同じBoolオブジェクトとみなされる</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Bool.isAux">
+<span class="sig-name descname"><span class="pre">isAux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Bool.isAux"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Bool.isAux" title="Link to this definition"></a></dt>
+<dd><p>このBoolオブジェクトが補助変数ならTrueを返す．</p>
+<p>変数名が &quot;?&quot; から始まれば補助変数とみなされる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>このBoolオブジェクトが補助変数ならTrue．そうでないならFalse．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">()</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cspsat.util.TRUE">
+<span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">TRUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">TRUE</span></em><a class="headerlink" href="#cspsat.util.TRUE" title="Link to this definition"></a></dt>
+<dd><p>真を表す命題定数 (Boolオブジェクト)．</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cspsat.util.FALSE">
+<span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">FALSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">FALSE</span></em><a class="headerlink" href="#cspsat.util.FALSE" title="Link to this definition"></a></dt>
+<dd><p>偽を表す命題定数 (Boolオブジェクト)．</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.Var">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">Var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Var"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Var" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>整数変数を表すクラス．</p>
+<p>同じ整数変数名を持つVarオブジェクトは同一とみなされる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) -- 整数変数名の文字列．整数変数名を指定しなければ新たな名前を付けた補助変数を生成する．
+変数名が &quot;?&quot; から始まる場合，補助変数とみなされる．
+変数名に &quot;#&quot;, &quot;~&quot;, &quot;=&quot;, &quot;&#64;&quot; を含んではならない (内部的に利用しているため)．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span> <span class="c1"># 整数変数名が&quot;x&quot;のVarオブジェクトを返す</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Var</span><span class="p">()</span> <span class="c1"># 新たな補助変数を生成して返す</span>
+<span class="go">?1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">x</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="c1"># どちらの整数変数名も&quot;x(1)&quot;になり，同じVarオブジェクトとみなされる</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Var.isAux">
+<span class="sig-name descname"><span class="pre">isAux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Var.isAux"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Var.isAux" title="Link to this definition"></a></dt>
+<dd><p>このVarオブジェクトが補助変数ならTrueを返す．</p>
+<p>変数名が &quot;?&quot; から始まれば補助変数とみなされる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>このVarオブジェクトが補助変数ならTrue．そうでないならFalse．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Var</span><span class="p">()</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.Wsum">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">Wsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wsum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>線形和を表すクラス．</p>
+<p>整数変数(<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Var</span></code></a>)あるいは命題変数(<a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>)の線形和を表す．
+線形和 <span class="math notranslate nohighlight">\(a_1 x_1 + a_2 x_2 + \cdots + a_n x_n + c\)</span> は
+<span class="math notranslate nohighlight">\(\textrm{Wsum}(\{x_1:a_1, x_2:a_2, \ldots, x_n:a_n\}, c)\)</span> として表される．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wsum</strong> (<em>dict</em><em>, </em><em>optional</em>) -- 変数をキーとし，値が係数(int)の辞書(dict)．
+定数のみ整数変数のみ命題変数のみでもよい．</p></li>
+<li><p><strong>c</strong> (<em>int</em><em>, </em><em>optional</em>) -- 定数部分．</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.wsum">
+<span class="sig-name descname"><span class="pre">wsum</span></span><a class="headerlink" href="#cspsat.util.Wsum.wsum" title="Link to this definition"></a></dt>
+<dd><p>変数をキーとして，値が係数の辞書(dict)．
+係数が0の場合は含まれない．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.c">
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#cspsat.util.Wsum.c" title="Link to this definition"></a></dt>
+<dd><p>定数部分．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">()</span> <span class="c1"># 0</span>
+<span class="go">Wsum({}, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># x</span>
+<span class="go">Wsum({x: 1}, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 3*x+1</span>
+<span class="go">Wsum({x: 3}, 1)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.variables"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.variables" title="Link to this definition"></a></dt>
+<dd><p>この線形和に含まれる整数変数のリストを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>整数変数(<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Var</span></code></a>)のリストを返す．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">variables</span><span class="p">()</span>
+<span class="go">dict_keys([x(1), x(2)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.coef">
+<span class="sig-name descname"><span class="pre">coef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.coef"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.coef" title="Link to this definition"></a></dt>
+<dd><p>この線形和に含まれる変数vの係数を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a><em> | </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>変数vの係数．変数vが含まれなければ0．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.isConstant">
+<span class="sig-name descname"><span class="pre">isConstant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.isConstant"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.isConstant" title="Link to this definition"></a></dt>
+<dd><p>この線形和が定数ならTrueを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>この線形和が定数ならTrue，そうでないならFalse．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">isConstant</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">isConstant</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.where">
+<span class="sig-name descname"><span class="pre">where</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.where"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.where" title="Link to this definition"></a></dt>
+<dd><p>この線形和で変数vの値がdに等しいとした場合の線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a><em> | </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 整数変数．</p></li>
+<li><p><strong>d</strong> (<em>int</em>) -- vの値．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>整数変数vがdに等しいとした場合の線形和を返す．整数変数vが含まれなければ，この線形和そのものを返す．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">Wsum({x(2): 1}, 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">Wsum({x(1): 1, x(2): 1}, 0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.mul">
+<span class="sig-name descname"><span class="pre">mul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.mul"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.mul" title="Link to this definition"></a></dt>
+<dd><p>この線形和を定数倍した線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>a</strong> (<em>int</em>) -- 定数倍の値．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>この線形和をa倍した線形和．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Wsum({x: 3}, 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.neg">
+<span class="sig-name descname"><span class="pre">neg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.neg"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.neg" title="Link to this definition"></a></dt>
+<dd><p>この線形和をマイナスにした線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>この線形和をマイナスにした線形和を返す．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">neg</span><span class="p">()</span>
+<span class="go">Wsum({x: -1}, -1)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.add"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.add" title="Link to this definition"></a></dt>
+<dd><p>この線形和に他の線形和を加えた線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 加える線形和．Wsumオブジェクトでない場合は，いったんWsumオブジェクトに変換したのち加えられる．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>和の線形和を返す．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">Wsum({x: 1}, 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">Wsum({x: 2}, 0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.sub">
+<span class="sig-name descname"><span class="pre">sub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.sub"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.sub" title="Link to this definition"></a></dt>
+<dd><p>この線形和から他の線形和を引いた線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 引く線形和．Wsumオブジェクトでない場合は，いったんWsumオブジェクトに変換したのち加えられる．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>差の線形和を返す．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">Wsum({x: 1}, -1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">Wsum({}, 0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.value"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.value" title="Link to this definition"></a></dt>
+<dd><p>与えられた値割当てにおけるこの線形和の値を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>dict</em>) -- 変数に対する値が定められた辞書(dict)．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>線形和の値．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Wsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">({</span> <span class="n">x</span><span class="p">:</span><span class="mi">2</span> <span class="p">})</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Wsum.toExpr">
+<span class="sig-name descname"><span class="pre">toExpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Wsum.toExpr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Wsum.toExpr" title="Link to this definition"></a></dt>
+<dd><p>この線形和を表す式のデータ(<a class="reference internal" href="cspsat.csp.html#module-cspsat.csp" title="cspsat.csp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.csp</span></code></a> 参照)を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>線形和を表す式 (list)．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">Wsum</span><span class="p">({</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span> <span class="mi">1</span><span class="p">},</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">toExpr</span><span class="p">()</span>
+<span class="go">[&#39;+&#39;, [&#39;*&#39;, x(1), 2], [&#39;*&#39;, x(2), 1], 3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.Binary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">Binary</span></span><a class="reference internal" href="_modules/cspsat/util.html#Binary"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ビット列演算を符号化するためのクラス．クラスメソッドを含む．</p>
+<p>ビット列は <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリストで，最下位ビットが先頭とする．</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.util.Binary.bins">
+<span class="sig-name descname"><span class="pre">bins</span></span><a class="headerlink" href="#cspsat.util.Binary.bins" title="Link to this definition"></a></dt>
+<dd><p>bins[i] は i ビット目に対する命題論理式のリストを保持する．
+その和の最下位ビットが i ビット目を表す．
+bins[i][j] に現れる命題論理式は以下のいずれかの形をしている (xiはリテラル)．</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>リテラル (<a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>)</p></li>
+<li><p>[&quot;and&quot;, x1, x2, ..., xn]</p></li>
+<li><p>[&quot;or&quot;, x1, x2, ..., xn]</p></li>
+<li><p>[&quot;xor&quot;, x1, x2]</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.eqK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eqK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.eqK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.eqK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx == k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx == k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.neK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">neK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.neK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.neK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx != k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx != k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.geK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">geK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.geK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.geK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx &gt;= k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &gt;= k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.gtK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gtK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.gtK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.gtK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx &gt; k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &gt; k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.leK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">leK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.leK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.leK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx &lt;= k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &lt;= k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.ltK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ltK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.ltK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.ltK" title="Link to this definition"></a></dt>
+<dd><p>ビット列xxについて xx &lt; k を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 比較する整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &lt; k を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.eq">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.eq"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.eq" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx == yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx == y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.ne">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.ne"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.ne" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx != yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx != y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.ge">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.ge"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.ge" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx &gt;= yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &gt;= y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.gt">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.gt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.gt" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx &gt; yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &gt; y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.le">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">le</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.le"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.le" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx &lt;= yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &lt;= y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.lt">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.lt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.lt" title="Link to this definition"></a></dt>
+<dd><p>ビット列xx, yyについて xx &lt; yy を表すCNF式を生成するジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+<li><p><strong>yy</strong> (<em>list</em>) -- <a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> のリスト．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>xx &lt; y を表すCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.put">
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.put"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.put" title="Link to this definition"></a></dt>
+<dd><p>このBinaryオブジェクトのiビット目にxを加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<em>int</em>) -- ビット位置．</p></li>
+<li><p><strong>x</strong> (<a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><em>list</em>) -- 加える命題論理式．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.addNum">
+<span class="sig-name descname"><span class="pre">addNum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.addNum"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.addNum" title="Link to this definition"></a></dt>
+<dd><p>このBinaryオブジェクトに整数nを加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) -- 加える値．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.add"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.add" title="Link to this definition"></a></dt>
+<dd><p>このBinaryオブジェクトにビット列xxを加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 加えるビット列 (リテラルのリスト)．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>, </em><em>optional</em>) -- 指定すれば a*xx を加える．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.addMul">
+<span class="sig-name descname"><span class="pre">addMul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.addMul"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.addMul" title="Link to this definition"></a></dt>
+<dd><p>このBinaryオブジェクトに xx*yy*a を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- ビット列 (リテラルのリスト)．</p></li>
+<li><p><strong>yy</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- ビット列 (リテラルのリスト)．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>, </em><em>optional</em>) -- 指定しなければ1．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.addPower">
+<span class="sig-name descname"><span class="pre">addPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.addPower"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.addPower" title="Link to this definition"></a></dt>
+<dd><p>このBinaryオブジェクトに xx^n*a を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- ビット列 (リテラルのリスト)．</p></li>
+<li><p><strong>n</strong> (<em>int</em>) -- ベキ乗．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>, </em><em>optional</em>) -- 指定しなければ1．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.isSimpleSeq">
+<span class="sig-name descname"><span class="pre">isSimpleSeq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.isSimpleSeq"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.isSimpleSeq" title="Link to this definition"></a></dt>
+<dd><p>現在の bins がビット列 (リテラルの列)を表しているなら真を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>現在の bins がビット列 (リテラルの列)を表しているなら真．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.toSimpleSeq">
+<span class="sig-name descname"><span class="pre">toSimpleSeq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.toSimpleSeq"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.toSimpleSeq" title="Link to this definition"></a></dt>
+<dd><p>すべての bins[i] の長さが1以下のとき，それらのビット列 (リテラルの列)を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ビット列 (<a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> の列)．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.toBchain">
+<span class="sig-name descname"><span class="pre">toBchain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.toBchain"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.toBchain" title="Link to this definition"></a></dt>
+<dd><p>このオブジェクトとビット列zzが等しいという制約を生成するジェネレータ関数．</p>
+<p>Daddaのアルゴリズムを使用している．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>zz</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- ビット列．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>このオブジェクトとビット列zzが等しいという制約．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Binary.toCNF">
+<span class="sig-name descname"><span class="pre">toCNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Binary.toCNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Binary.toCNF" title="Link to this definition"></a></dt>
+<dd><p>このオブジェクトとビット列zzが等しいというCNF式を生成するジェネレータ関数．</p>
+<p>Daddaのアルゴリズムを使用している．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>zz</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- ビット列．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>このオブジェクトとビット列zzが等しいという節．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">BinaryEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ビット列演算のためのクラス．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>encoder</strong> (<a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder" title="cspsat.csp.LogEncoder"><em>LogEncoder</em></a>) -- 利用するLogEncoderを指定する．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span> <span class="o">=</span> <span class="n">LogEncoder</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="o">.</span><span class="n">defInt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">addPower</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">addNum</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">)</span> <span class="c1"># x**2 - 5 &gt;= 0 のCNF式</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation.addNum">
+<span class="sig-name descname"><span class="pre">addNum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation.addNum"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation.addNum" title="Link to this definition"></a></dt>
+<dd><p>整数定数を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) -- 加える整数定数．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation.add"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation.add" title="Link to this definition"></a></dt>
+<dd><p>整数変数の定数倍 (x*a)を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 加える整数変数．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>,</em><em>optional</em>) -- 定数倍の値 (指定しなければ1)．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation.addMul">
+<span class="sig-name descname"><span class="pre">addMul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation.addMul"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation.addMul" title="Link to this definition"></a></dt>
+<dd><p>整数変数の積の定数倍 (x*y*a)を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 積の整数変数．</p></li>
+<li><p><strong>y</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 積の整数変数．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>,</em><em>optional</em>) -- 定数倍の値 (指定しなければ1)．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation.addPower">
+<span class="sig-name descname"><span class="pre">addPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation.addPower"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation.addPower" title="Link to this definition"></a></dt>
+<dd><p>整数変数のベキ乗の定数倍 ((x**n)*a)を加える．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference internal" href="#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p></li>
+<li><p><strong>n</strong> (<em>int</em>) -- ベキ乗．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>,</em><em>optional</em>) -- 定数倍の値 (指定しなければ1)．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.BinaryEquation.cmp0">
+<span class="sig-name descname"><span class="pre">cmp0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#BinaryEquation.cmp0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.BinaryEquation.cmp0" title="Link to this definition"></a></dt>
+<dd><p>0との比較のCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmp</strong> (<em>str</em>) -- 比較演算子 (&quot;==&quot;, &quot;!=&quot;, &quot;&lt;=&quot;, &quot;&lt;&quot;, &quot;&gt;=&quot;, &quot;&gt;&quot;のいずれか)．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">SeqCounter</span></span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>基数制約を符号化するためのクラス．クラスメソッドからなる．</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.eqK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eqK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.eqK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.eqK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... == k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- リテラルのリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.neK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">neK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.neK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.neK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... != k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 命題変数のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.geK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">geK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.geK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.geK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... &gt;= k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 命題変数のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.gtK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gtK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.gtK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.gtK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... &gt; k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 命題変数のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.leK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">leK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.leK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.leK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... &lt;= k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>s を指定すれば，s(i,j) (i=0,...,n, j=0,...k+1)は，xx[0] + ... + x[i-1] &gt;= j を表す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 命題変数のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+<li><p><strong>s</strong> (<a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em>, </em><em>optional</em>) -- 命題変数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.SeqCounter.ltK">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ltK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#SeqCounter.ltK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.SeqCounter.ltK" title="Link to this definition"></a></dt>
+<dd><p>基数制約 xx[0] + xx[1] + ... &lt; k を逐次カウンタ法でSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em><em> of </em><a class="reference internal" href="#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- 命題変数のリスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 整数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.util.Preprocessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.util.</span></span><span class="sig-name descname"><span class="pre">Preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">introduceAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Preprocessor"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Preprocessor" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>SAT符号化の前処理のためのクラス．</p>
+<p>制約を符号化し拡張CNF式を生成する．</p>
+<p>拡張CNF (XCNF)の形式は以下の通り．ここで pi はリテラルで，n&gt;=0 である．</p>
+<ul class="simple">
+<li><p>[p1, ..., pn] (通常の節)</p></li>
+<li><p>[p1, ..., pn, C] (Cを含む節)</p></li>
+</ul>
+<p>C は以下のいずれかである．ここで W は線形和を表している式，kは整数定数である．</p>
+<ul class="simple">
+<li><p>[&quot;_eq0&quot;, W] (W == 0 を表す)</p></li>
+<li><p>[&quot;_ne0&quot;, W] (W != 0 を表す)</p></li>
+<li><p>[&quot;_le0&quot;, W] (W &lt;= 0 を表す)</p></li>
+<li><p>[&quot;leK&quot;, [p1, ..., pn], K] (p1+...+pn &lt;= k を表す)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder</strong> (<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><em>Encoder</em></a>) -- 使用するEncoder．</p></li>
+<li><p><strong>introduceAux</strong> (<em>bool</em><em>,</em><em>optional</em>) -- 真なら符号化時に補助変数を導入する (指定しないなら偽)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a>, <a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> からの利用では真を指定している．</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Preprocessor.toWsum">
+<span class="sig-name descname"><span class="pre">toWsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Preprocessor.toWsum"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Preprocessor.toWsum" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題の式sを表す線形和を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>list</em>) -- 制約充足問題の式．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>sを表す線形和．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 式の構文が間違っている．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Preprocessor.isBC">
+<span class="sig-name descname"><span class="pre">isBC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Preprocessor.isBC"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Preprocessor.isBC" title="Link to this definition"></a></dt>
+<dd><p>線形和wが基数制約に変換できるかどうかを調べる．</p>
+<p>すなわち w のすべての変数のドメインが{0,1}で，係数が-1か1である．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約に変換できるなら真を返す．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Preprocessor.toBC">
+<span class="sig-name descname"><span class="pre">toBC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Preprocessor.toBC"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Preprocessor.toBC" title="Link to this definition"></a></dt>
+<dd><p>線形和wを基数制約に変換するためのタプル(xx,k)を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>タプル(xx,k)．xxは命題変数のリスト．kは基数の値．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.util.Preprocessor.toXCNF">
+<span class="sig-name descname"><span class="pre">toXCNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constraint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/util.html#Preprocessor.toXCNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.util.Preprocessor.toXCNF" title="Link to this definition"></a></dt>
+<dd><p>与えられた制約を拡張CNF式に符号化してyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>constraint</strong> (<em>list</em>) -- 制約．</p></li>
+<li><p><strong>positive</strong> (<em>bool</em><em>,</em><em>optional</em>) -- 偽なら制約の否定を符号化する (指定しなければ真)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>拡張CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cspsat.sat.html" class="btn btn-neutral float-left" title="cspsat.sat module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="cspsat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

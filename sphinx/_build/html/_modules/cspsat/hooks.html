@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.hooks &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=c033477b"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/translations.js?v=4dbe4bdc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cspsat.html">cspsat package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cspsat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">モジュールコード</a></li>
+      <li class="breadcrumb-item active">cspsat.hooks</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>cspsat.hooks のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;新規関数と新規制約に対応するためのフック関数を提供．</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="defaultFunctionHook">
+<a class="viewcode-back" href="../../cspsat.hooks.html#cspsat.hooks.defaultFunctionHook">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">defaultFunctionHook</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">encoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;新規関数に対応するためのフックとしてデフォールトで設定されている関数．</span>
+<span class="sd">    以下に対応している．</span>
+
+<span class="sd">    * ``[&quot;div&quot;, X, n]``</span>
+<span class="sd">    * ``[&quot;mod&quot;, X, n]``</span>
+<span class="sd">    * ``[&quot;abs&quot;, X]``</span>
+<span class="sd">    * ``[&quot;min&quot;, X1, ..., Xn]``</span>
+<span class="sd">    * ``[&quot;max&quot;, X1, ..., Xn]``</span>
+<span class="sd">    * ``[&quot;if&quot;, A, X, Y]``</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        function (list): 制約充足問題中の式.</span>
+<span class="sd">        encoder (Encoder): Encoderインスタンス.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        引数の function そのまま，または function を変換した式．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.csp</span> <span class="kn">import</span> <span class="n">LogEncoder</span>
+
+    <span class="k">def</span> <span class="nf">getBound</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBound</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">)</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decomposeAbs</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBound</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Var</span><span class="p">()</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">lb</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ub</span><span class="p">))])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;imp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]]])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;imp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">def</span> <span class="nf">decomposeMin</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">getBound</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Var</span><span class="p">()</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c2</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">def</span> <span class="nf">decomposeMax</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">getBound</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Var</span><span class="p">()</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c2</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">def</span> <span class="nf">decomposeIf</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">getBound</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="n">Var</span><span class="p">())</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;equ&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;imp&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">]])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;imp&quot;</span><span class="p">,</span> <span class="o">~</span><span class="n">p</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">def</span> <span class="nf">decomposeDivMod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;divあるいはmodの第2引数が正の整数定数でない: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBound</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="n">Var</span><span class="p">())</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">lb</span><span class="o">//</span><span class="n">n</span><span class="p">,</span> <span class="n">ub</span><span class="o">//</span><span class="n">n</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">q</span><span class="p">],</span> <span class="n">r</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decomposeBit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">LogEncoder</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;EncoderがLogEncoderでない&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">encoder</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;変数の下限が0でない: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">encoder</span><span class="o">.</span><span class="n">varBitK</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="k">match</span> <span class="n">function</span><span class="p">:</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;//&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeDivMod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;mod&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeDivMod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;abs&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeAbs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">xx</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeMin</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">xx</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeMax</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;if&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeIf</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;bit&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">decomposeBit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">function</span></div>
+
+
+<div class="viewcode-block" id="defaultConstraintHook">
+<a class="viewcode-back" href="../../cspsat.hooks.html#cspsat.hooks.defaultConstraintHook">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">defaultConstraintHook</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">encoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;新規制約に対応するためのフックとしてデフォールトで設定されている関数．</span>
+<span class="sd">    以下に対応している．</span>
+
+<span class="sd">    * ``[&quot;alldifferent&quot;, X1, ..., Xn]``</span>
+<span class="sd">    * ``[&quot;lexCmp&quot;, cmp, [X1,...Xn], [Y1,...,Yn]]`` (cmpは&quot;==&quot;, &quot;!=&quot;, &quot;&lt;=&quot;, &quot;&lt;&quot;, &quot;&gt;=&quot;, &quot;&gt;&quot;)</span>
+<span class="sd">    * ``[&quot;mulCmp&quot;, cmp, X, Y, Z]`` (cmpは&quot;==&quot;, &quot;!=&quot;, &quot;&lt;=&quot;, &quot;&lt;&quot;, &quot;&gt;=&quot;, &quot;&gt;&quot;)</span>
+<span class="sd">    * ``[&quot;powCmp&quot;, cmp, X, n, Z]`` (cmpは&quot;==&quot;, &quot;!=&quot;, &quot;&lt;=&quot;, &quot;&lt;&quot;, &quot;&gt;=&quot;, &quot;&gt;&quot;)</span>
+<span class="sd">    * ``[&quot;bits&quot;, [X1,...Xn], X]``</span>
+<span class="sd">    * ``[&quot;bit&quot;, X, i]``</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        constraint (list): 制約充足問題中の制約.</span>
+<span class="sd">        encoder (Encoder): Encoderインスタンス.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        引数の constraint そのまま，または constraint を変換した制約．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">.csp</span> <span class="kn">import</span> <span class="n">LogEncoder</span>
+
+    <span class="k">def</span> <span class="nf">decomposeAlldifferent</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBound</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span> <span class="p">]</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">)</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">FALSE</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">]</span>
+            <span class="k">return</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tt</span> <span class="o">=</span> <span class="p">[</span> <span class="n">t</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;eqK&quot;</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;equ&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]]</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="p">[</span> <span class="n">p</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">))</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;eqK&quot;</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">_fillZero</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">):</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">xx</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">):</span>
+            <span class="n">yy</span> <span class="o">=</span> <span class="n">yy</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decomposeLexEq</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span> <span class="o">=</span> <span class="n">_fillZero</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yy</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">def</span> <span class="nf">decomposeLexLe</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">less</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span> <span class="o">=</span> <span class="n">_fillZero</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">a</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">~</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">~</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">yy</span><span class="p">[</span><span class="n">i</span><span class="p">]]]</span>
+        <span class="k">yield</span> <span class="o">~</span><span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">less</span> <span class="k">else</span> <span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decomposeMulCmp</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">LogEncoder</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;EncoderがLogEncoderでない&quot;</span><span class="p">)</span>
+        <span class="n">binEqu</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">addMul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">binEqu</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">decomposePowCmp</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">LogEncoder</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;EncoderがLogEncoderでない&quot;</span><span class="p">)</span>
+        <span class="n">binEqu</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">addPower</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">binEqu</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">decomposeBits</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">LogEncoder</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;EncoderがLogEncoderでない&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">encoder</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;変数の下限が0でない: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">Binary</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBools</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">decomposeBit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">LogEncoder</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;EncoderがLogEncoderでない&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">encoder</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;変数の下限が0でない: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">encoder</span><span class="o">.</span><span class="n">varBitK</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="k">match</span> <span class="n">constraint</span><span class="p">:</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;alldifferent&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeAlldifferent</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexEq</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexEq</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexLe</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexLe</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">less</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexLe</span><span class="p">(</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;lexCmp&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeLexLe</span><span class="p">(</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">less</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;mulCmp&quot;</span><span class="p">,</span> <span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeMulCmp</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;powCmp&quot;</span><span class="p">,</span> <span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">z</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposePowCmp</span><span class="p">(</span><span class="n">cmp</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeBits</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;bit&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]:</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">decomposeBit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">constraint</span></div>
+
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">CspsatException</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">Var</span><span class="p">,</span> <span class="n">Binary</span><span class="p">,</span> <span class="n">BinaryEquation</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

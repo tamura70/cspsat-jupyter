@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.dpll &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=c033477b"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/translations.js?v=4dbe4bdc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cspsat.html">cspsat package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cspsat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">モジュールコード</a></li>
+      <li class="breadcrumb-item active">cspsat.dpll</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>cspsat.dpll のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;DPLLソルバーのモジュール．</span>
+
+<span class="sd">以下のクラスからなる．</span>
+
+<span class="sd">* DPLLクラス: 命題変数のクラス</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    本プログラムは学習用の目的で作成されている．</span>
+<span class="sd">    実用上の問題への適用は想定していない．</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DPLL">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">DPLL</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DPLLソルバーのクラス．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (int, optional): 正ならDPLLソルバーの情報を表示する (デフォルト値は0)．</span>
+<span class="sd">        interactive (bool, optional): 真なら会話的に実行する (デフォルト値はFalse)．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interactive</span> <span class="o">=</span> <span class="n">interactive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vname2dimacslit</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vName</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vLevel</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vReason</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propQueue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ex_type</span><span class="p">,</span> <span class="n">ex_value</span><span class="p">,</span> <span class="n">trace</span><span class="p">):</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="DPLL.nVars">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.nVars">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">nVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;命題変数の個数を返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            命題変数の個数．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.nClauses">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.nClauses">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">nClauses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;節の個数を返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            節の個数．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.toLit">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.toLit">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">toLit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数番号vに対するリテラル番号を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (int): 変数番号．</span>
+<span class="sd">            negative (int, optional): 1なら否定 (デフォールト値は0)．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            リテラル番号．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">negative</span></div>
+
+
+<div class="viewcode-block" id="DPLL.toVar">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.toVar">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">toVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リテラルlitに対する変数と符号のタプルを返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lit (int): リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            変数と符号のタプル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">lit</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lit</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.value">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.value">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リテラルlitの現在の真理値を返す．真理値が割当てられていなければNoneを返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lit (int): リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            litの真理値 (割当てられていなければNone)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toVar</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">t</span> <span class="o">^</span> <span class="n">n</span></div>
+
+
+<div class="viewcode-block" id="DPLL.newVar">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.newVar">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">newVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;新しい変数を追加する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vname (str, optional): 変数名 (デフォールト値はNone)．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            新しい変数番号．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vName</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span> <span class="c1"># for positive literal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span> <span class="c1"># for negative literal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vReason</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vLevel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+
+<div class="viewcode-block" id="DPLL.decisionLevel">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.decisionLevel">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decisionLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在の決定レベルを返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            決定レベル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.enqueue">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.enqueue">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">enqueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lit</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リテラルlitを伝播用キューに追加する．</span>
+
+<span class="sd">        リテラルlitの値がすでに1であればTrueを返し，伝播用キューには追加しない．</span>
+<span class="sd">        リテラルlitの値がすでに0であればFalseを返し，伝播用キューには追加しない．</span>
+<span class="sd">        リテラルlitの値が決まっていなければ伝播用キューには追加し，Trueを返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lit (int): リテラル．</span>
+<span class="sd">            reason (list, optional): 理由の節 (デフォールト値はNone)．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            衝突が生じなければTrue，衝突があればFalse．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">reason</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;propagate &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lit2repr</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clause2repr</span><span class="p">(</span><span class="n">reason</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toVar</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">^</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vLevel</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decisionLevel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vReason</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">reason</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propQueue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="DPLL.assume">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.assume">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">assume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リテラルlitを仮に真と決定する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lit (int): リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            衝突が生じなければTrue，衝突があればFalse．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;decisions&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;decide &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lit2repr</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.propagateClause">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.propagateClause">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">propagateClause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num番目の節に対しリテラルlitの伝播処理を行う．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num (int): 節の番号．</span>
+<span class="sd">            lit (int): リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            衝突が生じなければTrue，衝突があればFalse．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">lit</span> <span class="o">^</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lit</span> <span class="o">^</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">lit</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">clause</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">clause</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">clause</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">clause</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lit</span> <span class="o">^</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">^</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">lit</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">clause</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.propagate">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.propagate">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;伝播処理を行う．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            衝突が生じなければNone，衝突が生じれば衝突のあった節の番号．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">propQueue</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;propagations&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propQueue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">lit</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">lit</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tmp</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagateClause</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+                    <span class="c1"># confliction at clause number num</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">lit</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">propQueue</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DPLL.cancel">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.cancel">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;1レベルのバックトラック処理を行う．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">while</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toVar</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vReason</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vLevel</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">c</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DPLL.cancelUntil">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.cancelUntil">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">cancelUntil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;決定レベルlevelまでバックトラック処理を行う．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            level (int): 決定レベル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;backjump to level </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">decisionLevel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">level</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DPLL.newDecision">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.newDecision">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">newDecision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;値が未割当ての変数を選択し，それを偽と仮に決定する．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           負リテラル．未割当ての変数がなければNone．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toLit</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assume</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">lit</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DPLL.backtrack">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.backtrack">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">backtrack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;バックトラック処理を行う．</span>
+
+<span class="sd">        最後の決定まで戻り，それが正リテラルの決定の間はさらに前の決定に戻る．</span>
+<span class="sd">        負リテラルの決定なら，正リテラルにして決定する．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decisionLevel</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span>
+            <span class="n">lastDecision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="p">[</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cancelUntil</span><span class="p">(</span><span class="n">level</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toVar</span><span class="p">(</span><span class="n">lastDecision</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toLit</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">t</span><span class="o">^</span><span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assume</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+                <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="DPLL.getModel">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.getModel">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getModel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;モデルを返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           モデル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()):</span>
+            <span class="n">model</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var2repr</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="DPLL.search">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.search">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;モデルの探索を行い，見つかったモデルをyieldするジェネレータ関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num (int,optional): 探索するモデルの個数 (0なら全解を探索)．</span>
+<span class="sd">        </span>
+<span class="sd">        Yields:</span>
+<span class="sd">           モデル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;clauses&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">clause</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Clause </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clause2repr</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;decisions </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">decisions2repr</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;assigns </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">assigns2repr</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;watches </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">watches2repr</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">clause</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;conflict at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">clause2repr</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;conflicts&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backtrack</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">newDecision</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">lit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Model found</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getModel</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;found model </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">model</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">num</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">backtrack</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DPLL.getStat">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.getStat">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getStat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;実行の統計情報を返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            統計情報．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stat</span></div>
+
+
+<div class="viewcode-block" id="DPLL.solutions">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.solutions">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた節を追加し，モデルをyieldするジェネレータ関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clauses (list,optional): 追加する節のリスト．</span>
+<span class="sd">            num (int,optional): 探索するモデルの個数 (0なら全解を探索)．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            モデル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">clauses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">clauses</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trail</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isSat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;variables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;clauses&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nClauses</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;decisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;conflicts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;propagations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;solving&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
+            <span class="k">yield</span> <span class="n">model</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">decisionLevel</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cancelUntil</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="p">[</span><span class="s2">&quot;solving&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span></div>
+
+
+<div class="viewcode-block" id="DPLL.solve">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.solve">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clauses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた節を追加し，モデルを表示する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clauses (list,optional): 追加する節のリスト．</span>
+<span class="sd">            num (int,optional): 探索するモデルの個数 (0なら全解を探索)．</span>
+<span class="sd">            stat (bool,optional): 真なら統計情報も表示する．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">clauses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">clauses</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solutions</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SATISFIABLE&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UNSATISFIABLE&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stat</span> <span class="ow">and</span> <span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.info">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.info">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;メッセージを表示する．</span>
+
+<span class="sd">        表示レベルが self.verbose より大きければ表示しない．</span>
+<span class="sd">        self.interactive が真ならユーザ入力を待つ．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            l (int): 表示レベル．</span>
+<span class="sd">            msg (str): メッセージ．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">decisionLevel</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interactive</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Press Ctrl-Enter to proceed&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">input</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DPLL.var2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.var2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">var2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数の表記文字列を返す関数．</span>
+
+<span class="sd">        newVarで変数名が与えられていればそれを使用する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (int): 変数番号．</span>
+<span class="sd">            negative (int,optional): 1なら負リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            変数の表記文字列．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vName</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span> <span class="k">if</span> <span class="n">negative</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;~&quot;</span> <span class="o">+</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="DPLL.lit2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.lit2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">lit2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;リテラルの表記文字列を返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lit (int): リテラル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            リテラルの表記文字列．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toVar</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var2repr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.clause2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.clause2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">clause2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;節の表記 (リテラルの表記文字列のリスト)を返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clause (list): 節．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            節の表記．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">clause</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">lit2repr</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DPLL.assigns2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.assigns2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">assigns2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在の値割当ての表記を返す関数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            値割当ての表記．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">a</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var2repr</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vAssigns</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">a</span></div>
+
+
+<div class="viewcode-block" id="DPLL.decisions2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.decisions2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decisions2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在の決定リストの表記を返す関数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            決定リストの表記．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trail_lim</span><span class="p">:</span>
+            <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trail</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lit2repr</span><span class="p">(</span><span class="n">lit</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="DPLL.watches2repr">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.watches2repr">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">watches2repr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在の監視リストの表記を返す関数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            監視リストの表記．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">lit</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lit2repr</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">num</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+
+
+<div class="viewcode-block" id="DPLL.addInternalClause">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.addInternalClause">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">addInternalClause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;内部表現の節 (リテラル番号のリスト)を追加する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clause (list): 節．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">clause</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">^</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">watches</span><span class="p">[</span><span class="n">clause</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">^</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.addDimacsClause">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.addDimacsClause">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">addDimacsClause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimacsLits</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;DIMACS形式の節 (正負の変数番号のリスト)を追加する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dimacsLits (list): DIMACS形式の節．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">clause</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dimacsLit</span> <span class="ow">in</span> <span class="n">dimacsLits</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dimacsLit</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">v</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">newVar</span><span class="p">()</span>
+            <span class="n">lit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toLit</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">dimacsLit</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">clause</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addInternalClause</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.toDimacsLit">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.toDimacsLit">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">toDimacsLit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vname</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数名がvnameの変数をDIMACS形式のリテラル (正負の変数番号)に変換する．</span>
+
+<span class="sd">        変数名が `~&#39; から始まれば負リテラルとする．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vname (str): 変数名．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DIMACS形式のリテラル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">positive</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">vname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+            <span class="n">vname</span> <span class="o">=</span> <span class="n">vname</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">positive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dimacsLit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vname2dimacslit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dimacsLit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dimacsLit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="n">vname</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vname2dimacslit</span><span class="p">[</span><span class="n">vname</span><span class="p">]</span> <span class="o">=</span> <span class="n">dimacsLit</span>
+        <span class="k">return</span> <span class="n">dimacsLit</span> <span class="k">if</span> <span class="n">positive</span> <span class="k">else</span> <span class="o">-</span><span class="n">dimacsLit</span></div>
+
+
+<div class="viewcode-block" id="DPLL.toDimacsLits">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.toDimacsLits">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">toDimacsLits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数名のリストをDIMACS形式の節に変換する．</span>
+
+<span class="sd">        変数名が `~&#39; から始まれば負リテラルとする．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clause (list): 変数名のリスト．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DIMACS形式の節．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dimacsLits</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">toDimacsLit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lit</span><span class="p">))</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="p">]</span>
+        <span class="k">return</span> <span class="n">dimacsLits</span></div>
+
+
+<div class="viewcode-block" id="DPLL.addClause">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.addClause">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">addClause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数名のリストの形式の節を追加する．</span>
+
+<span class="sd">        変数名が `~&#39; から始まれば負リテラルとする．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clause (list): 変数名のリスト．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dimacsLits</span> <span class="o">=</span> <span class="n">clause</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="n">dimacsLits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toDimacsLits</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addDimacsClause</span><span class="p">(</span><span class="n">dimacsLits</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.add">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.add">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">clauses</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;節のリスト (変数名のリストの形式)を追加する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clauses (list): 節のリスト．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">clauses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addClause</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DPLL.load">
+<a class="viewcode-back" href="../../cspsat.dpll.html#cspsat.dpll.DPLL.load">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ファイルから節を読込んで追加する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (str): ファイル名 (Noneなら標準入力)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inp</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inp</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">clause</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+                    <span class="n">clause</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bool</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="kc">False</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">clause</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bool</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addClause</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+        <span class="nb">input</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">Bool</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

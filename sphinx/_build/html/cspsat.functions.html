@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.functions module &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c033477b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=4dbe4bdc"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="cspsat.hooks module" href="cspsat.hooks.html" />
+    <link rel="prev" title="cspsat.dpll module" href="cspsat.dpll.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cspsat.functions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.variables"><code class="docutils literal notranslate"><span class="pre">variables()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.assignments"><code class="docutils literal notranslate"><span class="pre">assignments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.value"><code class="docutils literal notranslate"><span class="pre">value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.truthTable"><code class="docutils literal notranslate"><span class="pre">truthTable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.isValid"><code class="docutils literal notranslate"><span class="pre">isValid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.isSat"><code class="docutils literal notranslate"><span class="pre">isSat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.isEquiv"><code class="docutils literal notranslate"><span class="pre">isEquiv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.models"><code class="docutils literal notranslate"><span class="pre">models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.toNF"><code class="docutils literal notranslate"><span class="pre">toNF()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.toNNF"><code class="docutils literal notranslate"><span class="pre">toNNF()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.toCNF"><code class="docutils literal notranslate"><span class="pre">toCNF()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.toDNF"><code class="docutils literal notranslate"><span class="pre">toDNF()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.ge1"><code class="docutils literal notranslate"><span class="pre">ge1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.le1"><code class="docutils literal notranslate"><span class="pre">le1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.eq1"><code class="docutils literal notranslate"><span class="pre">eq1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.geK"><code class="docutils literal notranslate"><span class="pre">geK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.leK"><code class="docutils literal notranslate"><span class="pre">leK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.eqK"><code class="docutils literal notranslate"><span class="pre">eqK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.statData"><code class="docutils literal notranslate"><span class="pre">statData</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.status"><code class="docutils literal notranslate"><span class="pre">status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.defaultTimeout"><code class="docutils literal notranslate"><span class="pre">defaultTimeout</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.getTimeout"><code class="docutils literal notranslate"><span class="pre">getTimeout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.setTimeout"><code class="docutils literal notranslate"><span class="pre">setTimeout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.solutionsSAT"><code class="docutils literal notranslate"><span class="pre">solutionsSAT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.solveSAT"><code class="docutils literal notranslate"><span class="pre">solveSAT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.solutionsCSP"><code class="docutils literal notranslate"><span class="pre">solutionsCSP()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.solveCSP"><code class="docutils literal notranslate"><span class="pre">solveCSP()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.saveSAT"><code class="docutils literal notranslate"><span class="pre">saveSAT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.loadSAT"><code class="docutils literal notranslate"><span class="pre">loadSAT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.saveDimacs"><code class="docutils literal notranslate"><span class="pre">saveDimacs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.saveCSP"><code class="docutils literal notranslate"><span class="pre">saveCSP()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.functions.loadCSP"><code class="docutils literal notranslate"><span class="pre">loadCSP()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cspsat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cspsat.functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cspsat.html">cspsat package</a></li>
+      <li class="breadcrumb-item active">cspsat.functions module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cspsat.functions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cspsat.functions">
+<span id="cspsat-functions-module"></span><h1>cspsat.functions module<a class="headerlink" href="#module-cspsat.functions" title="Link to this heading"></a></h1>
+<p>便利な関数群．</p>
+<p>cspsat モジュールの便利な関数群をまとめている．</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">命題論理式の記法 (Pは命題変数．A1, A2, ..., Anは命題論理式)</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 66.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>名称など</p></th>
+<th class="head"><p>命題論理式の記法</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>真</p></td>
+<td><p>TRUE</p></td>
+</tr>
+<tr class="row-odd"><td><p>偽</p></td>
+<td><p>FALSE</p></td>
+</tr>
+<tr class="row-even"><td><p>命題変数 p</p></td>
+<td><p>Bool(&quot;p&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p>補リテラル</p></td>
+<td><p>~P</p></td>
+</tr>
+<tr class="row-even"><td><p>否定</p></td>
+<td><p>[&quot;not&quot;, A1], [&quot;!&quot;, A1]</p></td>
+</tr>
+<tr class="row-odd"><td><p>論理積</p></td>
+<td><p>[&quot;and&quot;, A1, ..., An], [&quot;&amp;&amp;&quot;, A1, ..., An]</p></td>
+</tr>
+<tr class="row-even"><td><p>論理和</p></td>
+<td><p>[&quot;or&quot;, A1, ..., An], [&quot;||&quot;, A1, ..., An]</p></td>
+</tr>
+<tr class="row-odd"><td><p>含意</p></td>
+<td><p>[&quot;imp&quot;, A1, A2], [&quot;=&gt;&quot;, A1, A2]</p></td>
+</tr>
+<tr class="row-even"><td><p>同値</p></td>
+<td><p>[&quot;equ&quot;, A1, A2], [&quot;&lt;=&gt;&quot;, A1, A2]</p></td>
+</tr>
+<tr class="row-odd"><td><p>排他的論理和</p></td>
+<td><p>[&quot;xor&quot;, A1, ..., An], [&quot;^&quot;, A1, ..., An]</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>本プログラムは学習用の目的で作成されている．
+実用上の問題への適用は想定していない．</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.variables">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#variables"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.variables" title="Link to this definition"></a></dt>
+<dd><p>命題論理式に含まれている命題変数の集合を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクトの集合．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">variables</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="o">~</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="go">{p(1), p(2)}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.assignments">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">assignments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#assignments"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.assignments" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題変数のリストに対し，可能な値割当てをyieldするジェネレータ関数．
+各値割当ては，命題変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)をキーとする辞書(dict)で，値は0か1．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vs</strong> -- 命題変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)のリスト．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>値割当てを表す辞書(dict)．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">assignments</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]))</span>
+<span class="go">[{p(1): 0, p(2): 0}, {p(1): 0, p(2): 1}, {p(1): 1, p(2): 0}, {p(1): 1, p(2): 1}]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.value">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#value"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.value" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f と値割当て a に対し，f の真理値を返す関数．</p>
+<p>命題論理式 f はいったん <a class="reference internal" href="#cspsat.functions.toNF" title="cspsat.functions.toNF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toNF</span></code></a> 関数で否定・論理積・論理和のみの式に変換され，その後，真理値を計算する．
+値割当て中に含まれない命題変数の真理値はNoneになる．
+否定の引数の式の真理値がNoneの場合，否定の真理値はNoneになる．
+論理積の引数の真理値に0がある場合，論理積の真理値は0になる．
+論理積の引数の真理値に0がなくNoneがある場合，論理積の真理値はNoneになる．
+論理和の引数の真理値に1がある場合，論理和の真理値は1になる．
+論理和の引数の真理値に1がなくNoneがある場合，論理和の真理値はNoneになる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p></li>
+<li><p><strong>a</strong> (<em>dict</em>) -- 値割当ての辞書(dict)．キーは <a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクトで表される命題変数，値は0か1．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>f の真理値 (0か1かNone)．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">],</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">],</span> <span class="p">{})</span> <span class="c1"># Noneが返される</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.truthTable">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">truthTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#truthTable"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.truthTable" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f1, f2, ... の真理値表を出力する関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*fs</strong> -- 命題論理式 f1, f2, ... の列．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p>
+</dd>
+<dt class="field-even">例外<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truthTable</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="go">| p(1) | p(2) | [&#39;and&#39;, p(1), p(2)] | [&#39;or&#39;, p(1), p(2)] |</span>
+<span class="go">|------|------|---------------------|--------------------|</span>
+<span class="go">|   0  |   0  |          0          |          0         |</span>
+<span class="go">|   0  |   1  |          0          |          1         |</span>
+<span class="go">|   1  |   0  |          0          |          1         |</span>
+<span class="go">|   1  |   1  |          1          |          1         |</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.isValid">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">isValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#isValid"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.isValid" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f が恒真かどうかを判定する関数．</p>
+<p>命題論理式 f に対するすべての値割当てで f の真理値が1ならば恒真としてTrueを返す．
+f に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると <span class="math notranslate nohighlight">\(2^n\)</span> の時間がかかる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>f が恒真ならTrue．そうでなければFalse．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isValid</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="o">~</span><span class="n">p</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.isSat">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">isSat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#isSat"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.isSat" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f が充足可能かどうかを判定する関数．</p>
+<p>命題論理式 f に対するある値割当てで f の真理値が1ならば充足可能としてTrueを返す．
+f に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると <span class="math notranslate nohighlight">\(2^n\)</span> の時間がかかる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>f が充足可能ならTrue．そうでなければFalse．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isSat</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isSat</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="o">~</span><span class="n">p</span><span class="p">])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.isEquiv">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">isEquiv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#isEquiv"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.isEquiv" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f1, f2 が論理的に同値かどうかを判定する関数．</p>
+<p>命題論理式 [&quot;equ&quot;,f1,f2] が恒真なら f1 と f2 が論理的に同値としてTrueを返す．
+f1, f2 に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると <span class="math notranslate nohighlight">\(2^n\)</span> の時間がかかる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f1</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p></li>
+<li><p><strong>f2</strong> -- 命題論理式．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>f1 と f2 が論理的に同値ならTrue．そうでなければFalse．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isEquiv</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">p</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.models">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#models"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.models" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f の複数のモデルを探索し，それらをyieldするジェネレータ関数．</p>
+<p>命題論理式 f のすべての値割当て a に対し，a が f のモデルなら a をyieldする．
+探索するモデルの最大個数を num で指定できる．
+f に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると <span class="math notranslate nohighlight">\(2^n\)</span> の時間がかかる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p></li>
+<li><p><strong>num</strong> (<em>int</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>見つかったモデル．キーが <a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクトで値が0か1の辞書(dict)である．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="go">{p(1): 0, p(2): 1}</span>
+<span class="go">{p(1): 1, p(2): 0}</span>
+<span class="go">{p(1): 1, p(2): 1}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.toNF">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">toNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#toNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.toNF" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f を，論理演算子として否定・論理積・論理和だけを含む同値な式に変換する．</p>
+<p>含意 <span class="math notranslate nohighlight">\(A \Rightarrow B\)</span> は <span class="math notranslate nohighlight">\((\lnot A) \lor B\)</span> に変換する．
+同値 <span class="math notranslate nohighlight">\(A \Leftrightarrow B\)</span> は <span class="math notranslate nohighlight">\(((\lnot A) \lor B) \land (A \lor (\lnot B))\)</span> に変換する．
+排他的論理和 <span class="math notranslate nohighlight">\(A \oplus B\)</span> は <span class="math notranslate nohighlight">\((A \lor B) \land ((\lnot A) \lor (\lnot B))\)</span> に変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f</strong> -- 命題論理式．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>論理演算子として否定・論理積・論理和だけを含む命題論理式．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]])</span>
+<span class="go">[&#39;not&#39;, [&#39;and&#39;, [&#39;or&#39;, p(1), p(2)], [&#39;or&#39;, [&#39;not&#39;, p(1)], [&#39;not&#39;, p(2)]]]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.toNNF">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">toNNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#toNNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.toNNF" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f を否定標準形に変換する．</p>
+<p>否定標準形は，リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)および論理積と論理和のみが現れる命題論理式である．
+いったん f を <a class="reference internal" href="#cspsat.functions.toNF" title="cspsat.functions.toNF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toNF</span></code></a> 関数で否定・論理積・論理和だけを含む式に変換したのち，
+<span class="math notranslate nohighlight">\(\lnot \lnot A\)</span> を <span class="math notranslate nohighlight">\(A\)</span> に，
+<span class="math notranslate nohighlight">\(\lnot (A \land B)\)</span> を <span class="math notranslate nohighlight">\((\lnot A) \lor (\lnot B)\)</span> に，
+<span class="math notranslate nohighlight">\(\lnot (A \lor B)\)</span> を <span class="math notranslate nohighlight">\((\lnot A) \land (\lnot B)\)</span> に置き換える操作を再帰的に繰り返している．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> -- 命題論理式．</p></li>
+<li><p><strong>positive</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Falseなら [&quot;not&quot;,f] を否定標準形に変換する(デフォルト値はTrue)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>否定標準形の命題論理式．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toNNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]])</span>
+<span class="go">[&#39;or&#39;, [&#39;and&#39;, ~p(1), ~p(2)], [&#39;and&#39;, p(1), p(2)]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.toCNF">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">toCNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#toCNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.toCNF" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f を論理積標準形(CNF)に変換する．</p>
+<p>CNF式は複数の節の論理積であり，各節は複数のリテラルの論理和である．
+いったん f を <a class="reference internal" href="#cspsat.functions.toNNF" title="cspsat.functions.toNNF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toNNF</span></code></a> 関数で否定標準形に変換したのち，
+分配法則を用いて <span class="math notranslate nohighlight">\(A \lor (B \land C)\)</span> を <span class="math notranslate nohighlight">\((A \lor B) \land (A \lor C)\)</span> に置き換える操作を再帰的に繰り返している．</p>
+<p>simplify=True の場合，以下の方法でCNF式を簡単化する．</p>
+<ul class="simple">
+<li><p>節から命題定数 FALSE を削除する</p></li>
+<li><p>節に命題定数 TRUE が含まれていれば，その節をCNF式から削除する</p></li>
+<li><p>節にリテラル p と補リテラル ~p が含まれていれば，その節をCNF式から削除する</p></li>
+<li><p>節中に同じリテラルが重複して現れていれば，1つにまとめる</p></li>
+</ul>
+<p>formula=True を指定すれば，結果が節のリストではなく，命題論理式を返す．</p>
+<p>f に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると最悪の場合CNF式のサイズは <span class="math notranslate nohighlight">\(2^n\)</span> になる
+(たとえば <span class="math notranslate nohighlight">\((p_1 \land q_1)\lor(p_2 \land q_2)\lor\cdots\lor(p_n \land q_n)\)</span> の場合)．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p></li>
+<li><p><strong>simplify</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Falseなら得られたCNF式を簡単化しない(デフォルト値はTrue)．</p></li>
+<li><p><strong>formula</strong> (<em>bool</em><em>, </em><em>optional</em>) -- 節のリストでなく，命題論理式を返す．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．CNF式は節のリストであり，各節はリテラルのリストである．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toCNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]])</span>
+<span class="go">[[~p(1), p(2)], [p(1), ~p(2)]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toCNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[[~p(1), p(1)], [~p(1), p(2)], [~p(2), p(1)], [~p(2), p(2)]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toCNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">formula</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[&#39;and&#39;, [&#39;or&#39;, ~p(1), p(2)], [&#39;or&#39;, p(1), ~p(2)]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.toDNF">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">toDNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#toDNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.toDNF" title="Link to this definition"></a></dt>
+<dd><p>与えられた命題論理式 f を論理和標準形(DNF)に変換する．</p>
+<p>DNF式は複数の連言節の論理和であり，各連言節は複数のリテラルの論理積である．
+いったん [&quot;not&quot;,f] を <a class="reference internal" href="#cspsat.functions.toCNF" title="cspsat.functions.toCNF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toCNF</span></code></a> 関数でCNF式に変換したのち，
+CNF式中の各リテラルを否定することでDNF式を求めている．</p>
+<p>simplify=True の場合，簡単化したDNF式を返す．</p>
+<p>formula=True を指定すれば，命題論理式を返す．</p>
+<p>f に含まれる命題変数の個数を <span class="math notranslate nohighlight">\(n\)</span> とすると最悪の場合DNF式のサイズは <span class="math notranslate nohighlight">\(2^n\)</span> になる</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> -- 命題論理式．命題論理式の記法については <a class="reference internal" href="#module-cspsat.functions" title="cspsat.functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functions</span></code></a> 参照．</p></li>
+<li><p><strong>simplify</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Falseなら得られたDNF式を簡単化しない(デフォルト値はTrue)．</p></li>
+<li><p><strong>formula</strong> (<em>bool</em><em>, </em><em>optional</em>) -- 連言節のリストでなく，命題論理式を返す．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>DNF式．DNF式は連言節のリストであり，各連言節はリテラルのリストである．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 論理式の構文エラー．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toDNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]])</span>
+<span class="go">[[p(1), p(2)], [~p(1), ~p(2)]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">toDNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">formula</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[&#39;or&#39;, [&#39;and&#39;, p(1), p(2)], [&#39;and&#39;, ~p(1), ~p(2)]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.ge1">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">ge1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#ge1"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.ge1" title="Link to this definition"></a></dt>
+<dd><p>at-least-one基数制約の節をyieldするジェネレータ関数．</p>
+<p>xx = [x1, x2, ..., xn] のとき，節 {x1, x2, ..., xn} をyieldする．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">ge1</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)]):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[p(1), p(2), p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.le1">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">le1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#le1"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.le1" title="Link to this definition"></a></dt>
+<dd><p>at-most-one基数制約の節をyieldするジェネレータ関数．</p>
+<p>xx = [x1, x2, ..., xn] のとき，すべての xi, xj の組合せに対し節 {xi, xj} をyieldする．
+この方法はペアワイズ法と呼ばれる．
+一般には <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> クラスに実装されている逐次カウンタ法のほうが良い．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">le1</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)]):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[~p(1), ~p(2)]</span>
+<span class="go">[~p(1), ~p(3)]</span>
+<span class="go">[~p(2), ~p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.eq1">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">eq1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#eq1"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.eq1" title="Link to this definition"></a></dt>
+<dd><p>exact-one基数制約の節をyieldするジェネレータ関数．</p>
+<p><a class="reference internal" href="#cspsat.functions.ge1" title="cspsat.functions.ge1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ge1</span></code></a> 関数，<a class="reference internal" href="#cspsat.functions.le1" title="cspsat.functions.le1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">le1</span></code></a> 関数を用いて必要な節をyieldする．
+一般には <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> クラスに実装されている逐次カウンタ法のほうが良い．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">eq1</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)]):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[p(1), p(2), p(3)]</span>
+<span class="go">[~p(1), ~p(2)]</span>
+<span class="go">[~p(1), ~p(3)]</span>
+<span class="go">[~p(2), ~p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.geK">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">geK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#geK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.geK" title="Link to this definition"></a></dt>
+<dd><p>at-least-k基数制約の節をyieldするジェネレータ関数．</p>
+<p>xx = [x1, x2, ..., xn] のとき，xi から n-k+1 個のリテラルを選択するすべての組合せに対し，選んだリテラルからなる節をyieldする．
+すなわち n-k+1 個のリテラルがすべて偽になる場合を排除している．
+この方法はバイノミナル法と呼ばれる．
+一般には <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> クラスに実装されている逐次カウンタ法のほうが良い．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- kの値．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">geK</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="mi">2</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[p(1), p(2)]</span>
+<span class="go">[p(1), p(3)]</span>
+<span class="go">[p(2), p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.leK">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">leK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#leK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.leK" title="Link to this definition"></a></dt>
+<dd><p>at-most-k基数制約の節をyieldするジェネレータ関数．</p>
+<p>xx = [x1, x2, ..., xn] のとき，xi から k+1 個のリテラルを選択するすべての組合せに対し，選んだリテラルの否定からなる節をyieldする．
+すなわち k+1 個のリテラルがすべて真になる場合を排除している．
+この方法はバイノミナル法と呼ばれる．
+一般には <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> クラスに実装されている逐次カウンタ法のほうが良い．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- kの値．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">leK</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="mi">2</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[~p(1), ~p(2), ~p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.eqK">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">eqK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#eqK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.eqK" title="Link to this definition"></a></dt>
+<dd><p>exact-k基数制約の節をyieldするジェネレータ関数．</p>
+<p><a class="reference internal" href="#cspsat.functions.geK" title="cspsat.functions.geK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geK</span></code></a> 関数，<a class="reference internal" href="#cspsat.functions.leK" title="cspsat.functions.leK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leK</span></code></a> 関数を用いて必要な節をyieldする．
+一般には <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> クラスに実装されている逐次カウンタ法のほうが良い．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>list</em>) -- リテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)リスト．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- kの値．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>基数制約を符号化した節．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">eqK</span><span class="p">([</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="mi">2</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+<span class="go">[p(1), p(2)]</span>
+<span class="go">[p(1), p(3)]</span>
+<span class="go">[p(2), p(3)]</span>
+<span class="go">[~p(1), ~p(2), ~p(3)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cspsat.functions.statData">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">statData</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cspsat.functions.statData" title="Link to this definition"></a></dt>
+<dd><p>ソルバー実行の統計データを保存するグローバル変数</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.status">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lastOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#status"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.status" title="Link to this definition"></a></dt>
+<dd><p>SATソルバー (<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a>)またはCSPソルバー (<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a>)実行の統計データ．</p>
+<p><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.getStat" title="cspsat.sat.SAT.getStat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.getStat</span></code></a>, <a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.getStat" title="cspsat.csp.Solver.getStat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.getStat</span></code></a> 参照．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ソルバー実行の統計データ．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cspsat.functions.defaultTimeout">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">defaultTimeout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">600</span></em><a class="headerlink" href="#cspsat.functions.defaultTimeout" title="Link to this definition"></a></dt>
+<dd><p>タイムアウト秒数のデフォルト値を保存するグローバル変数</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.getTimeout">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">getTimeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#getTimeout"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.getTimeout" title="Link to this definition"></a></dt>
+<dd><p>タイムアウト秒数のデフォルト値を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>タイムアウト秒数のデフォルト値．</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">getTimeout</span><span class="p">()</span>
+<span class="go">600</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.setTimeout">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">setTimeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#setTimeout"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.setTimeout" title="Link to this definition"></a></dt>
+<dd><p>タイムアウト秒数のデフォルト値を設定する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>timeout</strong> (<em>int</em>) -- タイムアウト秒数．</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">setTimeout</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">getTimeout</span><span class="p">()</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.solutionsSAT">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">solutionsSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positiveOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#solutionsSAT"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.solutionsSAT" title="Link to this definition"></a></dt>
+<dd><p>与えられたCNF式のモデルをSATソルバーで探索しyieldするジェネレータ関数．</p>
+<p><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solutions" title="cspsat.sat.SAT.solutions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.solutions</span></code></a> 参照．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cnf</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- CNF式 (節のリスト)．</p></li>
+<li><p><strong>command</strong> (<em>str</em><em>, </em><em>optional</em>) -- 利用するSATソルバーのコマンド．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のcommand参照．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solutions" title="cspsat.sat.SAT.solutions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.solutions</span></code></a> のnum参照．</p></li>
+<li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のpositveOnly参照．</p></li>
+<li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のincludeAux参照．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のverobse参照．</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>optional</em>) -- この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．
+<a class="reference internal" href="#cspsat.functions.setTimeout" title="cspsat.functions.setTimeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setTimeout</span></code></a> でデフォルト値を変更できる．</p></li>
+<li><p><strong>tempdir</strong> (<em>str</em><em>, </em><em>optional</em>) -- 一時ファイルのディレクトリ名 (デフォルト値はNone)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式のモデル．命題変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)をキーとする辞書(dict)で，値は0か1．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">solutionsSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+<span class="go">{p(1): 0, p(2): 1}</span>
+<span class="go">{p(1): 1, p(2): 0}</span>
+<span class="go">{p(1): 1, p(2): 1}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">solutionsSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p(1)=</span><span class="si">{</span><span class="n">sol</span><span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span><span class="si">}</span><span class="s2">, p(2)=</span><span class="si">{</span><span class="n">sol</span><span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">p(1)=0, p(2)=1</span>
+<span class="go">p(1)=1, p(2)=0</span>
+<span class="go">p(1)=1, p(2)=1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">solutionsSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="nb">print</span><span class="p">((</span><span class="n">sol</span><span class="p">,</span> <span class="n">status</span><span class="p">()))</span>
+<span class="go">({p(1): 0, p(2): 1}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.709282636642456})</span>
+<span class="go">({p(1): 1, p(2): 0}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.30728840827941895})</span>
+<span class="go">({p(1): 1, p(2): 1}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.33997058868408203})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.solveSAT">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">solveSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positiveOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#solveSAT"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.solveSAT" title="Link to this definition"></a></dt>
+<dd><p>与えられたCNF式のモデルをSATソルバーで探索し出力する．</p>
+<p><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solve" title="cspsat.sat.SAT.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.solve</span></code></a> 参照．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cnf</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a>) -- CNF式 (節のリスト)．</p></li>
+<li><p><strong>command</strong> (<em>str</em><em>, </em><em>optional</em>) -- 利用するSATソルバーのコマンド．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のcommand参照．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solve" title="cspsat.sat.SAT.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.solve</span></code></a> のnum参照．</p></li>
+<li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のpositveOnly参照．</p></li>
+<li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のincludeAux参照．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のverobse参照．</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>optional</em>) -- この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．
+<a class="reference internal" href="#cspsat.functions.setTimeout" title="cspsat.functions.setTimeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setTimeout</span></code></a> でデフォルト値を変更できる．</p></li>
+<li><p><strong>stat</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueなら統計データも表示する (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.getStat" title="cspsat.sat.SAT.getStat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.getStat</span></code></a> 参照．</p></li>
+<li><p><strong>tempdir</strong> (<em>str</em><em>, </em><em>optional</em>) -- 一時ファイルのディレクトリ名 (デフォルト値はNone)．</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {p(1): 0, p(2): 1}</span>
+<span class="go">Model 2: {p(1): 1, p(2): 0}</span>
+<span class="go">Model 3: {p(1): 1, p(2): 1}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {p(1): 0, p(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.30565834045410156}</span>
+<span class="go">Model 2: {p(1): 1, p(2): 0}</span>
+<span class="go">Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.34708118438720703}</span>
+<span class="go">Model 3: {p(1): 1, p(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.3393073081970215}</span>
+<span class="go">Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 4, &#39;conflicts&#39;: 2, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.303924560546875}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.solutionsCSP">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">solutionsCSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positiveOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#solutionsCSP"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.solutionsCSP" title="Link to this definition"></a></dt>
+<dd><p>与えられたCSP(制約充足問題)をCNF式にSAT符号化し，得られたCNF式の解(モデル)をSATソルバーで探索し，
+CSPの解(モデル)に変換してyieldするジェネレータ関数．</p>
+<p><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solutions" title="cspsat.csp.Solver.solutions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.solutions</span></code></a> 参照．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csp</strong> -- CSP．制約のシーケンス．制約の記法については <a class="reference internal" href="cspsat.csp.html#module-cspsat.csp" title="cspsat.csp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.csp</span></code></a> 参照．</p></li>
+<li><p><strong>encoder</strong> (<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><em>Encoder</em></a><em> | </em><em>str</em><em>, </em><em>optional</em>) -- 使用するSAT符号化．Encoderのインスタンスならそれを用いる．
+文字列の場合，&quot;d&quot;から始まるなら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a>, &quot;l&quot;から始まるなら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder" title="cspsat.csp.LogEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogEncoder</span></code></a>, それ以外なら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> を用いる．</p></li>
+<li><p><strong>command</strong> (<em>str</em><em>, </em><em>optional</em>) -- 利用するSATソルバーのコマンド．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のcommand参照．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solutions" title="cspsat.csp.Solver.solutions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.solutions</span></code></a> のnum参照．</p></li>
+<li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のpositveOnly参照．</p></li>
+<li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のincludeAux参照．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のverbose参照．</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>optional</em>) -- この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．
+<a class="reference internal" href="#cspsat.functions.setTimeout" title="cspsat.functions.setTimeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setTimeout</span></code></a> でデフォルト値を変更できる．</p></li>
+<li><p><strong>tempdir</strong> (<em>str</em><em>, </em><em>optional</em>) -- 一時ファイルのディレクトリ名 (デフォルト値はNone)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CSPのモデル．命題変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)あるいは整数変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Var</span></code></a> オブジェクト)をキーとする辞書(dict)で，値は整数．</p>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">csp</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">solutionsCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+<span class="go">{x(1): 2, x(2): 1}</span>
+<span class="go">{x(1): 3, x(2): 1}</span>
+<span class="go">{x(1): 3, x(2): 2}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.solveCSP">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">solveCSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positiveOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#solveCSP"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.solveCSP" title="Link to this definition"></a></dt>
+<dd><p>与えられたCSP(制約充足問題)をCNF式にSAT符号化し，得られたCNF式の解(モデル)をSATソルバーで探索し，
+CSPの解(モデル)に変換して出力する．</p>
+<p><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solve" title="cspsat.csp.Solver.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.solve</span></code></a> 参照．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csp</strong> -- CSP．制約のシーケンス．制約の記法については <a class="reference internal" href="cspsat.csp.html#module-cspsat.csp" title="cspsat.csp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.csp</span></code></a> 参照．</p></li>
+<li><p><strong>encoder</strong> (<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><em>Encoder</em></a><em> | </em><em>str</em><em>, </em><em>optional</em>) -- 使用するSAT符号化．Encoderのインスタンスならそれを用いる．
+文字列の場合，&quot;d&quot;から始まるなら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a>, &quot;l&quot;から始まるなら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder" title="cspsat.csp.LogEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogEncoder</span></code></a>, それ以外なら <a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> を用いる．</p></li>
+<li><p><strong>command</strong> (<em>str</em><em>, </em><em>optional</em>) -- 利用するSATソルバーのコマンド．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のcommand参照．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solutions" title="cspsat.csp.Solver.solutions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.solutions</span></code></a> のnum参照．</p></li>
+<li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のpositveOnly参照．</p></li>
+<li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のincludeAux参照．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver" title="cspsat.csp.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a> のverbose参照．</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>optional</em>) -- この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．
+<a class="reference internal" href="#cspsat.functions.setTimeout" title="cspsat.functions.setTimeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setTimeout</span></code></a> でデフォルト値を変更できる．</p></li>
+<li><p><strong>stat</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueなら統計データも表示する (デフォルト値はFalse)．
+<a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.getStat" title="cspsat.csp.Solver.getStat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver.getStat</span></code></a> 参照．</p></li>
+<li><p><strong>tempdir</strong> (<em>str</em><em>, </em><em>optional</em>) -- 一時ファイルのディレクトリ名 (デフォルト値はNone)．</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">csp</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {x(1): 2, x(2): 1}</span>
+<span class="go">Model 2: {x(1): 3, x(2): 1}</span>
+<span class="go">Model 3: {x(1): 3, x(2): 2}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># 順序符号化 (OrderEncoder)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {x(1): 2, x(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 5, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 2, &#39;propagations&#39;: 4, &#39;solving&#39;: 0.3538937568664551, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="go">Model 2: {x(1): 3, x(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 6, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 4, &#39;solving&#39;: 0.36089038848876953, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="go">Model 3: {x(1): 3, x(2): 2}</span>
+<span class="go">Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 7, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 5, &#39;solving&#39;: 0.39816951751708984, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="go">Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 7, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 5, &#39;solving&#39;: 0.39816951751708984, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="s2">&quot;direct&quot;</span><span class="p">)</span> <span class="c1"># 直接符号化 (DirectEncoder)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {x(1): 2, x(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 11, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 3, &#39;propagations&#39;: 6, &#39;solving&#39;: 0.40071797370910645, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="go">Model 2: {x(1): 3, x(2): 1}</span>
+<span class="go">Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 12, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 2, &#39;propagations&#39;: 6, &#39;solving&#39;: 0.39261484146118164, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="go">Model 3: {x(1): 3, x(2): 2}</span>
+<span class="go">Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 13, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 10, &#39;solving&#39;: 0.38961291313171387, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="go">Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 13, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 10, &#39;solving&#39;: 0.38961291313171387, &#39;encoding&#39;: 0.0010752677917480469}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.saveSAT">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">saveSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#saveSAT"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.saveSAT" title="Link to this definition"></a></dt>
+<dd><p>CNF式をファイルに保存する．</p>
+<p>CNF式は節のシーケンス(リストなど)であり，各節はリテラル(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト)のリストである．
+節が文字列の場合はコメントとして扱われ，そのままファイルに書き込まれる
+(文字列の先頭が &quot;#&quot; でない場合は先頭に &quot;# &quot; を追加する)．
+保存したCNF式はloadSAT関数でロードできる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cnf</strong> -- CNF式．リテラルのリストのシーケンス．</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) -- ファイル名．</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span> <span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">saveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="s2">&quot;/tmp/foo.sat&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="n">loadSAT</span><span class="p">(</span><span class="s2">&quot;/tmp/foo.sat&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">solveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">)</span>
+<span class="go">SATISFIABLE</span>
+<span class="go">Model 1: {p(1): 0, p(2): 1}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.loadSAT">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">loadSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#loadSAT"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.loadSAT" title="Link to this definition"></a></dt>
+<dd><p>ファイルからCNF式を読み込み，各節をyieldするジェネレータ関数．</p>
+<p>各行が節を表すが，空行および <code class="docutils literal notranslate"><span class="pre">#</span></code> から始まる行はコメントとして処理される．
+各リテラルは1つ以上の空白文字で区切られているとし，負リテラルは <code class="docutils literal notranslate"><span class="pre">~</span></code> から始まるとする．
+命題変数名には <code class="docutils literal notranslate"><span class="pre">#</span></code> あるいは <code class="docutils literal notranslate"><span class="pre">~</span></code> から始まらない任意の文字列を使用できる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) -- ファイル名．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>読み込んだCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.saveDimacs">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">saveDimacs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#saveDimacs"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.saveDimacs" title="Link to this definition"></a></dt>
+<dd><p>CNF式をDIMACS CNF形式に変換しファイルに保存する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cnf</strong> -- CNF式．リテラルのリストのシーケンス．</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) -- ファイル名．</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span> <span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">],</span> <span class="p">[</span> <span class="o">~</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="o">~</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">saveDimacs</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="s2">&quot;/tmp/foo.cnf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.saveCSP">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">saveCSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#saveCSP"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.saveCSP" title="Link to this definition"></a></dt>
+<dd><p>CSPをJSON形式でファイルに保存する．
+Boolオブジェクトは先頭に &quot;$&quot; を付け加えた文字列に変換する．
+Varオブジェクトは先頭に &quot;&#64;&quot; を付け加えた文字列に変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cnf</strong> -- CSP．</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) -- ファイル名．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cspsat.functions.loadCSP">
+<span class="sig-prename descclassname"><span class="pre">cspsat.functions.</span></span><span class="sig-name descname"><span class="pre">loadCSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/functions.html#loadCSP"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.functions.loadCSP" title="Link to this definition"></a></dt>
+<dd><p>JSON形式でCSPが保存されたファイルからCSPを読み込みyieldするジェネレータ関数．</p>
+<p>先頭に &quot;$&quot; がある文字列はBoolオブジェクトに変換する．
+先頭に &quot;&#64;&quot; がある文字列はVarオブジェクトに変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) -- ファイル名．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>読み込んだCSPのデータ．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cspsat.dpll.html" class="btn btn-neutral float-left" title="cspsat.dpll module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cspsat.hooks.html" class="btn btn-neutral float-right" title="cspsat.hooks module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

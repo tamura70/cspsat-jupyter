@@ -1,0 +1,8 @@
+
+# sphinx-apidoc -F -H satsolver -A "Naoyuki Tamura" -o sphinx satsolver
+# sphinx-build sphinx sphinx/_build
+
+sphinx-apidoc -e -f -o sphinx cspsat
+cd sphinx
+make html
+

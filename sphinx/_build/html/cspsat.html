@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat package &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c033477b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=4dbe4bdc"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="cspsat.csp module" href="cspsat.csp.html" />
+    <link rel="prev" title="cspsatのドキュメント" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cspsat package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cspsat</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cspsat package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">cspsat package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cspsat.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cspsat-package">
+<h1>cspsat package<a class="headerlink" href="#cspsat-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.model"><code class="docutils literal notranslate"><span class="pre">Solver.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.stats"><code class="docutils literal notranslate"><span class="pre">Solver.stats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.minimize"><code class="docutils literal notranslate"><span class="pre">Solver.minimize</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.maximize"><code class="docutils literal notranslate"><span class="pre">Solver.maximize</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.add"><code class="docutils literal notranslate"><span class="pre">Solver.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.find"><code class="docutils literal notranslate"><span class="pre">Solver.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.getStat"><code class="docutils literal notranslate"><span class="pre">Solver.getStat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solutions"><code class="docutils literal notranslate"><span class="pre">Solver.solutions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Solver.solve"><code class="docutils literal notranslate"><span class="pre">Solver.solve()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder"><code class="docutils literal notranslate"><span class="pre">Encoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.defaultFunctionHooks"><code class="docutils literal notranslate"><span class="pre">Encoder.defaultFunctionHooks</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.defaultConstraintHooks"><code class="docutils literal notranslate"><span class="pre">Encoder.defaultConstraintHooks</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.delimEq"><code class="docutils literal notranslate"><span class="pre">Encoder.delimEq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.delimGe"><code class="docutils literal notranslate"><span class="pre">Encoder.delimGe</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.delimBit"><code class="docutils literal notranslate"><span class="pre">Encoder.delimBit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.defInt"><code class="docutils literal notranslate"><span class="pre">Encoder.defInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.variables"><code class="docutils literal notranslate"><span class="pre">Encoder.variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.intLb"><code class="docutils literal notranslate"><span class="pre">Encoder.intLb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.intUb"><code class="docutils literal notranslate"><span class="pre">Encoder.intUb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.intRange"><code class="docutils literal notranslate"><span class="pre">Encoder.intRange()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.wsumBound"><code class="docutils literal notranslate"><span class="pre">Encoder.wsumBound()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.getBound"><code class="docutils literal notranslate"><span class="pre">Encoder.getBound()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.varEqK"><code class="docutils literal notranslate"><span class="pre">Encoder.varEqK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.varToBool"><code class="docutils literal notranslate"><span class="pre">Encoder.varToBool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.encodeInt"><code class="docutils literal notranslate"><span class="pre">Encoder.encodeInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.isBoolLike"><code class="docutils literal notranslate"><span class="pre">Encoder.isBoolLike()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.encodeWsumEq0"><code class="docutils literal notranslate"><span class="pre">Encoder.encodeWsumEq0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.encodeWsumNe0"><code class="docutils literal notranslate"><span class="pre">Encoder.encodeWsumNe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.encodeWsumLe0"><code class="docutils literal notranslate"><span class="pre">Encoder.encodeWsumLe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.encode"><code class="docutils literal notranslate"><span class="pre">Encoder.encode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.put"><code class="docutils literal notranslate"><span class="pre">Encoder.put()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.decode"><code class="docutils literal notranslate"><span class="pre">Encoder.decode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.toCNF"><code class="docutils literal notranslate"><span class="pre">Encoder.toCNF()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.Encoder.getBlock"><code class="docutils literal notranslate"><span class="pre">Encoder.getBlock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder"><code class="docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.varToBool"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.varToBool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.encodeInt"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.encodeInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumEq0"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.encodeWsumEq0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumNe0"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.encodeWsumNe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumLe0"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.encodeWsumLe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.decode"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.decode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.DirectEncoder.getBlock"><code class="docutils literal notranslate"><span class="pre">DirectEncoder.getBlock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder"><code class="docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.varGeK"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.varGeK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.varToBool"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.varToBool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.encodeInt"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.encodeInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumEq0"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.encodeWsumEq0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumNe0"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.encodeWsumNe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumLe0"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.encodeWsumLe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.decode"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.decode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.OrderEncoder.getBlock"><code class="docutils literal notranslate"><span class="pre">OrderEncoder.getBlock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder"><code class="docutils literal notranslate"><span class="pre">LogEncoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.varEqK"><code class="docutils literal notranslate"><span class="pre">LogEncoder.varEqK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.varBitK"><code class="docutils literal notranslate"><span class="pre">LogEncoder.varBitK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.getBools"><code class="docutils literal notranslate"><span class="pre">LogEncoder.getBools()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.varToBool"><code class="docutils literal notranslate"><span class="pre">LogEncoder.varToBool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.encodeInt"><code class="docutils literal notranslate"><span class="pre">LogEncoder.encodeInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumEq0"><code class="docutils literal notranslate"><span class="pre">LogEncoder.encodeWsumEq0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumNe0"><code class="docutils literal notranslate"><span class="pre">LogEncoder.encodeWsumNe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumLe0"><code class="docutils literal notranslate"><span class="pre">LogEncoder.encodeWsumLe0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.decode"><code class="docutils literal notranslate"><span class="pre">LogEncoder.decode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html#cspsat.csp.LogEncoder.getBlock"><code class="docutils literal notranslate"><span class="pre">LogEncoder.getBlock()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL"><code class="docutils literal notranslate"><span class="pre">DPLL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.nVars"><code class="docutils literal notranslate"><span class="pre">DPLL.nVars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.nClauses"><code class="docutils literal notranslate"><span class="pre">DPLL.nClauses()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.toLit"><code class="docutils literal notranslate"><span class="pre">DPLL.toLit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.toVar"><code class="docutils literal notranslate"><span class="pre">DPLL.toVar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.value"><code class="docutils literal notranslate"><span class="pre">DPLL.value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.newVar"><code class="docutils literal notranslate"><span class="pre">DPLL.newVar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.decisionLevel"><code class="docutils literal notranslate"><span class="pre">DPLL.decisionLevel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.enqueue"><code class="docutils literal notranslate"><span class="pre">DPLL.enqueue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.assume"><code class="docutils literal notranslate"><span class="pre">DPLL.assume()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.propagateClause"><code class="docutils literal notranslate"><span class="pre">DPLL.propagateClause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.propagate"><code class="docutils literal notranslate"><span class="pre">DPLL.propagate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.cancel"><code class="docutils literal notranslate"><span class="pre">DPLL.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.cancelUntil"><code class="docutils literal notranslate"><span class="pre">DPLL.cancelUntil()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.newDecision"><code class="docutils literal notranslate"><span class="pre">DPLL.newDecision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.backtrack"><code class="docutils literal notranslate"><span class="pre">DPLL.backtrack()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.getModel"><code class="docutils literal notranslate"><span class="pre">DPLL.getModel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.search"><code class="docutils literal notranslate"><span class="pre">DPLL.search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.getStat"><code class="docutils literal notranslate"><span class="pre">DPLL.getStat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.solutions"><code class="docutils literal notranslate"><span class="pre">DPLL.solutions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.solve"><code class="docutils literal notranslate"><span class="pre">DPLL.solve()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.info"><code class="docutils literal notranslate"><span class="pre">DPLL.info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.var2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.var2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.lit2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.lit2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.clause2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.clause2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.assigns2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.assigns2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.decisions2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.decisions2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.watches2repr"><code class="docutils literal notranslate"><span class="pre">DPLL.watches2repr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.addInternalClause"><code class="docutils literal notranslate"><span class="pre">DPLL.addInternalClause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.addDimacsClause"><code class="docutils literal notranslate"><span class="pre">DPLL.addDimacsClause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.toDimacsLit"><code class="docutils literal notranslate"><span class="pre">DPLL.toDimacsLit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.toDimacsLits"><code class="docutils literal notranslate"><span class="pre">DPLL.toDimacsLits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.addClause"><code class="docutils literal notranslate"><span class="pre">DPLL.addClause()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.add"><code class="docutils literal notranslate"><span class="pre">DPLL.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html#cspsat.dpll.DPLL.load"><code class="docutils literal notranslate"><span class="pre">DPLL.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.variables"><code class="docutils literal notranslate"><span class="pre">variables()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.assignments"><code class="docutils literal notranslate"><span class="pre">assignments()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.value"><code class="docutils literal notranslate"><span class="pre">value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.truthTable"><code class="docutils literal notranslate"><span class="pre">truthTable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.isValid"><code class="docutils literal notranslate"><span class="pre">isValid()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.isSat"><code class="docutils literal notranslate"><span class="pre">isSat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.isEquiv"><code class="docutils literal notranslate"><span class="pre">isEquiv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.models"><code class="docutils literal notranslate"><span class="pre">models()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.toNF"><code class="docutils literal notranslate"><span class="pre">toNF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.toNNF"><code class="docutils literal notranslate"><span class="pre">toNNF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.toCNF"><code class="docutils literal notranslate"><span class="pre">toCNF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.toDNF"><code class="docutils literal notranslate"><span class="pre">toDNF()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.ge1"><code class="docutils literal notranslate"><span class="pre">ge1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.le1"><code class="docutils literal notranslate"><span class="pre">le1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.eq1"><code class="docutils literal notranslate"><span class="pre">eq1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.geK"><code class="docutils literal notranslate"><span class="pre">geK()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.leK"><code class="docutils literal notranslate"><span class="pre">leK()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.eqK"><code class="docutils literal notranslate"><span class="pre">eqK()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.statData"><code class="docutils literal notranslate"><span class="pre">statData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.status"><code class="docutils literal notranslate"><span class="pre">status()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.defaultTimeout"><code class="docutils literal notranslate"><span class="pre">defaultTimeout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.getTimeout"><code class="docutils literal notranslate"><span class="pre">getTimeout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.setTimeout"><code class="docutils literal notranslate"><span class="pre">setTimeout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.solutionsSAT"><code class="docutils literal notranslate"><span class="pre">solutionsSAT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.solveSAT"><code class="docutils literal notranslate"><span class="pre">solveSAT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.solutionsCSP"><code class="docutils literal notranslate"><span class="pre">solutionsCSP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.solveCSP"><code class="docutils literal notranslate"><span class="pre">solveCSP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.saveSAT"><code class="docutils literal notranslate"><span class="pre">saveSAT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.loadSAT"><code class="docutils literal notranslate"><span class="pre">loadSAT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.saveDimacs"><code class="docutils literal notranslate"><span class="pre">saveDimacs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.saveCSP"><code class="docutils literal notranslate"><span class="pre">saveCSP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.functions.html#cspsat.functions.loadCSP"><code class="docutils literal notranslate"><span class="pre">loadCSP()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook"><code class="docutils literal notranslate"><span class="pre">defaultFunctionHook()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook"><code class="docutils literal notranslate"><span class="pre">defaultConstraintHook()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT"><code class="docutils literal notranslate"><span class="pre">SAT</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.variables"><code class="docutils literal notranslate"><span class="pre">SAT.variables</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.nclauses"><code class="docutils literal notranslate"><span class="pre">SAT.nclauses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.model"><code class="docutils literal notranslate"><span class="pre">SAT.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.stats"><code class="docutils literal notranslate"><span class="pre">SAT.stats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.commitPosition"><code class="docutils literal notranslate"><span class="pre">SAT.commitPosition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.buffer"><code class="docutils literal notranslate"><span class="pre">SAT.buffer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.bufLimit"><code class="docutils literal notranslate"><span class="pre">SAT.bufLimit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.defaultCommand"><code class="docutils literal notranslate"><span class="pre">SAT.defaultCommand</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.defaultTempdir"><code class="docutils literal notranslate"><span class="pre">SAT.defaultTempdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.defaultLimit"><code class="docutils literal notranslate"><span class="pre">SAT.defaultLimit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.defaultMaxClauses"><code class="docutils literal notranslate"><span class="pre">SAT.defaultMaxClauses</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.nVars"><code class="docutils literal notranslate"><span class="pre">SAT.nVars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.nClauses"><code class="docutils literal notranslate"><span class="pre">SAT.nClauses()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.updateDimacsHeader"><code class="docutils literal notranslate"><span class="pre">SAT.updateDimacsHeader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.add"><code class="docutils literal notranslate"><span class="pre">SAT.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.find"><code class="docutils literal notranslate"><span class="pre">SAT.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.getStat"><code class="docutils literal notranslate"><span class="pre">SAT.getStat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.addBlock"><code class="docutils literal notranslate"><span class="pre">SAT.addBlock()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.commit"><code class="docutils literal notranslate"><span class="pre">SAT.commit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.cancel"><code class="docutils literal notranslate"><span class="pre">SAT.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solutions"><code class="docutils literal notranslate"><span class="pre">SAT.solutions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.solve"><code class="docutils literal notranslate"><span class="pre">SAT.solve()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException"><code class="docutils literal notranslate"><span class="pre">CspsatException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatTimeout"><code class="docutils literal notranslate"><span class="pre">CspsatTimeout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.Bool"><code class="docutils literal notranslate"><span class="pre">Bool</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Bool.isAux"><code class="docutils literal notranslate"><span class="pre">Bool.isAux()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.TRUE"><code class="docutils literal notranslate"><span class="pre">TRUE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.FALSE"><code class="docutils literal notranslate"><span class="pre">FALSE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.Var"><code class="docutils literal notranslate"><span class="pre">Var</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Var.isAux"><code class="docutils literal notranslate"><span class="pre">Var.isAux()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum"><code class="docutils literal notranslate"><span class="pre">Wsum</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.wsum"><code class="docutils literal notranslate"><span class="pre">Wsum.wsum</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.c"><code class="docutils literal notranslate"><span class="pre">Wsum.c</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.variables"><code class="docutils literal notranslate"><span class="pre">Wsum.variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.coef"><code class="docutils literal notranslate"><span class="pre">Wsum.coef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.isConstant"><code class="docutils literal notranslate"><span class="pre">Wsum.isConstant()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.where"><code class="docutils literal notranslate"><span class="pre">Wsum.where()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.mul"><code class="docutils literal notranslate"><span class="pre">Wsum.mul()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.neg"><code class="docutils literal notranslate"><span class="pre">Wsum.neg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.add"><code class="docutils literal notranslate"><span class="pre">Wsum.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.sub"><code class="docutils literal notranslate"><span class="pre">Wsum.sub()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.value"><code class="docutils literal notranslate"><span class="pre">Wsum.value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum.toExpr"><code class="docutils literal notranslate"><span class="pre">Wsum.toExpr()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary"><code class="docutils literal notranslate"><span class="pre">Binary</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.bins"><code class="docutils literal notranslate"><span class="pre">Binary.bins</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.eqK"><code class="docutils literal notranslate"><span class="pre">Binary.eqK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.neK"><code class="docutils literal notranslate"><span class="pre">Binary.neK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.geK"><code class="docutils literal notranslate"><span class="pre">Binary.geK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.gtK"><code class="docutils literal notranslate"><span class="pre">Binary.gtK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.leK"><code class="docutils literal notranslate"><span class="pre">Binary.leK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.ltK"><code class="docutils literal notranslate"><span class="pre">Binary.ltK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.eq"><code class="docutils literal notranslate"><span class="pre">Binary.eq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.ne"><code class="docutils literal notranslate"><span class="pre">Binary.ne()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.ge"><code class="docutils literal notranslate"><span class="pre">Binary.ge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.gt"><code class="docutils literal notranslate"><span class="pre">Binary.gt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.le"><code class="docutils literal notranslate"><span class="pre">Binary.le()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.lt"><code class="docutils literal notranslate"><span class="pre">Binary.lt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.put"><code class="docutils literal notranslate"><span class="pre">Binary.put()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.addNum"><code class="docutils literal notranslate"><span class="pre">Binary.addNum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.add"><code class="docutils literal notranslate"><span class="pre">Binary.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.addMul"><code class="docutils literal notranslate"><span class="pre">Binary.addMul()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.addPower"><code class="docutils literal notranslate"><span class="pre">Binary.addPower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.isSimpleSeq"><code class="docutils literal notranslate"><span class="pre">Binary.isSimpleSeq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.toSimpleSeq"><code class="docutils literal notranslate"><span class="pre">Binary.toSimpleSeq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.toBchain"><code class="docutils literal notranslate"><span class="pre">Binary.toBchain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Binary.toCNF"><code class="docutils literal notranslate"><span class="pre">Binary.toCNF()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation"><code class="docutils literal notranslate"><span class="pre">BinaryEquation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation.addNum"><code class="docutils literal notranslate"><span class="pre">BinaryEquation.addNum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation.add"><code class="docutils literal notranslate"><span class="pre">BinaryEquation.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation.addMul"><code class="docutils literal notranslate"><span class="pre">BinaryEquation.addMul()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation.addPower"><code class="docutils literal notranslate"><span class="pre">BinaryEquation.addPower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.BinaryEquation.cmp0"><code class="docutils literal notranslate"><span class="pre">BinaryEquation.cmp0()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter"><code class="docutils literal notranslate"><span class="pre">SeqCounter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.eqK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.eqK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.neK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.neK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.geK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.geK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.gtK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.gtK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.leK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.leK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.SeqCounter.ltK"><code class="docutils literal notranslate"><span class="pre">SeqCounter.ltK()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.util.html#cspsat.util.Preprocessor"><code class="docutils literal notranslate"><span class="pre">Preprocessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Preprocessor.toWsum"><code class="docutils literal notranslate"><span class="pre">Preprocessor.toWsum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Preprocessor.isBC"><code class="docutils literal notranslate"><span class="pre">Preprocessor.isBC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Preprocessor.toBC"><code class="docutils literal notranslate"><span class="pre">Preprocessor.toBC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html#cspsat.util.Preprocessor.toXCNF"><code class="docutils literal notranslate"><span class="pre">Preprocessor.toXCNF()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-cspsat">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cspsat" title="Link to this heading"></a></h2>
+<p>cspsatモジュール</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="cspsatのドキュメント" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cspsat.csp.html" class="btn btn-neutral float-right" title="cspsat.csp module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

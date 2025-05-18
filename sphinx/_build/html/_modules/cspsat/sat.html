@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.sat &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=c033477b"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/translations.js?v=4dbe4bdc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cspsat.html">cspsat package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cspsat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">モジュールコード</a></li>
+      <li class="breadcrumb-item active">cspsat.sat</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>cspsat.sat のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SATソルバーのモジュール．</span>
+
+<span class="sd">以下のクラスからなる．</span>
+
+<span class="sd">* SATクラス: SATソルバーのラッパークラス</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    本プログラムは学習用の目的で作成されている．</span>
+<span class="sd">    実用上の問題への適用は想定していない．</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="SAT">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">SAT</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SATソルバーのラッパークラス．</span>
+
+<span class="sd">    実際のモデル探索には，指定された外部のSATソルバーを使用する．</span>
+<span class="sd">    SATソルバーとしては，DIMACS CNFを入力形式とし，SAT solver competitionの出力形式にしたがって結果を標準出力に出力するものなら任意のプログラムを利用できる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．指定しなければ :obj:`defaultCommand` を使用する (デフォルト値はWindows系なら&quot;sat4j.bat&quot;，その他は&quot;./sat4j&quot;)．</span>
+<span class="sd">        tmpdir (str, optional): 一時ファイルのディレクトリ名を指定する．指定しなければシステム設定にしたがう．</span>
+<span class="sd">        cnfFile (str, optional): DIMACS CNFファイル名を指定する．指定しなければ一時ファイルが作成される．</span>
+<span class="sd">        outFile (str, optional): SATソルバーの出力ファイル名を指定する．指定しなければ一時ファイルが作成される．</span>
+<span class="sd">        delete (bool, optional): TrueならSATオブジェクトが削除される際にcnfFile, outFileを削除する (デフォルト値はTrue)．</span>
+<span class="sd">        maxClauses (int, optional): 節数がこの値を超えたら例外を発生する．指定しなければ :obj:`defaultMaxClauses` を使用する (デフォルト値は10000000)．</span>
+<span class="sd">        limit (int, optional): 実行時間の制限秒数を指定する．指定しなければ :obj:`defaultLimit` を使用する (デフォルト値は600秒)．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
+<span class="sd">        verbose (int, optional): 正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        variables (list): 変数名のリスト．DIMACS CNFファイル中では，このリスト順に変数番号が付けられている．</span>
+<span class="sd">        nclauses (int): 節の個数．</span>
+<span class="sd">        model (dict): 最後にSATソルバーで求めたモデル (負リテラルも含む)．</span>
+<span class="sd">        stats (dict): SATソルバー実行の統計データ．</span>
+<span class="sd">        commitPosition (dict): :obj:`commit` 関数で保存されたDIMACS CNFファイルの状態(変数数，節数，ファイルサイズ)．</span>
+<span class="sd">        buffer (bytearray): DIMACS CNFファイル書き込み用バッファー．</span>
+<span class="sd">        bufLimit (int): DIMACS CNFファイル書き込み用バッファーの最大サイズ (65000バイト)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; sat = SAT() # &quot;./sat4j&quot; (Windowsなら&quot;sat4j.bat&quot;)をSATソルバーとして利用する</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;) # 命題変数 p</span>
+<span class="sd">        &gt;&gt;&gt; sat.add([ p(1), p(2) ]) # 節 {p(1),p(2)} の追加</span>
+<span class="sd">        &gt;&gt;&gt; sat.solve(num=0) # すべての解 (モデル)を表示する</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">        Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">        Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultCommand</span> <span class="o">=</span> <span class="s2">&quot;sat4j.bat&quot;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;nt&quot;</span> <span class="k">else</span> <span class="s2">&quot;./sat4j&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;デフォルトのSATソルバーコマンド (Windows系なら&quot;sat4j.bat&quot;，その他は&quot;./sat4j&quot;)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultCommand</span>
+<span class="sd">        &#39;./sat4j&#39;</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultCommand = &quot;bin/kissat&quot; # Linuxの場合</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultCommand = &quot;wsl bin/kissat&quot; # WindowsでWSLがインストールされている場合</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultTempdir</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;一時ファイルのディレクトリ名のデフォルト値．Noneならシステム設定にしたがう．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultLimit</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;実行時間の制限秒数のデフォルト値 (600秒)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultLimit</span>
+<span class="sd">        600</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultLimit = 100</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultMaxClauses</span> <span class="o">=</span> <span class="mi">10000000</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;最大節数のデフォルト値 (10000000節)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultMaxClauses</span>
+<span class="sd">        10000000</span>
+<span class="sd">        &gt;&gt;&gt; SAT.defaultMaxClauses = 1000000</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_tempfileName</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tempdir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tempdir</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">defaultTempdir</span>
+        <span class="k">if</span> <span class="n">tempdir</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">tempdir</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tmp_</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cnfFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxClauses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span> <span class="ow">or</span> <span class="n">SAT</span><span class="o">.</span><span class="n">defaultCommand</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span> <span class="o">=</span> <span class="n">cnfFile</span> <span class="ow">or</span> <span class="n">SAT</span><span class="o">.</span><span class="n">_tempfileName</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.cnf&quot;</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+b&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFile</span> <span class="o">=</span> <span class="n">outFile</span> <span class="ow">or</span> <span class="n">SAT</span><span class="o">.</span><span class="n">_tempfileName</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.out&quot;</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tempfiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">delete</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tempfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tempfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxClauses</span> <span class="o">=</span> <span class="n">SAT</span><span class="o">.</span><span class="n">defaultMaxClauses</span> <span class="k">if</span> <span class="n">maxClauses</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">maxClauses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="n">SAT</span><span class="o">.</span><span class="n">defaultLimit</span> <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positiveOnly</span> <span class="o">=</span> <span class="n">positiveOnly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeAux</span> <span class="o">=</span> <span class="n">includeAux</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="ow">or</span> <span class="mi">0</span>
+
+        <span class="n">Bool</span><span class="o">.</span><span class="n">_auxCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_varname2litnum</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;ncalls&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;nmodels&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;solving&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">:[]</span> <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bufLimit</span> <span class="o">=</span> <span class="mi">65000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateDimacsHeader</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deleteTempfiles</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ex_type</span><span class="p">,</span> <span class="n">ex_value</span><span class="p">,</span> <span class="n">trace</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_deleteTempfiles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tempfiles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SAT.nVars">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.nVars">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">nVars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;命題変数の個数を返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            命題変数の個数．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ p(1), p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.nVars()</span>
+<span class="sd">            2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SAT.nClauses">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.nClauses">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">nClauses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;節の個数を返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            節の個数．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ p(1), p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.nClauses()</span>
+<span class="sd">            1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SAT.updateDimacsHeader">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.updateDimacsHeader">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">updateDimacsHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;DIMACS CNFファイルのヘッダー情報を更新する．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+b&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%-63s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="sa">f</span><span class="s2">&quot;p cnf </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nClauses</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s2">&quot;latin-1&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__toLitNum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;引数literalがBoolでない: </span><span class="si">{</span><span class="n">literal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">literal</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">litNum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_varname2litnum</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">litNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">litNum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_varname2litnum</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">litNum</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">literal</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">literal</span><span class="o">.</span><span class="n">positive</span><span class="p">:</span>
+            <span class="n">litNum</span> <span class="o">=</span> <span class="o">-</span><span class="n">litNum</span>
+        <span class="k">return</span> <span class="n">litNum</span>
+
+    <span class="k">def</span> <span class="nf">__toLitNums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+        <span class="n">litNums</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">__toLitNum</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span> <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">clause</span> <span class="p">]</span>
+        <span class="k">return</span> <span class="n">litNums</span>
+
+    <span class="k">def</span> <span class="nf">_addClause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clause</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;節を追加する．</span>
+
+<span class="sd">        Boolオブジェクトのリストで表現された節を追加する．</span>
+<span class="sd">        真の命題定数 ``TRUE`` を含む節は追加しない．偽の命題定数 ``FALSE`` は節から削除される．</span>
+<span class="sd">        clauseが文字列の場合は，コメントとみなし何もしない．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clause (list of Bool): Boolオブジェクトのリスト．文字列ならコメントを表す．</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            CspsatException: clause中のリテラルがBoolオブジェクトでない．</span>
+<span class="sd">            CspsatException: 節数がmaxClausesを超えた．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat._addClause([ p(1), p(2) ])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">TRUE</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">clause</span> <span class="o">=</span> <span class="p">[</span> <span class="n">literal</span> <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">clause</span> <span class="k">if</span> <span class="n">literal</span> <span class="o">!=</span> <span class="n">FALSE</span> <span class="p">]</span>
+        <span class="n">litNums</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__toLitNums</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">litNums</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; 0</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+b&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;latin-1&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bufLimit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span> <span class="o">%</span> <span class="mi">100000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span><span class="si">}</span><span class="s2">節を追加&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxClauses</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">maxClauses</span><span class="si">}</span><span class="s2">より多い節が追加された (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span><span class="si">}</span><span class="s2"> clauses)&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SAT.add">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.add">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">clauses</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;複数の節を追加する．</span>
+
+<span class="sd">        Boolオブジェクトのリストで表現された節を追加する．</span>
+<span class="sd">        命題定数 :obj:`.TRUE` を含む節は追加しない．命題定数 :obj:`.FALSE` は節から削除される．</span>
+<span class="sd">        節が文字列の場合は，コメントとみなし何もしない．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            clauses (list of list of Bool): 節のリスト．</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            CspsatException: 節中のリテラルがBoolオブジェクトでない．</span>
+<span class="sd">            CspsatException: 節数が合計でmaxClausesを超えた．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([p(0)] , [p(1)]) # 2つの節 {p(0)}, {p(1)} を追加する</span>
+<span class="sd">            &gt;&gt;&gt; sat.nClauses()</span>
+<span class="sd">            2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">clauses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_addClause</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;SATソルバーを実行する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnfFile</span><span class="p">]</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">procData</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;proc&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;killed&quot;</span><span class="p">:</span> <span class="kc">False</span> <span class="p">}</span>
+        <span class="k">def</span> <span class="nf">kill</span><span class="p">():</span>
+            <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+            <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;killed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span> <span class="n">kill</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー開始: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            <span class="k">while</span> <span class="n">proc</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">:</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">c</span><span class="o">%</span><span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー動作中 (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s2">秒)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SATソルバーの実行エラー: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">procData</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proc&quot;</span><span class="p">):</span>
+                <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# 制限時間を超えたためSATソルバーを停止&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;killed&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SAT.find">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.find">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;モデルを探索する．</span>
+
+<span class="sd">        指定されたSATソルバーを用いてモデルを探索し，モデルが見つかればそれを返す．見つからなければNoneを返す．</span>
+<span class="sd">        モデルは，キーがBoolオブジェクトで値が0か1の辞書(dict)である．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            モデル．キーがBoolオブジェクトで値が0か1の辞書(dict)である．モデルが見つからなければNone．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;) # 命題変数 p</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([p(1)], [~p(2)])</span>
+<span class="sd">            &gt;&gt;&gt; model = sat.find() # モデルを求める</span>
+<span class="sd">            &gt;&gt;&gt; model[p(1)] # 求めたモデルにおける p(1) の値</span>
+<span class="sd">            1</span>
+<span class="sd">            &gt;&gt;&gt; model[p(2)] # 求めたモデルにおける p(2) の値</span>
+<span class="sd">            0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateDimacsHeader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;variables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;clauses&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nClauses</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;sat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;ncalls&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;s SAT&quot;</span><span class="p">):</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;SATISFIABLE&quot;</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;s UNSAT&quot;</span><span class="p">):</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;UNSATISFIABLE&quot;</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;s &quot;</span><span class="p">):</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;UNKNOWN&quot;</span>
+                    <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v &quot;</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">litNum</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)):</span>
+                            <span class="k">if</span> <span class="n">litNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">litNum</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">litNum</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeAux</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="k">if</span> <span class="n">litNum</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">positiveOnly</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">litNum</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;c (conflicts|decisions|propagations)\s*:\s*(\d+)&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                            <span class="n">info</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;solving&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">info</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="k">if</span> <span class="n">ok</span> <span class="k">else</span> <span class="s2">&quot;TIMEOUT&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;solving&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatTimeout</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SATソルバーの実行時間が</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="si">}</span><span class="s2">秒を超えた&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;SATISFIABLE&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;nmodels&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="SAT.getStat">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.getStat">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getStat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">includeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このソルバーによる実行の集計データを返す．</span>
+
+<span class="sd">        なお，実行時間などの単位は秒で，CPU時間ではなく経過時間である．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            includeAll (bool, optional): Falseならsatフォールドの値は最後のSATソルバー実行の集計データのみである．</span>
+<span class="sd">                TrueならすべてのSATソルバー実行の集計データのリストになる (デフォールトはFalse)．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            以下からなる辞書(dict)を返す．</span>
+<span class="sd">            * result: 実行結果 (SATISFIABLE, UNSATISFIABLE, TIMEOUT, UNKNOWN, None)．複数回のSATソルバーを呼び出しで一度でもSATISFIABLEなら，この値もSATISFIABLEとなる．</span>
+<span class="sd">            * ncalls: SATソルバーを呼び出した回数．</span>
+<span class="sd">            * nmodels: SATソルバーでモデルを見つけた回数．</span>
+<span class="sd">            * time: 関数の実行時間 (秒)．</span>
+<span class="sd">            * solving: SATソルバーの実行にかかった時間 (累積値，秒)．</span>
+<span class="sd">            * command: SATソルバーのコマンド．</span>
+<span class="sd">            * sat: SATソルバーの集計データ (includeAllがFalseなら最後の集計データ，Trueならすべての集計データのリスト)．</span>
+
+<span class="sd">            SATソルバーの集計データ(satフィールド)は，以下からなるdictである．</span>
+
+<span class="sd">            * result: SATソルバーの実行結果 (SATISFIABLE, UNSATISFIABLE, TIMEOUT, UNKNOWN, None)．</span>
+<span class="sd">            * variables: CNF式の命題変数の個数．</span>
+<span class="sd">            * clauses: CNF式の節の個数．</span>
+<span class="sd">            * conflicts: SATソルバー実行での衝突の回数．</span>
+<span class="sd">            * decisions: SATソルバー実行での決定の回数．</span>
+<span class="sd">            * propagations: SATソルバー実行での伝播の回数．</span>
+<span class="sd">            * solving: SATソルバー呼び出しの実行時間 (秒)．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([p(1), p(2)])</span>
+<span class="sd">            &gt;&gt;&gt; sat.solve(num=0)</span>
+<span class="sd">            SATISFIABLE</span>
+<span class="sd">            Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">            Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">            Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">            &gt;&gt;&gt; sat.getStat() # satフィールドの値は，最後のSATソルバー呼び出しのみ</span>
+<span class="sd">            {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 4, &#39;nmodels&#39;: 3, &#39;time&#39;: 4.027583360671997, &#39;solving&#39;: 4.026149749755859, &#39;command&#39;: None, &#39;sat&#39;: {&#39;result&#39;: &#39;UNSATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 4, &#39;conflicts&#39;: 2, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 1.0061917304992676}}</span>
+<span class="sd">            &gt;&gt;&gt; sat.getStat(True) # satフィールドの値は，すべてのSATソルバー呼び出しを含む</span>
+<span class="sd">            {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 4, &#39;nmodels&#39;: 3, &#39;time&#39;: 4.027583360671997, &#39;solving&#39;: 4.026149749755859, &#39;command&#39;: None, &#39;sat&#39;: [{&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 1.0059900283813477}, {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 1.005939245223999}, {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 1.0080287456512451}, {&#39;result&#39;: &#39;UNSATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 4, &#39;conflicts&#39;: 2, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 1.0061917304992676}]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">includeAll</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;sat&quot;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">infos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">:</span><span class="n">info</span> <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="SAT.addBlock">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.addBlock">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">addBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;最後に求めたモデルをブロックする節を追加する．</span>
+
+<span class="sd">        self.model に保存されている最後に求めたモデルを否定する節を作成し追加する．</span>
+<span class="sd">        これにより複数解を求めることが可能になる．</span>
+<span class="sd">        なお，補助変数の値の違いは無視される．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ p(1), p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.find()</span>
+<span class="sd">            {p(1): 0, p(2): 1}</span>
+<span class="sd">            &gt;&gt;&gt; sat.addBlock()</span>
+<span class="sd">            &gt;&gt;&gt; sat.find()</span>
+<span class="sd">            {p(1): 1, p(2): 0}</span>
+<span class="sd">            &gt;&gt;&gt; sat.addBlock()</span>
+<span class="sd">            &gt;&gt;&gt; sat.find()</span>
+<span class="sd">            {p(1): 1, p(2): 1}</span>
+<span class="sd">            &gt;&gt;&gt; sat.addBlock()</span>
+<span class="sd">            &gt;&gt;&gt; sat.find() # Noneが返る</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">clause</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="o">~</span><span class="n">v</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SAT.commit">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.commit">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;現在のDIMACS CNFファイルの状態を返す．</span>
+
+<span class="sd">        現在のDIMACS CNFファイルの状態 (変数数，節数，ファイルサイズ)を :obj:`commitPosition` に保存し，それを返す．</span>
+<span class="sd">        そのデータを cancel 関数に渡せば，DIMACS CNFファイルをその状態に戻すことができる．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            現在のDIMACS CNFファイルの状態 (変数数，節数，ファイルサイズ)．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ p(1), p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.commit()</span>
+<span class="sd">            {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;size&#39;: 70}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateDimacsHeader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;variables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nVars</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;clauses&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nClauses</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span></div>
+
+
+<div class="viewcode-block" id="SAT.cancel">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.cancel">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commitPosition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;DIMACS CNFファイルの状態を戻す．</span>
+
+<span class="sd">        :obj:`commit` が返した状態に，DIMACS CNFファイルの状態を戻す．</span>
+<span class="sd">        現在のDIMACS CNFファイルの状態 (変数数，節数，ファイルサイズ)を :obj:`commitPosition` に保存し，それを返す．</span>
+<span class="sd">        そのデータを cancel 関数に渡せば，DIMACS CNFファイルをその状態に戻すことができる．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            commitPosition (dict, optional): DIMACS CNFファイルの状態 (変数数，節数，ファイルサイズ)．</span>
+<span class="sd">                指定されていなければ :obj:`commitPosition` に保存されている状態を使用する．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            使用したcommitPositionの値．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ p(1), p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.commit()</span>
+<span class="sd">            {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;size&#39;: 70}</span>
+<span class="sd">            &gt;&gt;&gt; sat.add([ ~p(1), ~p(2) ])</span>
+<span class="sd">            &gt;&gt;&gt; sat.solve(num=0)</span>
+<span class="sd">            SATISFIABLE</span>
+<span class="sd">            Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">            Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">            &gt;&gt;&gt; sat.cancel()</span>
+<span class="sd">            {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;size&#39;: 70}</span>
+<span class="sd">            &gt;&gt;&gt; sat.solve(num=0)</span>
+<span class="sd">            SATISFIABLE</span>
+<span class="sd">            Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">            Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">            Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">commitPosition</span> <span class="o">=</span> <span class="n">commitPosition</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitPosition</span>
+        <span class="k">if</span> <span class="n">commitPosition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateDimacsHeader</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[:</span><span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;variables&quot;</span><span class="p">]]</span>
+            <span class="n">nVars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span>
+            <span class="n">delNames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">litNum</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_varname2litnum</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">litNum</span> <span class="o">&gt;</span> <span class="n">nVars</span><span class="p">:</span>
+                    <span class="n">delNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">delNames</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_varname2litnum</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nclauses</span> <span class="o">=</span> <span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;clauses&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">commitPosition</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">commitPosition</span></div>
+
+
+<div class="viewcode-block" id="SAT.solutions">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.solutions">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cnf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;複数のモデルを探索し，それらをyieldするジェネレータ関数．</span>
+
+<span class="sd">        指定された上限の個数まで解(モデル)を探索し，解が見つかればそれをyieldする．</span>
+<span class="sd">        各モデルは，キーがBoolオブジェクトで値が0か1の辞書(dict)である．</span>
+
+<span class="sd">        複数のモデルを探索する場合は， :obj:`addBlock` メソッドを用いて，最後に見つかったモデルを否定する節を追加したのち，SATソルバーを再度起動することで他のモデルを求めている．</span>
+<span class="sd">        なお，補助変数の値のみが異なっている場合は同じモデルとみなす．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cnf (list of list of Bool, optional): CNF式 (節のリスト)．</span>
+<span class="sd">            num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            見つかったモデル．キーがBoolオブジェクトで値が0か1の辞書(dict)である．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; cnf = [ [p(1), p(2)] ]</span>
+<span class="sd">            &gt;&gt;&gt; for sol in sat.solutions(cnf, num=0): print(sol)</span>
+<span class="sd">            {p(1): 0, p(2): 1}</span>
+<span class="sd">            {p(1): 1, p(2): 0}</span>
+<span class="sd">            {p(1): 1, p(2): 1}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cnf</span> <span class="o">=</span> <span class="n">cnf</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">cnf</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">yield</span> <span class="n">model</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">()</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="SAT.solve">
+<a class="viewcode-back" href="../../cspsat.sat.html#cspsat.sat.SAT.solve">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cnf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;複数のモデルを探索し出力する．</span>
+
+<span class="sd">        :obj:`solutions` 関数で指定された上限の個数まで解(モデル)を探索し，出力する．</span>
+<span class="sd">        出力の最初の行で，SATISFIABLEかUNSATISFIABLEかを表示する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cnf (list of list of Bool, optional): CNF式 (節のリスト)．</span>
+<span class="sd">            num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+<span class="sd">            stat (bool, optional): Trueなら統計データも表示する (デフォルト値はFalse)．</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; sat = SAT()</span>
+<span class="sd">            &gt;&gt;&gt; cnf = [ [p(1), p(2)] ]</span>
+<span class="sd">            &gt;&gt;&gt; sat.solve(cnf, num=0, stat=True) # 最後のStatは4つ目のモデルが存在しないことの探索</span>
+<span class="sd">            SATISFIABLE</span>
+<span class="sd">            Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">            Stat: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 1, &#39;nmodels&#39;: 1, &#39;time&#39;: 1.0037319660186768, &#39;solving&#39;: 1.0032446384429932, &#39;sat&#39;: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 1.0032446384429932}}</span>
+<span class="sd">            Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">            Stat: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 2, &#39;nmodels&#39;: 2, &#39;time&#39;: 2.0091824531555176, &#39;solving&#39;: 2.008450746536255, &#39;sat&#39;: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 1.0052061080932617}}</span>
+<span class="sd">            Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">            Stat: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 3, &#39;nmodels&#39;: 3, &#39;time&#39;: 3.012281894683838, &#39;solving&#39;: 3.0112452507019043, &#39;sat&#39;: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 1.0027945041656494}}</span>
+<span class="sd">            Stat: {&#39;result&#39;: &#39;SATISFIABLE&#39;, &#39;ncalls&#39;: 4, &#39;nmodels&#39;: 3, &#39;time&#39;: 4.0171895027160645, &#39;solving&#39;: 4.01587438583374, &#39;sat&#39;: {&#39;result&#39;: &#39;UNSATISFIABLE&#39;, &#39;variables&#39;: 2, &#39;clauses&#39;: 4, &#39;conflicts&#39;: 2, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 1.004629135131836}}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cnf</span> <span class="o">=</span> <span class="n">cnf</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">cnf</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solutions</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getStat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stat</span> <span class="ow">and</span> <span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getStat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="c1"># import os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">CspsatException</span><span class="p">,</span> <span class="n">CspsatTimeout</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">Bool</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.functions &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=c033477b"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/translations.js?v=4dbe4bdc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cspsat.html">cspsat package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cspsat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">モジュールコード</a></li>
+      <li class="breadcrumb-item active">cspsat.functions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>cspsat.functions のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;便利な関数群．</span>
+
+<span class="sd">cspsat モジュールの便利な関数群をまとめている．</span>
+
+<span class="sd">.. csv-table:: 命題論理式の記法 (Pは命題変数．A1, A2, ..., Anは命題論理式)</span>
+<span class="sd">   :header: &quot;名称など&quot;, &quot;命題論理式の記法&quot;</span>
+<span class="sd">   :widths: 20, 40</span>
+
+<span class="sd">   &quot;真&quot;, &quot;TRUE&quot;</span>
+<span class="sd">   &quot;偽&quot;, &quot;FALSE&quot;</span>
+<span class="sd">   &quot;命題変数 p&quot;, &quot;Bool(&quot;&quot;p&quot;&quot;)&quot;</span>
+<span class="sd">   &quot;補リテラル&quot;, &quot;~P&quot;</span>
+<span class="sd">   &quot;否定&quot;, &quot;[&quot;&quot;not&quot;&quot;, A1], [&quot;&quot;!&quot;&quot;, A1]&quot;</span>
+<span class="sd">   &quot;論理積&quot;, &quot;[&quot;&quot;and&quot;&quot;, A1, ..., An], [&quot;&quot;&amp;&amp;&quot;&quot;, A1, ..., An]&quot;</span>
+<span class="sd">   &quot;論理和&quot;, &quot;[&quot;&quot;or&quot;&quot;, A1, ..., An], [&quot;&quot;||&quot;&quot;, A1, ..., An]&quot;</span>
+<span class="sd">   &quot;含意&quot;, &quot;[&quot;&quot;imp&quot;&quot;, A1, A2], [&quot;&quot;=&gt;&quot;&quot;, A1, A2]&quot;</span>
+<span class="sd">   &quot;同値&quot;, &quot;[&quot;&quot;equ&quot;&quot;, A1, A2], [&quot;&quot;&lt;=&gt;&quot;&quot;, A1, A2]&quot;</span>
+<span class="sd">   &quot;排他的論理和&quot;, &quot;[&quot;&quot;xor&quot;&quot;, A1, ..., An], [&quot;&quot;^&quot;&quot;, A1, ..., An]&quot;</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    本プログラムは学習用の目的で作成されている．</span>
+<span class="sd">    実用上の問題への適用は想定していない．</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="variables">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.variables">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">variables</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;命題論理式に含まれている命題変数の集合を返す．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :obj:`.Bool` オブジェクトの集合．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; variables([&quot;and&quot;, p(1), ~p(2), p(2)])</span>
+<span class="sd">        {p(1), p(2)}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">TRUE</span> <span class="ow">and</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">FALSE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">,</span><span class="nb">set</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="n">v</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="assignments">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.assignments">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題変数のリストに対し，可能な値割当てをyieldするジェネレータ関数．</span>
+<span class="sd">    各値割当ては，命題変数(:obj:`.Bool` オブジェクト)をキーとする辞書(dict)で，値は0か1．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vs: 命題変数(:obj:`.Bool` オブジェクト)のリスト．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        値割当てを表す辞書(dict)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; list(assignments([p(1),p(2)]))</span>
+<span class="sd">        [{p(1): 0, p(2): 0}, {p(1): 0, p(2): 1}, {p(1): 1, p(2): 0}, {p(1): 1, p(2): 1}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="p">{}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">{</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
+            <span class="k">yield</span> <span class="p">{</span> <span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="mi">1</span> <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="value">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.value">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f と値割当て a に対し，f の真理値を返す関数．</span>
+
+<span class="sd">    命題論理式 f はいったん :obj:`toNF` 関数で否定・論理積・論理和のみの式に変換され，その後，真理値を計算する．</span>
+<span class="sd">    値割当て中に含まれない命題変数の真理値はNoneになる．</span>
+<span class="sd">    否定の引数の式の真理値がNoneの場合，否定の真理値はNoneになる．</span>
+<span class="sd">    論理積の引数の真理値に0がある場合，論理積の真理値は0になる．</span>
+<span class="sd">    論理積の引数の真理値に0がなくNoneがある場合，論理積の真理値はNoneになる．</span>
+<span class="sd">    論理和の引数の真理値に1がある場合，論理和の真理値は1になる．</span>
+<span class="sd">    論理和の引数の真理値に1がなくNoneがある場合，論理和の真理値はNoneになる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+<span class="sd">        a (dict): 値割当ての辞書(dict)．キーは :obj:`.Bool` オブジェクトで表される命題変数，値は0か1．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        f の真理値 (0か1かNone)．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; value([&quot;not&quot;,p], {p: 1})</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; value([&quot;not&quot;,p], {}) # Noneが返される</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_value</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">match</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">()</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">FALSE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">()</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">TRUE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">1</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">positive</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">t1</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">~</span><span class="n">f</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t1</span> <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">]:</span>
+                <span class="n">t1</span> <span class="o">=</span> <span class="n">_value</span><span class="p">(</span><span class="n">g1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">_value</span><span class="p">(</span><span class="n">g1</span><span class="p">)</span> <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+                    <span class="k">match</span> <span class="n">_value</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+                        <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="mi">0</span>
+                        <span class="n">case</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="n">t</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+                    <span class="k">match</span> <span class="n">_value</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+                        <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="mi">1</span>
+                        <span class="n">case</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">t</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="n">t</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;論理式の構文エラー: </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_value</span><span class="p">(</span><span class="n">toNF</span><span class="p">(</span><span class="n">f</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="truthTable">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.truthTable">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">truthTable</span><span class="p">(</span><span class="o">*</span><span class="n">fs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f1, f2, ... の真理値表を出力する関数．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *fs: 命題論理式 f1, f2, ... の列．命題論理式の記法については :obj:`.functions` 参照．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; truthTable([&quot;and&quot;,p(1),p(2)], [&quot;or&quot;,p(1),p(2)])</span>
+<span class="sd">        | p(1) | p(2) | [&#39;and&#39;, p(1), p(2)] | [&#39;or&#39;, p(1), p(2)] |</span>
+<span class="sd">        |------|------|---------------------|--------------------|</span>
+<span class="sd">        |   0  |   0  |          0          |          0         |</span>
+<span class="sd">        |   0  |   1  |          0          |          1         |</span>
+<span class="sd">        |   1  |   0  |          0          |          1         |</span>
+<span class="sd">        |   1  |   1  |          1          |          1         |</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">row</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ws</span><span class="p">):</span>
+        <span class="n">ss</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">*</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">*</span><span class="p">((</span><span class="n">ws</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="n">ws</span><span class="p">[</span><span class="n">i</span><span class="p">]:])</span>
+        <span class="k">return</span> <span class="s2">&quot;| &quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">vs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">variables</span><span class="p">(</span><span class="n">fs</span><span class="p">))</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vs</span> <span class="o">+</span> <span class="n">fs</span> <span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">(</span><span class="n">vs</span> <span class="o">+</span> <span class="n">fs</span><span class="p">,</span> <span class="n">ws</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;|&quot;</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">w</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">ws</span> <span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+        <span class="n">xs1</span> <span class="o">=</span> <span class="p">[</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vs</span> <span class="p">]</span>
+        <span class="n">xs2</span> <span class="o">=</span> <span class="p">[</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fs</span> <span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">(</span><span class="n">xs1</span> <span class="o">+</span> <span class="n">xs2</span><span class="p">,</span> <span class="n">ws</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="isValid">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.isValid">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f が恒真かどうかを判定する関数．</span>
+
+<span class="sd">    命題論理式 f に対するすべての値割当てで f の真理値が1ならば恒真としてTrueを返す．</span>
+<span class="sd">    f に含まれる命題変数の個数を :math:`n` とすると :math:`2^n` の時間がかかる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        f が恒真ならTrue．そうでなければFalse．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; isValid([&quot;or&quot;,p,~p])</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vs</span> <span class="o">=</span> <span class="n">variables</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">{})</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="isSat">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.isSat">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">isSat</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f が充足可能かどうかを判定する関数．</span>
+
+<span class="sd">    命題論理式 f に対するある値割当てで f の真理値が1ならば充足可能としてTrueを返す．</span>
+<span class="sd">    f に含まれる命題変数の個数を :math:`n` とすると :math:`2^n` の時間がかかる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        f が充足可能ならTrue．そうでなければFalse．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; isSat([&quot;or&quot;,p(1),p(2)])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; isSat([&quot;and&quot;,p,~p])</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vs</span> <span class="o">=</span> <span class="n">variables</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">{})</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="isEquiv">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.isEquiv">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">isEquiv</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f1, f2 が論理的に同値かどうかを判定する関数．</span>
+
+<span class="sd">    命題論理式 [&quot;equ&quot;,f1,f2] が恒真なら f1 と f2 が論理的に同値としてTrueを返す．</span>
+<span class="sd">    f1, f2 に含まれる命題変数の個数を :math:`n` とすると :math:`2^n` の時間がかかる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f1: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+<span class="sd">        f2: 命題論理式．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        f1 と f2 が論理的に同値ならTrue．そうでなければFalse．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; isEquiv(p, [&quot;and&quot;,p,p])</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">isValid</span><span class="p">([</span><span class="s2">&quot;equ&quot;</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="models">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.models">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">models</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f の複数のモデルを探索し，それらをyieldするジェネレータ関数．</span>
+
+<span class="sd">    命題論理式 f のすべての値割当て a に対し，a が f のモデルなら a をyieldする．</span>
+<span class="sd">    探索するモデルの最大個数を num で指定できる．</span>
+<span class="sd">    f に含まれる命題変数の個数を :math:`n` とすると :math:`2^n` の時間がかかる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+<span class="sd">        num (int): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        見つかったモデル．キーが :obj:`.Bool` オブジェクトで値が0か1の辞書(dict)である．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for model in models([&quot;or&quot;,p(1),p(2)], num=0): print(model)</span>
+<span class="sd">        {p(1): 0, p(2): 1}</span>
+<span class="sd">        {p(1): 1, p(2): 0}</span>
+<span class="sd">        {p(1): 1, p(2): 1}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vs</span> <span class="o">=</span> <span class="n">variables</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">(</span><span class="n">vs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">num</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">a</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="toNF">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.toNF">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">toNF</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f を，論理演算子として否定・論理積・論理和だけを含む同値な式に変換する．</span>
+
+<span class="sd">    含意 :math:`A \\Rightarrow B` は :math:`(\\lnot A) \\lor B` に変換する．</span>
+<span class="sd">    同値 :math:`A \\Leftrightarrow B` は :math:`((\\lnot A) \\lor B) \\land (A \\lor (\\lnot B))` に変換する．</span>
+<span class="sd">    排他的論理和 :math:`A \\oplus B` は :math:`(A \\lor B) \\land ((\\lnot A) \\lor (\\lnot B))` に変換する．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        論理演算子として否定・論理積・論理和だけを含む命題論理式．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; toNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]])</span>
+<span class="sd">        [&#39;not&#39;, [&#39;and&#39;, [&#39;or&#39;, p(1), p(2)], [&#39;or&#39;, [&#39;not&#39;, p(1)], [&#39;not&#39;, p(2)]]]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">Bool</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;imp&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">toNF</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">],</span> <span class="n">g2</span><span class="p">])</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;equ&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;&lt;=&gt;&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">toNF</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">],</span> <span class="n">g2</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g2</span><span class="p">]]])</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FALSE</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">toNF</span><span class="p">([</span><span class="s2">&quot;xor&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]))</span>
+            <span class="k">return</span> <span class="n">toNF</span><span class="p">([</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g2</span><span class="p">]]])</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">toNF</span><span class="p">(</span><span class="n">g1</span><span class="p">)]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="n">toNF</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">]]</span>
+        <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;||&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="n">toNF</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">]]</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;論理式の構文エラー: </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="toNNF">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.toNNF">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">toNNF</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f を否定標準形に変換する．</span>
+
+<span class="sd">    否定標準形は，リテラル(:obj:`.Bool` オブジェクト)および論理積と論理和のみが現れる命題論理式である．</span>
+<span class="sd">    いったん f を :obj:`toNF` 関数で否定・論理積・論理和だけを含む式に変換したのち，</span>
+<span class="sd">    :math:`\\lnot \\lnot A` を :math:`A` に，</span>
+<span class="sd">    :math:`\\lnot (A \\land B)` を :math:`(\\lnot A) \\lor (\\lnot B)` に，</span>
+<span class="sd">    :math:`\\lnot (A \\lor B)` を :math:`(\\lnot A) \\land (\\lnot B)` に置き換える操作を再帰的に繰り返している．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．</span>
+<span class="sd">        positive (bool, optional): Falseなら [&quot;not&quot;,f] を否定標準形に変換する(デフォルト値はTrue)．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        否定標準形の命題論理式．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; toNNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]])</span>
+<span class="sd">        [&#39;or&#39;, [&#39;and&#39;, ~p(1), ~p(2)], [&#39;and&#39;, p(1), p(2)]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_toNNF</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">positive</span><span class="p">):</span>
+        <span class="k">match</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">f</span> <span class="k">if</span> <span class="n">positive</span> <span class="k">else</span> <span class="o">~</span><span class="n">f</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;not&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">_toNNF</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="ow">not</span> <span class="n">positive</span><span class="p">)</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">op</span> <span class="o">=</span> <span class="s2">&quot;and&quot;</span> <span class="k">if</span> <span class="n">positive</span> <span class="k">else</span> <span class="s2">&quot;or&quot;</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="n">_toNNF</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">positive</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span> <span class="p">]]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">op</span> <span class="o">=</span> <span class="s2">&quot;or&quot;</span> <span class="k">if</span> <span class="n">positive</span> <span class="k">else</span> <span class="s2">&quot;and&quot;</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="n">_toNNF</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">positive</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span> <span class="p">]]</span>
+    <span class="k">return</span> <span class="n">_toNNF</span><span class="p">(</span><span class="n">toNF</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">positive</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="toCNF">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.toCNF">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">toCNF</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">formula</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f を論理積標準形(CNF)に変換する．</span>
+
+<span class="sd">    CNF式は複数の節の論理積であり，各節は複数のリテラルの論理和である．</span>
+<span class="sd">    いったん f を :obj:`toNNF` 関数で否定標準形に変換したのち，</span>
+<span class="sd">    分配法則を用いて :math:`A \\lor (B \\land C)` を :math:`(A \\lor B) \\land (A \\lor C)` に置き換える操作を再帰的に繰り返している．</span>
+
+<span class="sd">    simplify=True の場合，以下の方法でCNF式を簡単化する．</span>
+
+<span class="sd">    * 節から命題定数 FALSE を削除する</span>
+<span class="sd">    * 節に命題定数 TRUE が含まれていれば，その節をCNF式から削除する</span>
+<span class="sd">    * 節にリテラル p と補リテラル ~p が含まれていれば，その節をCNF式から削除する</span>
+<span class="sd">    * 節中に同じリテラルが重複して現れていれば，1つにまとめる</span>
+
+<span class="sd">    formula=True を指定すれば，結果が節のリストではなく，命題論理式を返す．</span>
+
+<span class="sd">    f に含まれる命題変数の個数を :math:`n` とすると最悪の場合CNF式のサイズは :math:`2^n` になる</span>
+<span class="sd">    (たとえば :math:`(p_1 \\land q_1)\\lor(p_2 \\land q_2)\\lor\\cdots\\lor(p_n \\land q_n)` の場合)．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+<span class="sd">        simplify (bool, optional): Falseなら得られたCNF式を簡単化しない(デフォルト値はTrue)．</span>
+<span class="sd">        formula (bool, optional): 節のリストでなく，命題論理式を返す．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CNF式．CNF式は節のリストであり，各節はリテラルのリストである．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; toCNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]])</span>
+<span class="sd">        [[~p(1), p(2)], [p(1), ~p(2)]]</span>
+<span class="sd">        &gt;&gt;&gt; toCNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]], simplify=False)</span>
+<span class="sd">        [[~p(1), p(1)], [~p(1), p(2)], [~p(2), p(1)], [~p(2), p(2)]]</span>
+<span class="sd">        &gt;&gt;&gt; toCNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]], formula=True)</span>
+<span class="sd">        [&#39;and&#39;, [&#39;or&#39;, ~p(1), p(2)], [&#39;or&#39;, p(1), ~p(2)]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">simplifyClause</span><span class="p">(</span><span class="n">clause</span><span class="p">):</span>
+        <span class="n">clause</span> <span class="o">=</span> <span class="p">{</span> <span class="n">lit</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="k">if</span> <span class="n">lit</span> <span class="o">!=</span> <span class="n">FALSE</span> <span class="p">}</span>
+        <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lit</span> <span class="o">==</span> <span class="n">TRUE</span> <span class="ow">or</span> <span class="o">~</span><span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TRUE</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">clause</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_toCNF</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">match</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">()</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">FALSE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">()</span> <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">TRUE</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="p">[]</span>
+            <span class="k">case</span> <span class="n">Bool</span><span class="p">():</span>
+                <span class="k">return</span> <span class="p">[</span> <span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="n">clause</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span> <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">_toCNF</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">if</span> <span class="n">simplify</span> <span class="ow">and</span> <span class="p">[]</span> <span class="ow">in</span> <span class="n">cnf</span><span class="p">:</span>
+                    <span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
+                <span class="k">return</span> <span class="n">cnf</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]:</span>
+                <span class="n">cnf</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">clause1</span> <span class="ow">in</span> <span class="n">_toCNF</span><span class="p">(</span><span class="n">g1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">clause2</span> <span class="ow">in</span> <span class="n">_toCNF</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">gs</span><span class="p">]):</span>
+                        <span class="n">clause</span> <span class="o">=</span> <span class="n">clause1</span> <span class="o">+</span> <span class="n">clause2</span>
+                        <span class="k">if</span> <span class="n">simplify</span><span class="p">:</span>
+                            <span class="n">clause</span> <span class="o">=</span> <span class="n">simplifyClause</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">clause</span> <span class="o">==</span> <span class="p">[]:</span>
+                            <span class="k">return</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
+                        <span class="k">if</span> <span class="n">clause</span> <span class="o">!=</span> <span class="n">TRUE</span><span class="p">:</span>
+                            <span class="n">cnf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">cnf</span>
+
+    <span class="k">def</span> <span class="nf">simplifyCNF</span><span class="p">(</span><span class="n">cnf</span><span class="p">):</span>
+        <span class="n">tuples</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cnf</span> <span class="p">}</span>
+        <span class="n">clauses</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">set</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tuples</span> <span class="p">]</span>
+        <span class="n">cnf</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clauses</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="n">c1</span> <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">clauses</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">c1</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">cnf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cnf</span><span class="p">)</span>
+
+    <span class="n">cnf</span> <span class="o">=</span> <span class="n">_toCNF</span><span class="p">(</span><span class="n">toNNF</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">simplify</span><span class="p">:</span>
+        <span class="n">cnf</span> <span class="o">=</span> <span class="n">simplifyCNF</span><span class="p">(</span><span class="n">cnf</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">formula</span><span class="p">:</span>
+        <span class="n">cnf</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span><span class="o">*</span><span class="n">clause</span><span class="p">]</span> <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">cnf</span> <span class="p">]]</span>
+    <span class="k">return</span> <span class="n">cnf</span></div>
+
+
+<div class="viewcode-block" id="toDNF">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.toDNF">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">toDNF</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">simplify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">formula</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられた命題論理式 f を論理和標準形(DNF)に変換する．</span>
+
+<span class="sd">    DNF式は複数の連言節の論理和であり，各連言節は複数のリテラルの論理積である．</span>
+<span class="sd">    いったん [&quot;not&quot;,f] を :obj:`toCNF` 関数でCNF式に変換したのち，</span>
+<span class="sd">    CNF式中の各リテラルを否定することでDNF式を求めている．</span>
+
+<span class="sd">    simplify=True の場合，簡単化したDNF式を返す．</span>
+
+<span class="sd">    formula=True を指定すれば，命題論理式を返す．</span>
+
+<span class="sd">    f に含まれる命題変数の個数を :math:`n` とすると最悪の場合DNF式のサイズは :math:`2^n` になる</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        f: 命題論理式．命題論理式の記法については :obj:`.functions` 参照．</span>
+<span class="sd">        simplify (bool, optional): Falseなら得られたDNF式を簡単化しない(デフォルト値はTrue)．</span>
+<span class="sd">        formula (bool, optional): 連言節のリストでなく，命題論理式を返す．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DNF式．DNF式は連言節のリストであり，各連言節はリテラルのリストである．</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CspsatException: 論理式の構文エラー．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; toDNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]])</span>
+<span class="sd">        [[p(1), p(2)], [~p(1), ~p(2)]]</span>
+<span class="sd">        &gt;&gt;&gt; toDNF([&quot;not&quot;,[&quot;xor&quot;,p(1),p(2)]], formula=True)</span>
+<span class="sd">        [&#39;or&#39;, [&#39;and&#39;, p(1), p(2)], [&#39;and&#39;, ~p(1), ~p(2)]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dnf</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span> <span class="o">~</span><span class="n">lit</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="p">]</span> <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">toCNF</span><span class="p">([</span><span class="s2">&quot;not&quot;</span><span class="p">,</span><span class="n">f</span><span class="p">],</span> <span class="n">simplify</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">if</span> <span class="n">formula</span><span class="p">:</span>
+        <span class="n">dnf</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span><span class="o">*</span><span class="n">clause</span><span class="p">]</span> <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">dnf</span> <span class="p">]]</span>
+    <span class="k">return</span> <span class="n">dnf</span></div>
+
+
+<div class="viewcode-block" id="ge1">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.ge1">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">ge1</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;at-least-one基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    xx = [x1, x2, ..., xn] のとき，節 {x1, x2, ..., xn} をyieldする．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in ge1([p(1), p(2), p(3)]): print(clause)</span>
+<span class="sd">        [p(1), p(2), p(3)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">yield</span> <span class="n">xx</span></div>
+
+
+<div class="viewcode-block" id="le1">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.le1">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">le1</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;at-most-one基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    xx = [x1, x2, ..., xn] のとき，すべての xi, xj の組合せに対し節 {xi, xj} をyieldする．</span>
+<span class="sd">    この方法はペアワイズ法と呼ばれる．</span>
+<span class="sd">    一般には :obj:`.Encoder` クラスに実装されている逐次カウンタ法のほうが良い．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in le1([p(1), p(2), p(3)]): print(clause)</span>
+<span class="sd">        [~p(1), ~p(2)]</span>
+<span class="sd">        [~p(1), ~p(3)]</span>
+<span class="sd">        [~p(2), ~p(3)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="o">~</span><span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">~</span><span class="n">xx</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="eq1">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.eq1">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">eq1</span><span class="p">(</span><span class="n">xx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;exact-one基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    :obj:`ge1` 関数，:obj:`le1` 関数を用いて必要な節をyieldする．</span>
+<span class="sd">    一般には :obj:`.Encoder` クラスに実装されている逐次カウンタ法のほうが良い．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in eq1([p(1), p(2), p(3)]): print(clause)</span>
+<span class="sd">        [p(1), p(2), p(3)]</span>
+<span class="sd">        [~p(1), ~p(2)]</span>
+<span class="sd">        [~p(1), ~p(3)]</span>
+<span class="sd">        [~p(2), ~p(3)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">yield from</span> <span class="n">ge1</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+    <span class="k">yield from</span> <span class="n">le1</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="geK">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.geK">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">geK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;at-least-k基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    xx = [x1, x2, ..., xn] のとき，xi から n-k+1 個のリテラルを選択するすべての組合せに対し，選んだリテラルからなる節をyieldする．</span>
+<span class="sd">    すなわち n-k+1 個のリテラルがすべて偽になる場合を排除している．</span>
+<span class="sd">    この方法はバイノミナル法と呼ばれる．</span>
+<span class="sd">    一般には :obj:`.Encoder` クラスに実装されている逐次カウンタ法のほうが良い．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+<span class="sd">        k (int): kの値．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in geK([p(1), p(2), p(3)], 2): print(clause)</span>
+<span class="sd">        [p(1), p(2)]</span>
+<span class="sd">        [p(1), p(3)]</span>
+<span class="sd">        [p(2), p(3)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">yy</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="o">-</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="nb">list</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="leK">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.leK">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">leK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;at-most-k基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    xx = [x1, x2, ..., xn] のとき，xi から k+1 個のリテラルを選択するすべての組合せに対し，選んだリテラルの否定からなる節をyieldする．</span>
+<span class="sd">    すなわち k+1 個のリテラルがすべて真になる場合を排除している．</span>
+<span class="sd">    この方法はバイノミナル法と呼ばれる．</span>
+<span class="sd">    一般には :obj:`.Encoder` クラスに実装されている逐次カウンタ法のほうが良い．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+<span class="sd">        k (int): kの値．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in leK([p(1), p(2), p(3)], 2): print(clause)</span>
+<span class="sd">        [~p(1), ~p(2), ~p(3)]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">yy</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">yy</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="eqK">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.eqK">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">eqK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;exact-k基数制約の節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    :obj:`geK` 関数，:obj:`leK` 関数を用いて必要な節をyieldする．</span>
+<span class="sd">    一般には :obj:`.Encoder` クラスに実装されている逐次カウンタ法のほうが良い．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xx (list): リテラル(:obj:`.Bool` オブジェクト)リスト．</span>
+<span class="sd">        k (int): kの値．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        基数制約を符号化した節．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; for clause in eqK([p(1), p(2), p(3)], 2): print(clause)</span>
+<span class="sd">        [p(1), p(2)]</span>
+<span class="sd">        [p(1), p(3)]</span>
+<span class="sd">        [p(2), p(3)]</span>
+<span class="sd">        [~p(1), ~p(2), ~p(3)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">yield from</span> <span class="n">geK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">yield from</span> <span class="n">leK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span></div>
+
+
+<span class="n">statData</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">&quot;&quot;&quot;ソルバー実行の統計データを保存するグローバル変数</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="status">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.status">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="n">lastOnly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SATソルバー (:obj:`.SAT`)またはCSPソルバー (:obj:`.Solver`)実行の統計データ．</span>
+
+<span class="sd">    :obj:`.SAT.getStat`, :obj:`.Solver.getStat` 参照．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ソルバー実行の統計データ．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lastOnly</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">statData</span>
+    <span class="n">infos</span> <span class="o">=</span> <span class="n">statData</span><span class="p">[</span><span class="s2">&quot;sat&quot;</span><span class="p">]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">infos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="o">**</span><span class="n">statData</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">:</span><span class="n">info</span> <span class="p">}</span></div>
+
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+
+<span class="n">defaultTimeout</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="sd">&quot;&quot;&quot;タイムアウト秒数のデフォルト値を保存するグローバル変数</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="getTimeout">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.getTimeout">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">getTimeout</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;タイムアウト秒数のデフォルト値を返す．</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        タイムアウト秒数のデフォルト値．</span>
+
+<span class="sd">    &gt;&gt;&gt; getTimeout()</span>
+<span class="sd">    600</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">defaultTimeout</span></div>
+
+
+<div class="viewcode-block" id="setTimeout">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.setTimeout">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">setTimeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;タイムアウト秒数のデフォルト値を設定する．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timeout (int): タイムアウト秒数．</span>
+
+<span class="sd">    &gt;&gt;&gt; setTimeout(100)</span>
+<span class="sd">    &gt;&gt;&gt; getTimeout()</span>
+<span class="sd">    100</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">defaultTimeout</span>
+    <span class="n">defaultTimeout</span> <span class="o">=</span> <span class="n">timeout</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">_cspsatTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;timeout秒を超えると，メインのスレッドにSIGINTのシグナルを送り，:obj:`.CspsatTimeout` 例外をraiseする．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timeout (int): タイムアウト秒．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">_thread</span><span class="o">.</span><span class="n">interrupt_main</span><span class="p">)</span>
+    <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# タイムアウト</span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2">秒でプログラム開始&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">timer</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+            <span class="k">raise</span>
+        <span class="k">raise</span> <span class="n">CspsatTimeout</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;プログラムの実行時間が</span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2">秒を超えた&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+<div class="viewcode-block" id="solutionsSAT">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.solutionsSAT">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">solutionsSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられたCNF式のモデルをSATソルバーで探索しyieldするジェネレータ関数．</span>
+
+<span class="sd">    :obj:`.SAT.solutions` 参照．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cnf (list of list of Bool): CNF式 (節のリスト)．</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．</span>
+<span class="sd">            :obj:`.SAT` のcommand参照．</span>
+<span class="sd">        num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+<span class="sd">            :obj:`.SAT.solutions` のnum参照．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.SAT` のpositveOnly参照．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.SAT` のincludeAux参照．</span>
+<span class="sd">        verbose (int, optional): 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
+<span class="sd">            :obj:`.SAT` のverobse参照．</span>
+<span class="sd">        timeout (int, optional): この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．</span>
+<span class="sd">            :obj:`setTimeout` でデフォルト値を変更できる．</span>
+<span class="sd">        tempdir (str, optional): 一時ファイルのディレクトリ名 (デフォルト値はNone)．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        CNF式のモデル．命題変数(:obj:`.Bool` オブジェクト)をキーとする辞書(dict)で，値は0か1．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cnf = [ [p(1), p(2)] ]</span>
+<span class="sd">        &gt;&gt;&gt; for sol in solutionsSAT(cnf, num=0): print(sol)</span>
+<span class="sd">        {p(1): 0, p(2): 1}</span>
+<span class="sd">        {p(1): 1, p(2): 0}</span>
+<span class="sd">        {p(1): 1, p(2): 1}</span>
+<span class="sd">        &gt;&gt;&gt; for sol in solutionsSAT(cnf, num=0): print(f&quot;p(1)={sol[p(1)]}, p(2)={sol[p(2)]}&quot;)</span>
+<span class="sd">        p(1)=0, p(2)=1</span>
+<span class="sd">        p(1)=1, p(2)=0</span>
+<span class="sd">        p(1)=1, p(2)=1</span>
+<span class="sd">        &gt;&gt;&gt; for sol in solutionsSAT(cnf, num=0): print((sol, status()))</span>
+<span class="sd">        ({p(1): 0, p(2): 1}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.709282636642456})</span>
+<span class="sd">        ({p(1): 1, p(2): 0}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.30728840827941895})</span>
+<span class="sd">        ({p(1): 1, p(2): 1}, {&#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.33997058868408203})</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">statData</span>
+    <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="ow">or</span> <span class="n">getTimeout</span><span class="p">()</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">SAT</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="n">positiveOnly</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="n">includeAux</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">_cspsatTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+            <span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">cnf</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">sat</span><span class="o">.</span><span class="n">solutions</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+                <span class="n">statData</span> <span class="o">=</span> <span class="n">sat</span><span class="o">.</span><span class="n">stats</span>
+                <span class="k">yield</span> <span class="n">sol</span>
+    <span class="k">except</span> <span class="n">CspsatTimeout</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sat</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TIMEOUT&quot;</span>
+        <span class="k">raise</span> <span class="n">e</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">statData</span> <span class="o">=</span> <span class="n">sat</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">sat</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="solveSAT">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.solveSAT">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">solveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられたCNF式のモデルをSATソルバーで探索し出力する．</span>
+
+<span class="sd">    :obj:`.SAT.solve` 参照．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cnf (list of list of Bool): CNF式 (節のリスト)．</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．</span>
+<span class="sd">            :obj:`.SAT` のcommand参照．</span>
+<span class="sd">        num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+<span class="sd">            :obj:`.SAT.solve` のnum参照．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.SAT` のpositveOnly参照．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.SAT` のincludeAux参照．</span>
+<span class="sd">        verbose (int, optional): 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
+<span class="sd">            :obj:`.SAT` のverobse参照．</span>
+<span class="sd">        timeout (int, optional): この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．</span>
+<span class="sd">            :obj:`setTimeout` でデフォルト値を変更できる．</span>
+<span class="sd">        stat (bool, optional): Trueなら統計データも表示する (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.SAT.getStat` 参照．</span>
+<span class="sd">        tempdir (str, optional): 一時ファイルのディレクトリ名 (デフォルト値はNone)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cnf = [ [p(1), p(2)] ]</span>
+<span class="sd">        &gt;&gt;&gt; solveSAT(cnf, num=0)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">        Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">        Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">        &gt;&gt;&gt; solveSAT(cnf, num=0, stat=True)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 1, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.30565834045410156}</span>
+<span class="sd">        Model 2: {p(1): 1, p(2): 0}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 2, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.34708118438720703}</span>
+<span class="sd">        Model 3: {p(1): 1, p(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 3, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 3, &#39;solving&#39;: 0.3393073081970215}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 2, &#39;clauses&#39;: 4, &#39;conflicts&#39;: 2, &#39;decisions&#39;: 1, &#39;propagations&#39;: 2, &#39;solving&#39;: 0.303924560546875}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">statData</span>
+    <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="ow">or</span> <span class="n">getTimeout</span><span class="p">()</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">SAT</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="n">positiveOnly</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="n">includeAux</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">_cspsatTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+            <span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">cnf</span><span class="p">)</span>
+            <span class="n">sat</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="n">stat</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">CspsatTimeout</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sat</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TIMEOUT&quot;</span>
+        <span class="k">raise</span> <span class="n">e</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">statData</span> <span class="o">=</span> <span class="n">sat</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">sat</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="solutionsCSP">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.solutionsCSP">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">solutionsCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられたCSP(制約充足問題)をCNF式にSAT符号化し，得られたCNF式の解(モデル)をSATソルバーで探索し，</span>
+<span class="sd">    CSPの解(モデル)に変換してyieldするジェネレータ関数．</span>
+
+<span class="sd">    :obj:`.Solver.solutions` 参照．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        csp: CSP．制約のシーケンス．制約の記法については :obj:`cspsat.csp` 参照．</span>
+<span class="sd">        encoder (Encoder | str, optional): 使用するSAT符号化．Encoderのインスタンスならそれを用いる．</span>
+<span class="sd">            文字列の場合，&quot;d&quot;から始まるなら :obj:`.DirectEncoder`, &quot;l&quot;から始まるなら :obj:`.LogEncoder`, それ以外なら :obj:`.OrderEncoder` を用いる．</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．</span>
+<span class="sd">            :obj:`.SAT` のcommand参照．</span>
+<span class="sd">        num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+<span class="sd">            :obj:`.Solver.solutions` のnum参照．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.Solver` のpositveOnly参照．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.Solver` のincludeAux参照．</span>
+<span class="sd">        verbose (int, optional): 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
+<span class="sd">            :obj:`.Solver` のverbose参照．</span>
+<span class="sd">        timeout (int, optional): この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．</span>
+<span class="sd">            :obj:`setTimeout` でデフォルト値を変更できる．</span>
+<span class="sd">        tempdir (str, optional): 一時ファイルのディレクトリ名 (デフォルト値はNone)．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        CSPのモデル．命題変数(:obj:`.Bool` オブジェクト)あるいは整数変数(:obj:`.Var` オブジェクト)をキーとする辞書(dict)で，値は整数．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; x = Var(&quot;x&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; csp = [ [&quot;int&quot;,x(1),1,3], [&quot;int&quot;,x(2),1,3], [&quot;&gt;&quot;,x(1),x(2)] ]</span>
+<span class="sd">        &gt;&gt;&gt; for sol in solutionsCSP(csp, num=0): print(sol)</span>
+<span class="sd">        {x(1): 2, x(2): 1}</span>
+<span class="sd">        {x(1): 3, x(2): 1}</span>
+<span class="sd">        {x(1): 3, x(2): 2}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">statData</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">Encoder</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">encoder</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">):</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">DirectEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">encoder</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">):</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">LogEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">OrderEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# Encoderは</span><span class="si">{</span><span class="n">encoder</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">SAT</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">sat</span><span class="o">=</span><span class="n">sat</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="n">positiveOnly</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="n">includeAux</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="ow">or</span> <span class="n">getTimeout</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">_cspsatTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sol</span> <span class="ow">in</span> <span class="n">solver</span><span class="o">.</span><span class="n">solutions</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+                <span class="n">statData</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">stats</span>
+                <span class="k">yield</span> <span class="n">sol</span>
+    <span class="k">except</span> <span class="n">CspsatTimeout</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TIMEOUT&quot;</span>
+        <span class="k">raise</span> <span class="n">e</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">statData</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">sat</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="solveCSP">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.solveCSP">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">solveCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;与えられたCSP(制約充足問題)をCNF式にSAT符号化し，得られたCNF式の解(モデル)をSATソルバーで探索し，</span>
+<span class="sd">    CSPの解(モデル)に変換して出力する．</span>
+
+<span class="sd">    :obj:`.Solver.solve` 参照．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        csp: CSP．制約のシーケンス．制約の記法については :obj:`cspsat.csp` 参照．</span>
+<span class="sd">        encoder (Encoder | str, optional): 使用するSAT符号化．Encoderのインスタンスならそれを用いる．</span>
+<span class="sd">            文字列の場合，&quot;d&quot;から始まるなら :obj:`.DirectEncoder`, &quot;l&quot;から始まるなら :obj:`.LogEncoder`, それ以外なら :obj:`.OrderEncoder` を用いる．</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．</span>
+<span class="sd">            :obj:`.SAT` のcommand参照．</span>
+<span class="sd">        num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォルト値は1)．</span>
+<span class="sd">            :obj:`.Solver.solutions` のnum参照．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.Solver` のpositveOnly参照．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.Solver` のincludeAux参照．</span>
+<span class="sd">        verbose (int, optional): 負なら結果を出力しない．正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
+<span class="sd">            :obj:`.Solver` のverbose参照．</span>
+<span class="sd">        timeout (int, optional): この関数の実行時間のタイムアウト秒数を指定する (デフォルト値は600秒)．</span>
+<span class="sd">            :obj:`setTimeout` でデフォルト値を変更できる．</span>
+<span class="sd">        stat (bool, optional): Trueなら統計データも表示する (デフォルト値はFalse)．</span>
+<span class="sd">            :obj:`.Solver.getStat` 参照．</span>
+<span class="sd">        tempdir (str, optional): 一時ファイルのディレクトリ名 (デフォルト値はNone)．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; x = Var(&quot;x&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; csp = [ [&quot;int&quot;,x(1),1,3], [&quot;int&quot;,x(2),1,3], [&quot;&gt;&quot;,x(1),x(2)] ]</span>
+<span class="sd">        &gt;&gt;&gt; solveCSP(csp, num=0)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {x(1): 2, x(2): 1}</span>
+<span class="sd">        Model 2: {x(1): 3, x(2): 1}</span>
+<span class="sd">        Model 3: {x(1): 3, x(2): 2}</span>
+<span class="sd">        &gt;&gt;&gt; solveCSP(csp, num=0, stat=True) # 順序符号化 (OrderEncoder)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {x(1): 2, x(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 5, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 2, &#39;propagations&#39;: 4, &#39;solving&#39;: 0.3538937568664551, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="sd">        Model 2: {x(1): 3, x(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 6, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 1, &#39;propagations&#39;: 4, &#39;solving&#39;: 0.36089038848876953, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="sd">        Model 3: {x(1): 3, x(2): 2}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 7, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 5, &#39;solving&#39;: 0.39816951751708984, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 4, &#39;clauses&#39;: 7, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 1, &#39;propagations&#39;: 5, &#39;solving&#39;: 0.39816951751708984, &#39;encoding&#39;: 0.0009377002716064453}</span>
+<span class="sd">        &gt;&gt;&gt; solveCSP(csp, num=0, stat=True, encoder=&quot;direct&quot;) # 直接符号化 (DirectEncoder)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {x(1): 2, x(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 11, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 3, &#39;propagations&#39;: 6, &#39;solving&#39;: 0.40071797370910645, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="sd">        Model 2: {x(1): 3, x(2): 1}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 12, &#39;conflicts&#39;: 0, &#39;decisions&#39;: 2, &#39;propagations&#39;: 6, &#39;solving&#39;: 0.39261484146118164, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="sd">        Model 3: {x(1): 3, x(2): 2}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 13, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 10, &#39;solving&#39;: 0.38961291313171387, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="sd">        Stat: {&#39;variables&#39;: 6, &#39;clauses&#39;: 13, &#39;conflicts&#39;: 1, &#39;decisions&#39;: 2, &#39;propagations&#39;: 10, &#39;solving&#39;: 0.38961291313171387, &#39;encoding&#39;: 0.0010752677917480469}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">statData</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">Encoder</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">encoder</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">):</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">DirectEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">encoder</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;l&quot;</span><span class="p">):</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">LogEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">OrderEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# Encoderは</span><span class="si">{</span><span class="n">encoder</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">SAT</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">sat</span><span class="o">=</span><span class="n">sat</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="n">positiveOnly</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="n">includeAux</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="ow">or</span> <span class="n">getTimeout</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">_cspsatTimer</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+            <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="n">stat</span><span class="p">)</span>
+            <span class="n">statData</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">stats</span>
+    <span class="k">except</span> <span class="n">CspsatTimeout</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;TIMEOUT&quot;</span>
+        <span class="k">raise</span> <span class="n">e</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">statData</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">sat</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="saveSAT">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.saveSAT">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">saveSAT</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CNF式をファイルに保存する．</span>
+
+<span class="sd">    CNF式は節のシーケンス(リストなど)であり，各節はリテラル(:obj:`.Bool` オブジェクト)のリストである．</span>
+<span class="sd">    節が文字列の場合はコメントとして扱われ，そのままファイルに書き込まれる</span>
+<span class="sd">    (文字列の先頭が &quot;#&quot; でない場合は先頭に &quot;# &quot; を追加する)．</span>
+<span class="sd">    保存したCNF式はloadSAT関数でロードできる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cnf: CNF式．リテラルのリストのシーケンス．</span>
+<span class="sd">        fileName (str): ファイル名．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cnf = [ [ p(1), p(2) ]]</span>
+<span class="sd">        &gt;&gt;&gt; saveSAT(cnf, &quot;/tmp/foo.sat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cnf = loadSAT(&quot;/tmp/foo.sat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; solveSAT(cnf)</span>
+<span class="sd">        SATISFIABLE</span>
+<span class="sd">        Model 1: {p(1): 0, p(2): 1}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">cnf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clause</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">clause</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">comment</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">comment</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# &quot;</span><span class="p">)</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="loadSAT">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.loadSAT">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">loadSAT</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ファイルからCNF式を読み込み，各節をyieldするジェネレータ関数．</span>
+
+<span class="sd">    各行が節を表すが，空行および ``#`` から始まる行はコメントとして処理される．</span>
+<span class="sd">    各リテラルは1つ以上の空白文字で区切られているとし，負リテラルは ``~`` から始まるとする．</span>
+<span class="sd">    命題変数名には ``#`` あるいは ``~`` から始まらない任意の文字列を使用できる．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fileName (str): ファイル名．</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        読み込んだCNF式．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">line</span>
+                <span class="k">continue</span>
+            <span class="n">clause</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
+                    <span class="n">clause</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bool</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="kc">False</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">clause</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bool</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="k">yield</span> <span class="n">clause</span></div>
+
+
+<div class="viewcode-block" id="saveDimacs">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.saveDimacs">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">saveDimacs</span><span class="p">(</span><span class="n">cnf</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CNF式をDIMACS CNF形式に変換しファイルに保存する．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cnf: CNF式．リテラルのリストのシーケンス．</span>
+<span class="sd">        fileName (str): ファイル名．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; p = Bool(&quot;p&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; cnf = [ [ p(1), p(2) ], [ ~p(1), ~p(2) ] ]</span>
+<span class="sd">        &gt;&gt;&gt; saveDimacs(cnf, &quot;/tmp/foo.cnf&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">SAT</span><span class="p">(</span><span class="n">cnfFile</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">cnf</span><span class="p">)</span>
+    <span class="n">sat</span><span class="o">.</span><span class="n">updateDimacsHeader</span><span class="p">()</span>
+    <span class="n">sat</span><span class="o">.</span><span class="n">cnf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">sat</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="saveCSP">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.saveCSP">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">saveCSP</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CSPをJSON形式でファイルに保存する．</span>
+<span class="sd">    Boolオブジェクトは先頭に &quot;$&quot; を付け加えた文字列に変換する．</span>
+<span class="sd">    Varオブジェクトは先頭に &quot;@&quot; を付け加えた文字列に変換する．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cnf: CSP．</span>
+<span class="sd">        fileName (str): ファイル名．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">return</span> <span class="s2">&quot;$&quot;</span> <span class="o">+</span> <span class="n">n</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">positive</span> <span class="k">else</span> <span class="s2">&quot;$~&quot;</span> <span class="o">+</span> <span class="n">n</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Var</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;@&quot;</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span> <span class="n">serialize</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;制約の構文エラー: </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;[</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">csp</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">([</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;END of CSP&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="loadCSP">
+<a class="viewcode-back" href="../../cspsat.functions.html#cspsat.functions.loadCSP">[ドキュメント]</a>
+<span class="k">def</span> <span class="nf">loadCSP</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;JSON形式でCSPが保存されたファイルからCSPを読み込みyieldするジェネレータ関数．</span>
+
+<span class="sd">    先頭に &quot;$&quot; がある文字列はBoolオブジェクトに変換する．</span>
+<span class="sd">    先頭に &quot;@&quot; がある文字列はVarオブジェクトに変換する．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fileName (str): ファイル名．</span>
+
+<span class="sd">    Yield:</span>
+<span class="sd">        読み込んだCSPのデータ．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="nb">bool</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;~&quot;</span> <span class="k">else</span> <span class="o">~</span><span class="n">Bool</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Var</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="n">c</span></div>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">_thread</span>
+<span class="kn">from</span> <span class="nn">.sat</span> <span class="kn">import</span> <span class="n">SAT</span>
+<span class="kn">from</span> <span class="nn">.csp</span> <span class="kn">import</span> <span class="n">Solver</span><span class="p">,</span> <span class="n">Encoder</span><span class="p">,</span> <span class="n">DirectEncoder</span><span class="p">,</span> <span class="n">OrderEncoder</span><span class="p">,</span> <span class="n">LogEncoder</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">CspsatException</span><span class="p">,</span> <span class="n">CspsatTimeout</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">Var</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

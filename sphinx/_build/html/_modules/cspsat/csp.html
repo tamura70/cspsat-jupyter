@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.csp &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=c033477b"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/translations.js?v=4dbe4bdc"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cspsat.html">cspsat package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cspsat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">モジュールコード</a></li>
+      <li class="breadcrumb-item active">cspsat.csp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>cspsat.csp のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;制約充足問題(CSP)のSAT符号化のモジュール．</span>
+
+<span class="sd">以下のクラスからなる．</span>
+
+<span class="sd">* Solverクラス: 制約ソルバーのクラス．</span>
+<span class="sd">* Encoderクラス: SAT符号化の基底クラス</span>
+<span class="sd">* DirectEncoderクラス: 直接符号化・支持符号化のクラス</span>
+<span class="sd">* OrderEncoderクラス: 順序符号化のクラス</span>
+<span class="sd">* LogEncoderクラス: 対数符号化のクラス</span>
+
+<span class="sd">以下の記法の説明でA1, A2, ..., Anは制約．X1, X2, ..., Xnは式，L1, L2, ..., Lnはリテラルまたはドメインが0,1の整数変数を表す．</span>
+
+<span class="sd">.. csv-table:: 宣言の記法</span>
+<span class="sd">   :header: &quot;名称など&quot;, &quot;宣言の記法&quot;, &quot;備考&quot;</span>
+<span class="sd">   :widths: 20, 40, 30</span>
+
+<span class="sd">   &quot;整数変数&quot;, &quot;[&quot;&quot;int&quot;&quot;, lb, ub]&quot;</span>
+<span class="sd">   &quot;最小化&quot;, &quot;[&quot;&quot;minimize&quot;&quot;, X]&quot;</span>
+<span class="sd">   &quot;最大化&quot;, &quot;[&quot;&quot;maximize&quot;&quot;, X]&quot;</span>
+<span class="sd">   &quot;コメント&quot;, &quot;[&quot;&quot;comment&quot;&quot;, ...], [&quot;&quot;#&quot;&quot;, ...]&quot;</span>
+
+<span class="sd">.. csv-table:: 式の記法</span>
+<span class="sd">   :header: &quot;名称など&quot;, &quot;式の記法&quot;, &quot;備考&quot;</span>
+<span class="sd">   :widths: 20, 40, 30</span>
+
+<span class="sd">   &quot;整数定数&quot;, n, &quot;0, 1, -1, 2, -2などの整数&quot;</span>
+<span class="sd">   &quot;整数変数&quot;, &quot;Var(:math:`x`)&quot;, &quot;:math:`x` は変数名の文字列&quot;</span>
+<span class="sd">   &quot;リテラル&quot;, &quot;p, ~p&quot;, &quot;pは :obj:`.Bool` オプジェクト&quot;</span>
+<span class="sd">   &quot;マイナス&quot;, &quot;[&quot;&quot;-&quot;&quot;, X1]&quot;</span>
+<span class="sd">   &quot;加算&quot;, &quot;[&quot;&quot;+&quot;&quot;, X1, ..., Xn]&quot;</span>
+<span class="sd">   &quot;減算&quot;, &quot;[&quot;&quot;-&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;定数乗算&quot;, &quot;[&quot;&quot;*&quot;&quot;, X1, X2]&quot;, &quot;X1またはX2は整数定数&quot;</span>
+<span class="sd">   &quot;定数除算&quot;, &quot;[&quot;&quot;div&quot;&quot;, X, n], [&quot;&quot;//&quot;&quot;, X, n]&quot;, nは正の整数定数. :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;定数剰余&quot;, &quot;[&quot;&quot;mod&quot;&quot;, X, n], [&quot;&quot;%&quot;&quot;, X, n]&quot;, nは正の整数定数. :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;絶対値&quot;, &quot;[&quot;&quot;abs&quot;&quot;, X]&quot;, :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;最小値&quot;, &quot;[&quot;&quot;min&quot;&quot;, X1, ..., Xn]&quot;, :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;最大値&quot;, &quot;[&quot;&quot;max&quot;&quot;, X1, ..., Xn]&quot;, :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;if式&quot;, &quot;[&quot;&quot;if&quot;&quot;, A, X, Y]&quot;, :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+<span class="sd">   &quot;Xのiビット目&quot;, &quot;[&quot;&quot;bit&quot;&quot;, X, i]&quot;, iは0以上の整数定数. :obj:`cspsat.hooks.defaultFunctionHook` で定義</span>
+
+<span class="sd">.. csv-table:: 制約の記法</span>
+<span class="sd">   :header: &quot;名称など&quot;, &quot;制約の記法&quot;, &quot;備考&quot;</span>
+<span class="sd">   :widths: 20, 40, 30</span>
+
+<span class="sd">   &quot;真&quot;, &quot;TRUE&quot;</span>
+<span class="sd">   &quot;偽&quot;, &quot;FALSE&quot;</span>
+<span class="sd">   &quot;命題変数&quot;, &quot;Bool(:math:`p`)&quot;, &quot;:math:`p` は変数名の文字列&quot;</span>
+<span class="sd">   &quot;負リテラル&quot;, &quot;~p&quot;, &quot;pは :obj:`.Bool` オブジェクト&quot;</span>
+<span class="sd">   &quot;否定&quot;, &quot;[&quot;&quot;not&quot;&quot;, A1], [&quot;&quot;!&quot;&quot;, A1]&quot;</span>
+<span class="sd">   &quot;論理積&quot;, &quot;[&quot;&quot;and&quot;&quot;, A1, ..., An], [&quot;&quot;&amp;&amp;&quot;&quot;, A1, ..., An]&quot;</span>
+<span class="sd">   &quot;論理和&quot;, &quot;[&quot;&quot;or&quot;&quot;, A1, ..., An], [&quot;&quot;||&quot;&quot;, A1, ..., An]&quot;</span>
+<span class="sd">   &quot;含意&quot;, &quot;[&quot;&quot;imp&quot;&quot;, A1, A2], [&quot;&quot;=&gt;&quot;&quot;, A1, A2]&quot;</span>
+<span class="sd">   &quot;同値&quot;, &quot;[&quot;&quot;equ&quot;&quot;, A1, A2], [&quot;&quot;&lt;=&gt;&quot;&quot;, A1, A2]&quot;</span>
+<span class="sd">   &quot;排他的論理和&quot;, &quot;[&quot;&quot;xor&quot;&quot;, A1, ..., An], [&quot;&quot;^&quot;&quot;, A1, ..., An]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 = X_2`&quot;, &quot;[&quot;&quot;eq&quot;&quot;, X1, X2], [&quot;&quot;==&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 \\ne X_2`&quot;, &quot;[&quot;&quot;ne&quot;&quot;, X1, X2], [&quot;&quot;!=&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 \\ge X_2`&quot;, &quot;[&quot;&quot;ge&quot;&quot;, X1, X2], [&quot;&quot;&gt;=&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 &gt; X_2`&quot;, &quot;[&quot;&quot;gt&quot;&quot;, X1, X2], [&quot;&quot;&gt;&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 \\le X_2`&quot;, &quot;[&quot;&quot;le&quot;&quot;, X1, X2], [&quot;&quot;&lt;=&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`X_1 &lt; X_2`&quot;, &quot;[&quot;&quot;lt&quot;&quot;, X1, X2], [&quot;&quot;&lt;&quot;&quot;, X1, X2]&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i = k` (exact-k制約)&quot;, &quot;[&quot;&quot;eqK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i \\ne k`&quot;, &quot;[&quot;&quot;neK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i \\ge k` (at-least-k制約)&quot;, &quot;[&quot;&quot;geK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i &gt; k`&quot;, &quot;[&quot;&quot;gtK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i \\le k` (at-most-k制約)&quot;, &quot;[&quot;&quot;leK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+<span class="sd">   &quot;:math:`\\sum L_i &lt; k`&quot;, &quot;[&quot;&quot;ltK&quot;&quot;, [L1,...,Ln], k]&quot;, &quot;kは整数定数&quot;</span>
+
+<span class="sd">.. csv-table:: グローバル制約の記法</span>
+<span class="sd">   :header: &quot;名称など&quot;, &quot;グローバル制約の記法&quot;, &quot;備考&quot;</span>
+<span class="sd">   :widths: 20, 40, 30</span>
+
+<span class="sd">   &quot;alldifferent制約&quot;, &quot;[&quot;&quot;alldifferent&quot;&quot;, X1, ..., Xn]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+<span class="sd">   &quot;辞書順比較&quot;, &quot;[&quot;&quot;lexCmp&quot;&quot;, cmp, [X1,...,Xn], [Y1,...,Yn]]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+<span class="sd">   &quot;乗算比較&quot;, &quot;[&quot;&quot;mulCmp&quot;&quot;, cmp, X, Y, Z]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+<span class="sd">   &quot;ベキ乗比較&quot;, &quot;[&quot;&quot;powCmp&quot;&quot;, cmp, X, n, Y]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+<span class="sd">   &quot;ビット列&quot;, &quot;[&quot;&quot;bits&quot;&quot;, [X1,...,Xn], X]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+<span class="sd">   &quot;ビット&quot;, &quot;[&quot;&quot;bit&quot;&quot;, X, i]&quot;, :obj:`cspsat.hooks.defaultConstraintHook` で定義</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    本プログラムは学習用の目的で作成されている．</span>
+<span class="sd">    実用上の問題への適用は想定していない．</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.hooks</span> <span class="kn">import</span> <span class="n">defaultFunctionHook</span><span class="p">,</span> <span class="n">defaultConstraintHook</span>
+
+<div class="viewcode-block" id="Solver">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">Solver</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;制約ソルバーのクラス．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        encoder (Encoder): 使用する :obj:`Encoder` オブジェクト．</span>
+<span class="sd">        sat (SAT, optional): 使用する :obj:`.SAT` ソルバーオブジェクト．指定しなければcommandで指定したSATソルバーを用いる．</span>
+<span class="sd">        command (str, optional): 利用するSATソルバーのコマンド．指定しなければ ``./sat4j`` が利用される(Windowsなら ``.\\sat4j.bat``)．</span>
+<span class="sd">            :obj:`.SAT` のcommand参照．</span>
+<span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォールトはFalse)．</span>
+<span class="sd">            :obj:`.SAT` のpositiveOnly参照．</span>
+<span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォールトはFalse)．</span>
+<span class="sd">            :obj:`.SAT` のincludeAux参照．</span>
+<span class="sd">        verbose (int, optional): 正なら実行の詳細情報を表示する (デフォールトは0)．</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model (dict): 最後に得られたモデル． 整数変数(:obj:`.Var`)あるいは命題変数(:obj:`.Bool`)をキーとし，変数の値が保持された辞書(dict)．</span>
+<span class="sd">        stats (dict): ソルバー実行の統計データ．</span>
+<span class="sd">        minimize (Wsum): 最小化する線形和．Noneなら最小化しない．</span>
+<span class="sd">        maximize (Wsum): 最大化する線形和．Noneなら最大化しない．minimizeが設定されていればそちらを優先する．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">positiveOnly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span> <span class="ow">or</span> <span class="n">OrderEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sat</span> <span class="o">=</span> <span class="n">sat</span> <span class="ow">or</span> <span class="n">SAT</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positiveOnly</span> <span class="o">=</span> <span class="n">positiveOnly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeAux</span> <span class="o">=</span> <span class="n">includeAux</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="n">Var</span><span class="o">.</span><span class="n">_auxCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;result&quot;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;ncalls&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;nmodels&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;encoding&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;solving&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;intVars&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;constraints&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;encoder&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">:[]</span> <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimize</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ex_type</span><span class="p">,</span> <span class="n">ex_value</span><span class="p">,</span> <span class="n">trace</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span>
+
+<div class="viewcode-block" id="Solver.add">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver.add">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;制約をSAT符号化したCNF式をSATソルバーに追加する．</span>
+<span class="sd">        :obj:`Encoder.put`, :obj:`Encoder.encode`, :obj:`.SAT.add` を呼び出す．</span>
+
+<span class="sd">        ただし制約が ``[&quot;minimize&quot;, w]`` あるいは ``[&quot;maximize&quot;, w]`` の場合は最小化あるいは最大化する線形和を設定する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            constraints (list): 制約のリスト．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">constraint</span><span class="p">:</span>
+                <span class="k">case</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="o">*</span><span class="k">_</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">]:</span>
+                    <span class="k">pass</span>
+                <span class="k">case</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;minimize&quot;</span><span class="p">,</span> <span class="k">_</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;maximize&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">]:</span>
+                    <span class="k">pass</span>
+                <span class="k">case</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="k">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;intVars&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span></div>
+
+
+<div class="viewcode-block" id="Solver.find">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver.find">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;SATソルバーに追加されている制約充足問題の解をSATソルバーで求めて制約充足問題の解に変換して返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            見つかった制約充足問題のモデル．モデルが見つからなければNone．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;ncalls&quot;</span><span class="p">,</span> <span class="s2">&quot;nmodels&quot;</span><span class="p">,</span> <span class="s2">&quot;solving&quot;</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">includeAux</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">positiveOnly</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="n">model</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_solutionsSat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">yield</span> <span class="n">model</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">model</span><span class="p">))</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_solutionsOpt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wsum</span><span class="p">,</span> <span class="n">minimize</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">includeSat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">wsum</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">minimize</span><span class="p">:</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="n">wsum</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lb</span> <span class="o">=</span> <span class="n">wsum</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">lb</span> <span class="o">==</span> <span class="n">ub</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">includeSat</span><span class="p">:</span> <span class="c1"># experimental</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BOUND </span><span class="si">{</span><span class="n">lb</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ub</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">yield</span> <span class="n">model</span>
+            <span class="k">if</span> <span class="n">minimize</span><span class="p">:</span>
+                <span class="n">mid</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">lb</span><span class="o">+</span><span class="n">ub</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># v &lt;= mid</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">wsum</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">mid</span><span class="p">)))</span>
+                <span class="n">model1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">model1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">model</span> <span class="o">=</span> <span class="n">model1</span>
+                    <span class="n">ub</span> <span class="o">=</span> <span class="n">wsum</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lb</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mid</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">lb</span><span class="o">+</span><span class="n">ub</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># v &gt;= mid</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">wsum</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span><span class="o">.</span><span class="n">neg</span><span class="p">()))</span>
+                <span class="n">model1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">model1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">model</span> <span class="o">=</span> <span class="n">model1</span>
+                    <span class="n">lb</span> <span class="o">=</span> <span class="n">wsum</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ub</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">minimize</span><span class="p">:</span>
+            <span class="c1"># v &lt;= ub</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">wsum</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">ub</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># v &gt;= lb</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">wsum</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">lb</span><span class="p">)</span><span class="o">.</span><span class="n">neg</span><span class="p">()))</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MINIMUM </span><span class="si">{</span><span class="n">lb</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">minimize</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;MAXIMUM </span><span class="si">{</span><span class="n">ub</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">yield</span> <span class="n">model</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">num</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sat</span><span class="o">.</span><span class="n">model</span><span class="p">))</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+<div class="viewcode-block" id="Solver.getStat">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver.getStat">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getStat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">includeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このソルバーによる実行の統計データを返す．</span>
+
+<span class="sd">        なお，実行時間などの単位は秒で，CPU時間ではなく経過時間である．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            includeAll (bool, optional): Falseならsatフォールドの値は最後のSATソルバー実行の統計データのみである．</span>
+<span class="sd">                TrueならすべてのSATソルバー実行の統計データのリストになる (デフォールトはFalse)．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            以下からなる辞書(dict)を返す．</span>
+
+<span class="sd">            * result: 実行結果 (SATISFIABLE, UNSATISFIABLE, MINIMUM n, MAXIMUM n, TIMEOUT, UNKNOWN, None)．</span>
+<span class="sd">            * ncalls: SATソルバーを呼び出した回数．</span>
+<span class="sd">            * nmodels: SATソルバーでモデルを見つけた回数．</span>
+<span class="sd">            * time: 関数の実行時間 (秒)．</span>
+<span class="sd">            * encoding: SAT符号化にかかった時間 (累積値，秒)．</span>
+<span class="sd">            * solving: SATソルバーの実行にかかった時間 (累積値，秒)．</span>
+<span class="sd">            * command: SATソルバーのコマンド．</span>
+<span class="sd">            * sat: SATソルバーの統計データ (includeAllがFalseなら最後の統計データ，Trueならすべての統計データのリスト)．</span>
+
+<span class="sd">            SATソルバーの統計データ(satフィールド)は，以下からなるdictである．</span>
+
+<span class="sd">            * result: SATソルバーの実行結果 (SATISFIABLE, UNSATISFIABLE, TIMEOUT, UNKNOWN, None)．</span>
+<span class="sd">            * variables: CNF式の命題変数の個数．</span>
+<span class="sd">            * clauses: CNF式の節の個数．</span>
+<span class="sd">            * conflicts: SATソルバー実行での衝突の回数．</span>
+<span class="sd">            * decisions: SATソルバー実行での決定の回数．</span>
+<span class="sd">            * propagations: SATソルバー実行での伝播の回数．</span>
+<span class="sd">            * solving: SATソルバー呼び出しの実行時間 (秒)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">includeAll</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+        <span class="n">infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;sat&quot;</span><span class="p">]</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">infos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="s2">&quot;sat&quot;</span><span class="p">:</span><span class="n">info</span> <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Solver.solutions">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver.solutions">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた制約充足問題の複数のモデルを探索し，それらをyieldするジェネレータ関数．</span>
+
+<span class="sd">        指定された上限の個数までモデルを探索し，モデルが見つかればそれをyieldする．</span>
+<span class="sd">        最小化あるいは最大化する線形和が指定されている場合は，制約最適問題として最適解を二分探索する．</span>
+<span class="sd">        ただし，最小化問題の場合，線形和が最適値未満なら常に充足不能，最適値以上なら常に充足可能と仮定している．</span>
+<span class="sd">        同様に，最大化問題の場合，線形和が最適値より大きいなら常に充足不能，最適値以下なら常に充足可能と仮定している．</span>
+<span class="sd">        なお，複数のモデルを探索において，補助変数の値のみが異なっている場合は同じモデルとみなされる．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            csp (list): 制約充足問題 (制約のリスト)．</span>
+<span class="sd">            num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォールトは1)．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            見つかったモデル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">csp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimize</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solutionsOpt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minimize</span><span class="p">,</span> <span class="n">minimize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximize</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solutionsOpt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> <span class="n">minimize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solutionsSat</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Solver.solve">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Solver.solve">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた制約充足問題の複数のモデルを探索し，表示する関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            csp (list): 制約充足問題 (制約のリスト)．</span>
+<span class="sd">            num (int, optional): 探索するモデルの最大個数．0なら全解を探索する (デフォールトは1)．</span>
+<span class="sd">            stat (bool, optional): Trueなら統計データも表示する (デフォールトはFalse)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solutions</span><span class="p">(</span><span class="n">csp</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getStat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">],</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stat</span> <span class="ow">and</span> <span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stat: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">getStat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Encoder">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">Encoder</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;制約充足問題(CSP)をSAT符号化する抽象基底クラス．</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        functionHooks (optional): 式の符号化時に呼び出すフック関数のリスト．指定しなければ :obj:`defaultFunctionHooks` を使用する．</span>
+<span class="sd">        constraintHooks (optional): 制約の符号化時に呼び出すフック関数のリスト．指定しなければ :obj:`defaultConstraintHooks` を使用する．</span>
+<span class="sd">        verbose (int, optional): 正なら実行の詳細情報を表示する (デフォールトは0)．</span>
+
+<span class="sd">    Atrributes:</span>
+<span class="sd">        solver (Solver): このオブジェクトを利用する制約ソルバーのクラス．</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultFunctionHooks</span> <span class="o">=</span> <span class="p">[</span><span class="n">defaultFunctionHook</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;式の符号化時に呼び出されるフック関数のリスト．デフォールト値は :obj:`.defaultFunctionHook` のみのリスト．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; Encoder.defaultFunctionHooks</span>
+<span class="sd">        [&lt;function defaultFunctionHook at 0x722f0efa0540&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; def myFunctionHook(f, encoder):</span>
+<span class="sd">        ...   match f:</span>
+<span class="sd">        ...     case [&quot;++&quot;, x]:</span>
+<span class="sd">        ...       f = [&quot;+&quot;, x, 1]</span>
+<span class="sd">        ...   return f</span>
+<span class="sd">        ... </span>
+<span class="sd">        &gt;&gt;&gt; Encoder.defaultFunctionHooks.append(myFunctionHook)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defaultConstraintHooks</span> <span class="o">=</span> <span class="p">[</span><span class="n">defaultConstraintHook</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;制約の符号化時に呼び出されるフック関数のリスト．デフォールト値は :obj:`.defaultConstraintHook` のみのリスト．</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; Encoder.defaultConstraintHooks</span>
+<span class="sd">        &gt;&gt;&gt; def myConstraintHook(c, encoder):</span>
+<span class="sd">        ...   match c:</span>
+<span class="sd">        ...     case [&quot;even&quot;, x]:</span>
+<span class="sd">        ...       (lb, ub) = encoder.getBound(x)</span>
+<span class="sd">        ...       y = Var()</span>
+<span class="sd">        ...       encoder.put([&quot;int&quot;, y, int(lb/2), int(ub/2)])</span>
+<span class="sd">        ...       c = [&quot;==&quot;, x, [&quot;+&quot;, y, y]]</span>
+<span class="sd">        ...   return c</span>
+<span class="sd">        ... </span>
+<span class="sd">        &gt;&gt;&gt; Encoder.defaultConstraintHooks.append(myConstraintHook)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">delimEq</span> <span class="o">=</span> <span class="s2">&quot;==&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;v=k を表す命題変数の区切り文字．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">delimGe</span> <span class="o">=</span> <span class="s2">&quot;&gt;=&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;v&gt;=k を表す命題変数の区切り文字．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">delimBit</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;v+lbのkビット目を表す命題変数の区切り文字．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functionHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraintHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">functionHooks</span> <span class="o">=</span> <span class="n">functionHooks</span> <span class="ow">or</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">defaultFunctionHooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraintHooks</span> <span class="o">=</span> <span class="n">constraintHooks</span> <span class="ow">or</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">defaultConstraintHooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remaining</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="n">Preprocessor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name2var</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">Encoder</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;Encoderはインスタンス化できない&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Encoder.defInt">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.defInt">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">defInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;整数変数をCSPに追加する．節は生成しない．</span>
+
+<span class="sd">        節は内部的な制約 [&quot;_int&quot;, v, lb, ub] で別に生成する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Var): 整数変数．</span>
+<span class="sd">            lb (int): 整数変数の下限値．</span>
+<span class="sd">            ub (int): 整数変数の上限値．</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            CspsatException: vがVarオブジェクトでない，あるいは下限値が上限値より大きい，あるいはすでにvが宣言されている．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Var</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">はVarオブジェクトでない&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">lb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">ub</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;整数変数</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">のドメインエラー: </span><span class="si">{</span><span class="n">lb</span><span class="si">}</span><span class="s2">..</span><span class="si">{</span><span class="n">ub</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;重複した宣言: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lb</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name2var</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span></div>
+
+
+<div class="viewcode-block" id="Encoder.variables">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.variables">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;これまで追加された変数のリストを返す．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            整数変数(:obj:`.Var`)のリストを返す．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Encoder.intLb">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.intLb">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">intLb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数vの下限値を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vがVarオブジェクトなら指定されている下限値．Boolオブジェクトなら0．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Var</span><span class="p">):</span>
+            <span class="n">lb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;整数変数</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">はintで宣言されていない&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lb</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">は整数変数(Var)でない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.intUb">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.intUb">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">intUb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数vの上限値を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vがVarオブジェクトなら指定されている上限値．Boolオブジェクトなら1．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Var</span><span class="p">):</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;整数変数</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">はintで宣言されていない&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ub</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">は整数変数(Var)でない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.intRange">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.intRange">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">intRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数vの下限値から上限値の値のrangeオブジェクトを返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vの下限値から上限値の値のrangeオブジェクト．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.wsumBound">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.wsumBound">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">wsumBound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;線形和wの下限値と上限値の対を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w (Wsum): 線形和．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            wの下限値lbと上限値ubの対 (lb,ub)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">():</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">lb</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="n">ub</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lb</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="n">ub</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.getBound">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.getBound">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;制約充足問題の式sの下限値と上限値を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            s (list): 制約充足問題の式．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            sの下限値lbと上限値ubの対 (lb,ub)．</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            CspsatException: 式の構文が間違っている．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">s</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Encoder.varEqK">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.varEqK">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varEqK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;a*v==kを表す命題変数を返す．</span>
+
+<span class="sd">        :obj:`DirectEncoder`, :obj:`OrderEncoder` で使用．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+<span class="sd">            k (int): 定数．</span>
+<span class="sd">            a (int, optional): 係数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vがBoolオブジェクトの時，k=0なら~v，k=1ならv，その他ならFALSEを返す．vがVarオブジェクトの時，kがvのドメインに含まれればv==kを表す命題変数，その他ならFALSEを返す．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">%</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FALSE</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">//</span> <span class="n">a</span>
+        <span class="c1"># v == k</span>
+        <span class="k">match</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+            <span class="k">case</span> <span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">~</span><span class="n">v</span>
+            <span class="k">case</span> <span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">v</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="k">_</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">FALSE</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="k">_</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FALSE</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="k">_</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimEq</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;varEqKの引数エラー: varEqK(</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.varToBool">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.varToBool">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varToBool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;変数vが0から1の値だけを取るとき，vに対する命題変数を返す．</span>
+
+<span class="sd">        Encoderの派生クラスで実装する必要がある．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vがBoolオブジェクトならvを返す．vがVarオブジェクトの場合は以下の通り．</span>
+
+<span class="sd">            * DirectEncodingの場合 v=1 に対応する命題変数．</span>
+<span class="sd">            * OrderEncodingの場合 v&gt;=1 に対応する命題変数．</span>
+<span class="sd">            * LogEncodingの場合 v の最下位ビットに対応する命題変数．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.encodeInt">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.encodeInt">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;整数変数をSAT符号化したCNF式をyieldするジェネレータ関数．</span>
+
+<span class="sd">        Encoderの派生クラスで実装する必要がある．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Var): 整数変数．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            CNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.isBoolLike">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.isBoolLike">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">isBoolLike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた整数変数が0-1変数なら真を返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Var): 整数変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vが0-1変数なら真．それ以外は偽．</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Var</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Encoder.encodeWsumEq0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.encodeWsumEq0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumEq0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;線形和の式 w==0 をSAT符号化したCNF式をyieldするジェネレータ関数．</span>
+
+<span class="sd">        Encoderの派生クラスで実装する必要がある．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w (Wsum): 線形和．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            CNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_pickV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">())):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">v1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">s1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">s1</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">a1</span><span class="p">):</span>
+                <span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v1</span>
+
+<div class="viewcode-block" id="Encoder.encodeWsumNe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.encodeWsumNe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumNe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;線形和の式 w!=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</span>
+
+<span class="sd">        Encoderの派生クラスで実装する必要がある．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w (Wsum): 線形和．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            CNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.encodeWsumLe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.encodeWsumLe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumLe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;線形和の式 w&lt;=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</span>
+
+<span class="sd">        Encoderの派生クラスで実装する必要がある．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w (Wsum): 線形和．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            CNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_encodeXclause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xclause</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lits</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[])</span>
+        <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">xclause</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lit</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+                <span class="n">lits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;XCNFの構文エラー: </span><span class="si">{</span><span class="n">xclause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">xclause</span>
+            <span class="k">return</span>
+        <span class="n">constraint</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">match</span> <span class="n">constraint</span><span class="p">:</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;_eq0&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumEq0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;_ne0&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumNe0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;_le0&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;eqK&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">SeqCounter</span><span class="o">.</span><span class="n">eqK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;neK&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">SeqCounter</span><span class="o">.</span><span class="n">neK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;leK&quot;</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">SeqCounter</span><span class="o">.</span><span class="n">leK</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">*</span><span class="n">lits</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;XCNF制約の構文エラー: </span><span class="si">{</span><span class="n">constraint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Encoder.encode">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.encode">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;追加された制約をSAT符号化した節をyieldするジェネレータ関数．</span>
+
+<span class="sd">        ただし制約が ``[&quot;minimize&quot;, x]`` あるいは ``[&quot;maximize&quot;, x]`` の場合は最小化あるいは最大化する線形和を設定する．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            SAT符号化した節．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining</span><span class="p">:</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remaining</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">constraint</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">match</span> <span class="n">constraint</span><span class="p">:</span>
+                <span class="k">case</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="o">*</span><span class="k">_</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">]:</span>
+                    <span class="k">pass</span>
+                <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;minimize&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">minimize</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">maximize</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;minimizeあるいはmaxmizeの二重宣言: </span><span class="si">{</span><span class="n">constraint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">minimize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;maximize&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">minimize</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">maximize</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;minimizeあるいはmaxmizeの二重宣言: </span><span class="si">{</span><span class="n">constraint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">maximize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toWsum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;_int&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">]:</span> <span class="c1"># internal use</span>
+                    <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeInt</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">TRUE</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+                            <span class="k">yield</span> <span class="p">[</span> <span class="n">lit</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="k">if</span> <span class="n">lit</span> <span class="o">!=</span> <span class="n">FALSE</span> <span class="p">]</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">xclause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre</span><span class="o">.</span><span class="n">toXCNF</span><span class="p">(</span><span class="n">constraint</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;# xclause: </span><span class="si">{</span><span class="n">xclause</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encodeXclause</span><span class="p">(</span><span class="n">xclause</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">TRUE</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+                                <span class="k">yield</span> <span class="p">[</span> <span class="n">lit</span> <span class="k">for</span> <span class="n">lit</span> <span class="ow">in</span> <span class="n">clause</span> <span class="k">if</span> <span class="n">lit</span> <span class="o">!=</span> <span class="n">FALSE</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Encoder.put">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.put">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">constraints</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;制約を追加する．SAT符号化は行わない．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            constraints (list): 制約のリスト．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">constraint</span><span class="p">:</span>
+                <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defInt</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;_int&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">])</span> <span class="c1"># internal use</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">remaining</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.decode">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.decode">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">satModel</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;SATのモデルを制約充足問題のモデルに変換する．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            satModel (dict): SATのモデル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            制約充足問題のモデル．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Encoder.toCNF">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.toCNF">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">toCNF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;制約充足問題をSAT符号化したCNF式をyieldするジェネレータ関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            csp (list): 制約充足問題 (制約のリスト)．</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            CNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">csp</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Encoder.getBlock">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.Encoder.getBlock">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">satModel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;制約充足問題のモデルを否定する条件をCNF式として返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (dict): 制約充足問題のモデル．</span>
+<span class="sd">            satModel (dict): SATソルバーのモデル．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            モデルを否定したCNF式．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="DirectEncoder">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">DirectEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;直接符号化・支持符号化を実装したクラス．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functionHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraintHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">functionHooks</span><span class="p">,</span> <span class="n">constraintHooks</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="n">Preprocessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">introduceAux</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">useSC</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="DirectEncoder.varToBool">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.varToBool">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varToBool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:obj:`Encoder.varToBool` の :obj:`DirectEncoder` での実装</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.encodeInt">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.encodeInt">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;DirectEncoderでの実装</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useSC</span><span class="p">:</span>
+            <span class="c1"># Sequential counter</span>
+            <span class="k">yield from</span> <span class="n">SeqCounter</span><span class="o">.</span><span class="n">eqK</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Pair wise</span>
+            <span class="k">yield</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">qs</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="n">q</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">qs</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.encodeWsumEq0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumEq0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumEq0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lb</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumEq0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                        <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">*</span><span class="n">clause</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.encodeWsumNe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumNe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumNe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lb</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumNe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                        <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">*</span><span class="n">clause</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.encodeWsumLe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.encodeWsumLe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumLe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># v &lt;= -w.c/a</span>
+                    <span class="n">b</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">),</span><span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># v &gt;= -w.c/a</span>
+                    <span class="n">b</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                        <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">*</span><span class="n">clause</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.decode">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.decode">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">satModel</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">satModel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">satModel</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">delimEq</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">satModel</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimEq</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name2var</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                        <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">satModel</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="DirectEncoder.getBlock">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.DirectEncoder.getBlock">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">block</span></div>
+</div>
+
+
+<div class="viewcode-block" id="OrderEncoder">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">OrderEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;順序符号化を実装したクラス．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functionHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constraintHooks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">functionHooks</span><span class="p">,</span> <span class="n">constraintHooks</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre</span> <span class="o">=</span> <span class="n">Preprocessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">introduceAux</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OrderEncoder.varGeK">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.varGeK">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varGeK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;v&gt;=kを表す命題変数を返す．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Bool | Var): 変数．</span>
+<span class="sd">            k (int): 定数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vがBoolオブジェクトの時，k&lt;=0ならTRUE，k=1ならv，その他ならFALSEを返す．vがVarオブジェクトの時，kがvの下限値以下ならTRUE，上限値より大きいならFALSE，その他ならv&gt;=kを表す命題変数を返す．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># v &gt;= k</span>
+        <span class="k">match</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">k</span><span class="p">):</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="k">_</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TRUE</span>
+            <span class="k">case</span> <span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">v</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Bool</span><span class="p">(),</span> <span class="k">_</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FALSE</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="k">_</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">TRUE</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="k">_</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">FALSE</span>
+            <span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Var</span><span class="p">(),</span> <span class="k">_</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimGe</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;varGeKの引数エラー: varGeK(</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.varToBool">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.varToBool">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varToBool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:obj:`Encoder.varToBool` の :obj:`OrderEncoder` での実装</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.encodeInt">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.encodeInt">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;OrderEncoderでの実装</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.encodeWsumEq0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumEq0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumEq0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lb</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">neg</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.encodeWsumNe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumNe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumNe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lb</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varEqK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+                <span class="n">expr</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">toExpr</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">~</span><span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="o">~</span><span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+                <span class="k">yield</span> <span class="p">[</span> <span class="n">p</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.encodeWsumLe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.encodeWsumLe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumLe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_isSatLe0</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lb</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">ub</span>
+        <span class="k">def</span> <span class="nf">_isUnsatLe0</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lb</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wsumBound</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">return</span>
+        <span class="k">match</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">variables</span><span class="p">()):</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">[]</span> <span class="c1"># False clause</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="p">[]</span> <span class="c1"># True</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="o">-</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pickV</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">ds1</span> <span class="o">=</span> <span class="p">[</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">_isSatLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span> <span class="p">]</span>
+                <span class="n">ds2</span> <span class="o">=</span> <span class="p">[</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">intRange</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">_isUnsatLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span> <span class="p">]</span>
+                <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">coef</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds1</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                            <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="o">*</span><span class="n">clause</span> <span class="p">]</span>
+                    <span class="k">if</span> <span class="n">ds2</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="p">[</span> <span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">ds2</span><span class="p">))</span> <span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds1</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encodeWsumLe0</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">)):</span>
+                            <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="o">*</span><span class="n">clause</span> <span class="p">]</span>
+                    <span class="k">if</span> <span class="n">ds2</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">ds2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.decode">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.decode">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">satModel</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">satModel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">satModel</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">delimGe</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">satModel</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimGe</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name2var</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                        <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">delimEq</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">satModel</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="OrderEncoder.getBlock">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.OrderEncoder.getBlock">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]))</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varGeK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">block</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LogEncoder">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder">[ドキュメント]</a>
+<span class="k">class</span> <span class="nc">LogEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;対数符号化を実装したクラス．</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LogEncoder.varEqK">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.varEqK">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varEqK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">CspsatException</span><span class="p">(</span><span class="s2">&quot;実装されていない&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_nbits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="o">.</span><span class="n">bit_length</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LogEncoder.varBitK">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.varBitK">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varBitK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた整数変数vのkビット目を返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Var): 整数変数．</span>
+<span class="sd">            k (int): ビット位置．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vのkビット目を表す命題変数 (:obj:`.Bool`)．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nbits</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimBit</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FALSE</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.getBools">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.getBools">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;与えられた整数変数を表現するビット列を返す関数．</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v (Var): 整数変数．</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            vを表現するビット列．</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">varBitK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nbits</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.varToBool">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.varToBool">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">varToBool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:obj:`Encoder.varToBool` の :obj:`LogEncoder` での実装</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">varBitK</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.encodeInt">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.encodeInt">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeInt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">intUb</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="k">yield from</span> <span class="n">Binary</span><span class="o">.</span><span class="n">leK</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getBools</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">ub</span> <span class="o">-</span> <span class="n">lb</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.encodeWsumEq0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumEq0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumEq0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">binEqu</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">addNum</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">wsum</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">binEqu</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">binEqu</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="s2">&quot;==&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.encodeWsumNe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumNe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumNe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">binEqu</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">addNum</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">wsum</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">binEqu</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">binEqu</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="s2">&quot;!=&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.encodeWsumLe0">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.encodeWsumLe0">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">encodeWsumLe0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">binEqu</span> <span class="o">=</span> <span class="n">BinaryEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">binEqu</span><span class="o">.</span><span class="n">addNum</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">wsum</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">binEqu</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">binEqu</span><span class="o">.</span><span class="n">cmp0</span><span class="p">(</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.decode">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.decode">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">satModel</span><span class="p">,</span> <span class="n">includeAux</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">satModel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intLb</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">satModel</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Encoder</span><span class="o">.</span><span class="n">delimBit</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">satModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">Encoder</span><span class="o">.</span><span class="n">delimBit</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name2var</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                        <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">isAux</span><span class="p">()</span> <span class="ow">or</span> <span class="n">includeAux</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">satModel</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="LogEncoder.getBlock">
+<a class="viewcode-back" href="../../cspsat.csp.html#cspsat.csp.LogEncoder.getBlock">[ドキュメント]</a>
+    <span class="k">def</span> <span class="nf">getBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">satModel</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Bool</span><span class="p">):</span>
+                <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">~</span><span class="n">v</span> <span class="k">if</span> <span class="n">model</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBools</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">~</span><span class="n">x</span> <span class="k">if</span> <span class="n">satModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">block</span></div>
+</div>
+
+
+<span class="kn">from</span> <span class="nn">.sat</span> <span class="kn">import</span> <span class="n">SAT</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">CspsatException</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">Var</span><span class="p">,</span> <span class="n">Binary</span><span class="p">,</span> <span class="n">BinaryEquation</span><span class="p">,</span> <span class="n">SeqCounter</span><span class="p">,</span> <span class="n">Preprocessor</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

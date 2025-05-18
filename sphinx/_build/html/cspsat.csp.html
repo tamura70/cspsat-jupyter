@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.csp module &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c033477b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=4dbe4bdc"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="cspsat.dpll module" href="cspsat.dpll.html" />
+    <link rel="prev" title="cspsat package" href="cspsat.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cspsat.csp module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.csp.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.csp.Encoder"><code class="docutils literal notranslate"><span class="pre">Encoder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.csp.DirectEncoder"><code class="docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.csp.OrderEncoder"><code class="docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.csp.LogEncoder"><code class="docutils literal notranslate"><span class="pre">LogEncoder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cspsat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cspsat.csp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.dpll.html">cspsat.dpll module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cspsat.html">cspsat package</a></li>
+      <li class="breadcrumb-item active">cspsat.csp module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cspsat.csp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cspsat.csp">
+<span id="cspsat-csp-module"></span><h1>cspsat.csp module<a class="headerlink" href="#module-cspsat.csp" title="Link to this heading"></a></h1>
+<p>制約充足問題(CSP)のSAT符号化のモジュール．</p>
+<p>以下のクラスからなる．</p>
+<ul class="simple">
+<li><p>Solverクラス: 制約ソルバーのクラス．</p></li>
+<li><p>Encoderクラス: SAT符号化の基底クラス</p></li>
+<li><p>DirectEncoderクラス: 直接符号化・支持符号化のクラス</p></li>
+<li><p>OrderEncoderクラス: 順序符号化のクラス</p></li>
+<li><p>LogEncoderクラス: 対数符号化のクラス</p></li>
+</ul>
+<p>以下の記法の説明でA1, A2, ..., Anは制約．X1, X2, ..., Xnは式，L1, L2, ..., Lnはリテラルまたはドメインが0,1の整数変数を表す．</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">宣言の記法</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 44.4%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>名称など</p></th>
+<th class="head"><p>宣言の記法</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>整数変数</p></td>
+<td><p>[&quot;int&quot;, lb, ub]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>最小化</p></td>
+<td><p>[&quot;minimize&quot;, X]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>最大化</p></td>
+<td><p>[&quot;maximize&quot;, X]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>コメント</p></td>
+<td><p>[&quot;comment&quot;, ...], [&quot;#&quot;, ...]</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">式の記法</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 44.4%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>名称など</p></th>
+<th class="head"><p>式の記法</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>整数定数</p></td>
+<td><p>n</p></td>
+<td><p>0, 1, -1, 2, -2などの整数</p></td>
+</tr>
+<tr class="row-odd"><td><p>整数変数</p></td>
+<td><p>Var(<span class="math notranslate nohighlight">\(x\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(x\)</span> は変数名の文字列</p></td>
+</tr>
+<tr class="row-even"><td><p>リテラル</p></td>
+<td><p>p, ~p</p></td>
+<td><p>pは <a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オプジェクト</p></td>
+</tr>
+<tr class="row-odd"><td><p>マイナス</p></td>
+<td><p>[&quot;-&quot;, X1]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>加算</p></td>
+<td><p>[&quot;+&quot;, X1, ..., Xn]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>減算</p></td>
+<td><p>[&quot;-&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>定数乗算</p></td>
+<td><p>[&quot;*&quot;, X1, X2]</p></td>
+<td><p>X1またはX2は整数定数</p></td>
+</tr>
+<tr class="row-odd"><td><p>定数除算</p></td>
+<td><p>[&quot;div&quot;, X, n], [&quot;//&quot;, X, n]</p></td>
+<td><p>nは正の整数定数. <a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-even"><td><p>定数剰余</p></td>
+<td><p>[&quot;mod&quot;, X, n], [&quot;%&quot;, X, n]</p></td>
+<td><p>nは正の整数定数. <a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>絶対値</p></td>
+<td><p>[&quot;abs&quot;, X]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-even"><td><p>最小値</p></td>
+<td><p>[&quot;min&quot;, X1, ..., Xn]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>最大値</p></td>
+<td><p>[&quot;max&quot;, X1, ..., Xn]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-even"><td><p>if式</p></td>
+<td><p>[&quot;if&quot;, A, X, Y]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>Xのiビット目</p></td>
+<td><p>[&quot;bit&quot;, X, i]</p></td>
+<td><p>iは0以上の整数定数. <a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultFunctionHook</span></code></a> で定義</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">制約の記法</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 44.4%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>名称など</p></th>
+<th class="head"><p>制約の記法</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>真</p></td>
+<td><p>TRUE</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>偽</p></td>
+<td><p>FALSE</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>命題変数</p></td>
+<td><p>Bool(<span class="math notranslate nohighlight">\(p\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(p\)</span> は変数名の文字列</p></td>
+</tr>
+<tr class="row-odd"><td><p>負リテラル</p></td>
+<td><p>~p</p></td>
+<td><p>pは <a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a> オブジェクト</p></td>
+</tr>
+<tr class="row-even"><td><p>否定</p></td>
+<td><p>[&quot;not&quot;, A1], [&quot;!&quot;, A1]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>論理積</p></td>
+<td><p>[&quot;and&quot;, A1, ..., An], [&quot;&amp;&amp;&quot;, A1, ..., An]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>論理和</p></td>
+<td><p>[&quot;or&quot;, A1, ..., An], [&quot;||&quot;, A1, ..., An]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>含意</p></td>
+<td><p>[&quot;imp&quot;, A1, A2], [&quot;=&gt;&quot;, A1, A2]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>同値</p></td>
+<td><p>[&quot;equ&quot;, A1, A2], [&quot;&lt;=&gt;&quot;, A1, A2]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>排他的論理和</p></td>
+<td><p>[&quot;xor&quot;, A1, ..., An], [&quot;^&quot;, A1, ..., An]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(X_1 = X_2\)</span></p></td>
+<td><p>[&quot;eq&quot;, X1, X2], [&quot;==&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(X_1 \ne X_2\)</span></p></td>
+<td><p>[&quot;ne&quot;, X1, X2], [&quot;!=&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(X_1 \ge X_2\)</span></p></td>
+<td><p>[&quot;ge&quot;, X1, X2], [&quot;&gt;=&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(X_1 &gt; X_2\)</span></p></td>
+<td><p>[&quot;gt&quot;, X1, X2], [&quot;&gt;&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(X_1 \le X_2\)</span></p></td>
+<td><p>[&quot;le&quot;, X1, X2], [&quot;&lt;=&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(X_1 &lt; X_2\)</span></p></td>
+<td><p>[&quot;lt&quot;, X1, X2], [&quot;&lt;&quot;, X1, X2]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\sum L_i = k\)</span> (exact-k制約)</p></td>
+<td><p>[&quot;eqK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\sum L_i \ne k\)</span></p></td>
+<td><p>[&quot;neK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\sum L_i \ge k\)</span> (at-least-k制約)</p></td>
+<td><p>[&quot;geK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\sum L_i &gt; k\)</span></p></td>
+<td><p>[&quot;gtK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\sum L_i \le k\)</span> (at-most-k制約)</p></td>
+<td><p>[&quot;leK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\sum L_i &lt; k\)</span></p></td>
+<td><p>[&quot;ltK&quot;, [L1,...,Ln], k]</p></td>
+<td><p>kは整数定数</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">グローバル制約の記法</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 44.4%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>名称など</p></th>
+<th class="head"><p>グローバル制約の記法</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>alldifferent制約</p></td>
+<td><p>[&quot;alldifferent&quot;, X1, ..., Xn]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>辞書順比較</p></td>
+<td><p>[&quot;lexCmp&quot;, cmp, [X1,...,Xn], [Y1,...,Yn]]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-even"><td><p>乗算比較</p></td>
+<td><p>[&quot;mulCmp&quot;, cmp, X, Y, Z]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>ベキ乗比較</p></td>
+<td><p>[&quot;powCmp&quot;, cmp, X, n, Y]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-even"><td><p>ビット列</p></td>
+<td><p>[&quot;bits&quot;, [X1,...,Xn], X]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+<tr class="row-odd"><td><p>ビット</p></td>
+<td><p>[&quot;bit&quot;, X, i]</p></td>
+<td><p><a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspsat.hooks.defaultConstraintHook</span></code></a> で定義</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>本プログラムは学習用の目的で作成されている．
+実用上の問題への適用は想定していない．</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.csp.Solver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.csp.</span></span><span class="sig-name descname"><span class="pre">Solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positiveOnly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>制約ソルバーのクラス．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder</strong> (<a class="reference internal" href="#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><em>Encoder</em></a>) -- 使用する <a class="reference internal" href="#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder</span></code></a> オブジェクト．</p></li>
+<li><p><strong>sat</strong> (<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><em>SAT</em></a><em>, </em><em>optional</em>) -- 使用する <a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> ソルバーオブジェクト．指定しなければcommandで指定したSATソルバーを用いる．</p></li>
+<li><p><strong>command</strong> (<em>str</em><em>, </em><em>optional</em>) -- 利用するSATソルバーのコマンド．指定しなければ <code class="docutils literal notranslate"><span class="pre">./sat4j</span></code> が利用される(Windowsなら <code class="docutils literal notranslate"><span class="pre">.\sat4j.bat</span></code>)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のcommand参照．</p></li>
+<li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォールトはFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のpositiveOnly参照．</p></li>
+<li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォールトはFalse)．
+<a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT" title="cspsat.sat.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a> のincludeAux参照．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 正なら実行の詳細情報を表示する (デフォールトは0)．</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#cspsat.csp.Solver.model" title="Link to this definition"></a></dt>
+<dd><p>最後に得られたモデル． 整数変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Var</span></code></a>)あるいは命題変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>)をキーとし，変数の値が保持された辞書(dict)．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#cspsat.csp.Solver.stats" title="Link to this definition"></a></dt>
+<dd><p>ソルバー実行の統計データ．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.minimize">
+<span class="sig-name descname"><span class="pre">minimize</span></span><a class="headerlink" href="#cspsat.csp.Solver.minimize" title="Link to this definition"></a></dt>
+<dd><p>最小化する線形和．Noneなら最小化しない．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum">Wsum</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.maximize">
+<span class="sig-name descname"><span class="pre">maximize</span></span><a class="headerlink" href="#cspsat.csp.Solver.maximize" title="Link to this definition"></a></dt>
+<dd><p>最大化する線形和．Noneなら最大化しない．minimizeが設定されていればそちらを優先する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum">Wsum</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">constraints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver.add"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver.add" title="Link to this definition"></a></dt>
+<dd><p>制約をSAT符号化したCNF式をSATソルバーに追加する．
+<a class="reference internal" href="#cspsat.csp.Encoder.put" title="cspsat.csp.Encoder.put"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder.put</span></code></a>, <a class="reference internal" href="#cspsat.csp.Encoder.encode" title="cspsat.csp.Encoder.encode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder.encode</span></code></a>, <a class="reference internal" href="cspsat.sat.html#cspsat.sat.SAT.add" title="cspsat.sat.SAT.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT.add</span></code></a> を呼び出す．</p>
+<p>ただし制約が <code class="docutils literal notranslate"><span class="pre">[&quot;minimize&quot;,</span> <span class="pre">w]</span></code> あるいは <code class="docutils literal notranslate"><span class="pre">[&quot;maximize&quot;,</span> <span class="pre">w]</span></code> の場合は最小化あるいは最大化する線形和を設定する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>list</em>) -- 制約のリスト．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver.find"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver.find" title="Link to this definition"></a></dt>
+<dd><p>SATソルバーに追加されている制約充足問題の解をSATソルバーで求めて制約充足問題の解に変換して返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>見つかった制約充足問題のモデル．モデルが見つからなければNone．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.getStat">
+<span class="sig-name descname"><span class="pre">getStat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">includeAll</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver.getStat"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver.getStat" title="Link to this definition"></a></dt>
+<dd><p>このソルバーによる実行の統計データを返す．</p>
+<p>なお，実行時間などの単位は秒で，CPU時間ではなく経過時間である．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>includeAll</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Falseならsatフォールドの値は最後のSATソルバー実行の統計データのみである．
+TrueならすべてのSATソルバー実行の統計データのリストになる (デフォールトはFalse)．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>以下からなる辞書(dict)を返す．</p>
+<ul class="simple">
+<li><p>result: 実行結果 (SATISFIABLE, UNSATISFIABLE, MINIMUM n, MAXIMUM n, TIMEOUT, UNKNOWN, None)．</p></li>
+<li><p>ncalls: SATソルバーを呼び出した回数．</p></li>
+<li><p>nmodels: SATソルバーでモデルを見つけた回数．</p></li>
+<li><p>time: 関数の実行時間 (秒)．</p></li>
+<li><p>encoding: SAT符号化にかかった時間 (累積値，秒)．</p></li>
+<li><p>solving: SATソルバーの実行にかかった時間 (累積値，秒)．</p></li>
+<li><p>command: SATソルバーのコマンド．</p></li>
+<li><p>sat: SATソルバーの統計データ (includeAllがFalseなら最後の統計データ，Trueならすべての統計データのリスト)．</p></li>
+</ul>
+<p>SATソルバーの統計データ(satフィールド)は，以下からなるdictである．</p>
+<ul class="simple">
+<li><p>result: SATソルバーの実行結果 (SATISFIABLE, UNSATISFIABLE, TIMEOUT, UNKNOWN, None)．</p></li>
+<li><p>variables: CNF式の命題変数の個数．</p></li>
+<li><p>clauses: CNF式の節の個数．</p></li>
+<li><p>conflicts: SATソルバー実行での衝突の回数．</p></li>
+<li><p>decisions: SATソルバー実行での決定の回数．</p></li>
+<li><p>propagations: SATソルバー実行での伝播の回数．</p></li>
+<li><p>solving: SATソルバー呼び出しの実行時間 (秒)．</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.solutions">
+<span class="sig-name descname"><span class="pre">solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver.solutions"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver.solutions" title="Link to this definition"></a></dt>
+<dd><p>与えられた制約充足問題の複数のモデルを探索し，それらをyieldするジェネレータ関数．</p>
+<p>指定された上限の個数までモデルを探索し，モデルが見つかればそれをyieldする．
+最小化あるいは最大化する線形和が指定されている場合は，制約最適問題として最適解を二分探索する．
+ただし，最小化問題の場合，線形和が最適値未満なら常に充足不能，最適値以上なら常に充足可能と仮定している．
+同様に，最大化問題の場合，線形和が最適値より大きいなら常に充足不能，最適値以下なら常に充足可能と仮定している．
+なお，複数のモデルを探索において，補助変数の値のみが異なっている場合は同じモデルとみなされる．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csp</strong> (<em>list</em>) -- 制約充足問題 (制約のリスト)．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォールトは1)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>見つかったモデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Solver.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Solver.solve"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Solver.solve" title="Link to this definition"></a></dt>
+<dd><p>与えられた制約充足問題の複数のモデルを探索し，表示する関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csp</strong> (<em>list</em>) -- 制約充足問題 (制約のリスト)．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) -- 探索するモデルの最大個数．0なら全解を探索する (デフォールトは1)．</p></li>
+<li><p><strong>stat</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueなら統計データも表示する (デフォールトはFalse)．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.csp.</span></span><span class="sig-name descname"><span class="pre">Encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functionHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraintHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>制約充足問題(CSP)をSAT符号化する抽象基底クラス．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>functionHooks</strong> (<em>optional</em>) -- 式の符号化時に呼び出すフック関数のリスト．指定しなければ <a class="reference internal" href="#cspsat.csp.Encoder.defaultFunctionHooks" title="cspsat.csp.Encoder.defaultFunctionHooks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultFunctionHooks</span></code></a> を使用する．</p></li>
+<li><p><strong>constraintHooks</strong> (<em>optional</em>) -- 制約の符号化時に呼び出すフック関数のリスト．指定しなければ <a class="reference internal" href="#cspsat.csp.Encoder.defaultConstraintHooks" title="cspsat.csp.Encoder.defaultConstraintHooks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultConstraintHooks</span></code></a> を使用する．</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 正なら実行の詳細情報を表示する (デフォールトは0)．</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Atrributes:</dt><dd><p>solver (Solver): このオブジェクトを利用する制約ソルバーのクラス．</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.defaultFunctionHooks">
+<span class="sig-name descname"><span class="pre">defaultFunctionHooks</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;function</span> <span class="pre">defaultFunctionHook&gt;]</span></em><a class="headerlink" href="#cspsat.csp.Encoder.defaultFunctionHooks" title="Link to this definition"></a></dt>
+<dd><p>式の符号化時に呼び出されるフック関数のリスト．デフォールト値は <a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultFunctionHook" title="cspsat.hooks.defaultFunctionHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultFunctionHook</span></code></a> のみのリスト．</p>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Encoder</span><span class="o">.</span><span class="n">defaultFunctionHooks</span>
+<span class="go">[&lt;function defaultFunctionHook at 0x722f0efa0540&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">myFunctionHook</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoder</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="k">match</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;++&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+<span class="gp">... </span>      <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>  <span class="k">return</span> <span class="n">f</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Encoder</span><span class="o">.</span><span class="n">defaultFunctionHooks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">myFunctionHook</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.defaultConstraintHooks">
+<span class="sig-name descname"><span class="pre">defaultConstraintHooks</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;function</span> <span class="pre">defaultConstraintHook&gt;]</span></em><a class="headerlink" href="#cspsat.csp.Encoder.defaultConstraintHooks" title="Link to this definition"></a></dt>
+<dd><p>制約の符号化時に呼び出されるフック関数のリスト．デフォールト値は <a class="reference internal" href="cspsat.hooks.html#cspsat.hooks.defaultConstraintHook" title="cspsat.hooks.defaultConstraintHook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultConstraintHook</span></code></a> のみのリスト．</p>
+<p class="rubric">サンプル</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Encoder</span><span class="o">.</span><span class="n">defaultConstraintHooks</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">myConstraintHook</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">encoder</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="k">match</span> <span class="n">c</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">case</span> <span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">]:</span>
+<span class="gp">... </span>      <span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">getBound</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>      <span class="n">y</span> <span class="o">=</span> <span class="n">Var</span><span class="p">()</span>
+<span class="gp">... </span>      <span class="n">encoder</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">lb</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">ub</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+<span class="gp">... </span>      <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">]]</span>
+<span class="gp">... </span>  <span class="k">return</span> <span class="n">c</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Encoder</span><span class="o">.</span><span class="n">defaultConstraintHooks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">myConstraintHook</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.delimEq">
+<span class="sig-name descname"><span class="pre">delimEq</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'=='</span></em><a class="headerlink" href="#cspsat.csp.Encoder.delimEq" title="Link to this definition"></a></dt>
+<dd><p>v=k を表す命題変数の区切り文字．</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.delimGe">
+<span class="sig-name descname"><span class="pre">delimGe</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&gt;='</span></em><a class="headerlink" href="#cspsat.csp.Encoder.delimGe" title="Link to this definition"></a></dt>
+<dd><p>v&gt;=k を表す命題変数の区切り文字．</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.delimBit">
+<span class="sig-name descname"><span class="pre">delimBit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&#64;'</span></em><a class="headerlink" href="#cspsat.csp.Encoder.delimBit" title="Link to this definition"></a></dt>
+<dd><p>v+lbのkビット目を表す命題変数の区切り文字．</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.defInt">
+<span class="sig-name descname"><span class="pre">defInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.defInt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.defInt" title="Link to this definition"></a></dt>
+<dd><p>整数変数をCSPに追加する．節は生成しない．</p>
+<p>節は内部的な制約 [&quot;_int&quot;, v, lb, ub] で別に生成する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p></li>
+<li><p><strong>lb</strong> (<em>int</em>) -- 整数変数の下限値．</p></li>
+<li><p><strong>ub</strong> (<em>int</em>) -- 整数変数の上限値．</p></li>
+</ul>
+</dd>
+<dt class="field-even">例外<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- vがVarオブジェクトでない，あるいは下限値が上限値より大きい，あるいはすでにvが宣言されている．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.variables"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.variables" title="Link to this definition"></a></dt>
+<dd><p>これまで追加された変数のリストを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>整数変数(<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Var</span></code></a>)のリストを返す．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.intLb">
+<span class="sig-name descname"><span class="pre">intLb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.intLb"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.intLb" title="Link to this definition"></a></dt>
+<dd><p>変数vの下限値を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vがVarオブジェクトなら指定されている下限値．Boolオブジェクトなら0．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.intUb">
+<span class="sig-name descname"><span class="pre">intUb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.intUb"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.intUb" title="Link to this definition"></a></dt>
+<dd><p>変数vの上限値を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vがVarオブジェクトなら指定されている上限値．Boolオブジェクトなら1．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.intRange">
+<span class="sig-name descname"><span class="pre">intRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.intRange"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.intRange" title="Link to this definition"></a></dt>
+<dd><p>変数vの下限値から上限値の値のrangeオブジェクトを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vの下限値から上限値の値のrangeオブジェクト．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.wsumBound">
+<span class="sig-name descname"><span class="pre">wsumBound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.wsumBound"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.wsumBound" title="Link to this definition"></a></dt>
+<dd><p>線形和wの下限値と上限値の対を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>wの下限値lbと上限値ubの対 (lb,ub)．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.getBound">
+<span class="sig-name descname"><span class="pre">getBound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.getBound"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.getBound" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題の式sの下限値と上限値を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>list</em>) -- 制約充足問題の式．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>sの下限値lbと上限値ubの対 (lb,ub)．</p>
+</dd>
+<dt class="field-odd">例外<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cspsat.util.html#cspsat.util.CspsatException" title="cspsat.util.CspsatException"><strong>CspsatException</strong></a> -- 式の構文が間違っている．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.varEqK">
+<span class="sig-name descname"><span class="pre">varEqK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.varEqK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.varEqK" title="Link to this definition"></a></dt>
+<dd><p>a*v==kを表す命題変数を返す．</p>
+<p><a class="reference internal" href="#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a>, <a class="reference internal" href="#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> で使用．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 定数．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>, </em><em>optional</em>) -- 係数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vがBoolオブジェクトの時，k=0なら~v，k=1ならv，その他ならFALSEを返す．vがVarオブジェクトの時，kがvのドメインに含まれればv==kを表す命題変数，その他ならFALSEを返す．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.varToBool">
+<span class="sig-name descname"><span class="pre">varToBool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.varToBool"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.varToBool" title="Link to this definition"></a></dt>
+<dd><p>変数vが0から1の値だけを取るとき，vに対する命題変数を返す．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>vがBoolオブジェクトならvを返す．vがVarオブジェクトの場合は以下の通り．</p>
+<ul class="simple">
+<li><p>DirectEncodingの場合 v=1 に対応する命題変数．</p></li>
+<li><p>OrderEncodingの場合 v&gt;=1 に対応する命題変数．</p></li>
+<li><p>LogEncodingの場合 v の最下位ビットに対応する命題変数．</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.encodeInt">
+<span class="sig-name descname"><span class="pre">encodeInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.encodeInt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.encodeInt" title="Link to this definition"></a></dt>
+<dd><p>整数変数をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.isBoolLike">
+<span class="sig-name descname"><span class="pre">isBoolLike</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.isBoolLike"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.isBoolLike" title="Link to this definition"></a></dt>
+<dd><p>与えられた整数変数が0-1変数なら真を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vが0-1変数なら真．それ以外は偽．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.encodeWsumEq0">
+<span class="sig-name descname"><span class="pre">encodeWsumEq0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.encodeWsumEq0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.encodeWsumEq0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w==0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.encodeWsumNe0">
+<span class="sig-name descname"><span class="pre">encodeWsumNe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.encodeWsumNe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.encodeWsumNe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w!=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.encodeWsumLe0">
+<span class="sig-name descname"><span class="pre">encodeWsumLe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.encodeWsumLe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.encodeWsumLe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w&lt;=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.encode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.encode" title="Link to this definition"></a></dt>
+<dd><p>追加された制約をSAT符号化した節をyieldするジェネレータ関数．</p>
+<p>ただし制約が <code class="docutils literal notranslate"><span class="pre">[&quot;minimize&quot;,</span> <span class="pre">x]</span></code> あるいは <code class="docutils literal notranslate"><span class="pre">[&quot;maximize&quot;,</span> <span class="pre">x]</span></code> の場合は最小化あるいは最大化する線形和を設定する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">列挙<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SAT符号化した節．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.put">
+<span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">constraints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.put"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.put" title="Link to this definition"></a></dt>
+<dd><p>制約を追加する．SAT符号化は行わない．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>constraints</strong> (<em>list</em>) -- 制約のリスト．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.decode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.decode" title="Link to this definition"></a></dt>
+<dd><p>SATのモデルを制約充足問題のモデルに変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>satModel</strong> (<em>dict</em>) -- SATのモデル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>制約充足問題のモデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.toCNF">
+<span class="sig-name descname"><span class="pre">toCNF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.toCNF"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.toCNF" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>csp</strong> (<em>list</em>) -- 制約充足問題 (制約のリスト)．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.Encoder.getBlock">
+<span class="sig-name descname"><span class="pre">getBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#Encoder.getBlock"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.Encoder.getBlock" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題のモデルを否定する条件をCNF式として返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) -- 制約充足問題のモデル．</p></li>
+<li><p><strong>satModel</strong> (<em>dict</em>) -- SATソルバーのモデル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデルを否定したCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.csp.</span></span><span class="sig-name descname"><span class="pre">DirectEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functionHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraintHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Encoder</span></code></a></p>
+<p>直接符号化・支持符号化を実装したクラス．</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.varToBool">
+<span class="sig-name descname"><span class="pre">varToBool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.varToBool"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.varToBool" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#cspsat.csp.Encoder.varToBool" title="cspsat.csp.Encoder.varToBool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder.varToBool</span></code></a> の <a class="reference internal" href="#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a> での実装</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.encodeInt">
+<span class="sig-name descname"><span class="pre">encodeInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.encodeInt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.encodeInt" title="Link to this definition"></a></dt>
+<dd><p>DirectEncoderでの実装</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.encodeWsumEq0">
+<span class="sig-name descname"><span class="pre">encodeWsumEq0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.encodeWsumEq0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.encodeWsumEq0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w==0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.encodeWsumNe0">
+<span class="sig-name descname"><span class="pre">encodeWsumNe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.encodeWsumNe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.encodeWsumNe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w!=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.encodeWsumLe0">
+<span class="sig-name descname"><span class="pre">encodeWsumLe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.encodeWsumLe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.encodeWsumLe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w&lt;=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.decode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.decode" title="Link to this definition"></a></dt>
+<dd><p>SATのモデルを制約充足問題のモデルに変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>satModel</strong> (<em>dict</em>) -- SATのモデル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>制約充足問題のモデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.DirectEncoder.getBlock">
+<span class="sig-name descname"><span class="pre">getBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#DirectEncoder.getBlock"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.DirectEncoder.getBlock" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題のモデルを否定する条件をCNF式として返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) -- 制約充足問題のモデル．</p></li>
+<li><p><strong>satModel</strong> (<em>dict</em>) -- SATソルバーのモデル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデルを否定したCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.csp.</span></span><span class="sig-name descname"><span class="pre">OrderEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functionHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraintHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Encoder</span></code></a></p>
+<p>順序符号化を実装したクラス．</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.varGeK">
+<span class="sig-name descname"><span class="pre">varGeK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.varGeK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.varGeK" title="Link to this definition"></a></dt>
+<dd><p>v&gt;=kを表す命題変数を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 定数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vがBoolオブジェクトの時，k&lt;=0ならTRUE，k=1ならv，その他ならFALSEを返す．vがVarオブジェクトの時，kがvの下限値以下ならTRUE，上限値より大きいならFALSE，その他ならv&gt;=kを表す命題変数を返す．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.varToBool">
+<span class="sig-name descname"><span class="pre">varToBool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.varToBool"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.varToBool" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#cspsat.csp.Encoder.varToBool" title="cspsat.csp.Encoder.varToBool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder.varToBool</span></code></a> の <a class="reference internal" href="#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> での実装</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.encodeInt">
+<span class="sig-name descname"><span class="pre">encodeInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.encodeInt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.encodeInt" title="Link to this definition"></a></dt>
+<dd><p>OrderEncoderでの実装</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.encodeWsumEq0">
+<span class="sig-name descname"><span class="pre">encodeWsumEq0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.encodeWsumEq0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.encodeWsumEq0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w==0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.encodeWsumNe0">
+<span class="sig-name descname"><span class="pre">encodeWsumNe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.encodeWsumNe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.encodeWsumNe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w!=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.encodeWsumLe0">
+<span class="sig-name descname"><span class="pre">encodeWsumLe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.encodeWsumLe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.encodeWsumLe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w&lt;=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.decode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.decode" title="Link to this definition"></a></dt>
+<dd><p>SATのモデルを制約充足問題のモデルに変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>satModel</strong> (<em>dict</em>) -- SATのモデル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>制約充足問題のモデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.OrderEncoder.getBlock">
+<span class="sig-name descname"><span class="pre">getBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#OrderEncoder.getBlock"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.OrderEncoder.getBlock" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題のモデルを否定する条件をCNF式として返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) -- 制約充足問題のモデル．</p></li>
+<li><p><strong>satModel</strong> (<em>dict</em>) -- SATソルバーのモデル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデルを否定したCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.csp.</span></span><span class="sig-name descname"><span class="pre">LogEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functionHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraintHooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#cspsat.csp.Encoder" title="cspsat.csp.Encoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Encoder</span></code></a></p>
+<p>対数符号化を実装したクラス．</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.varEqK">
+<span class="sig-name descname"><span class="pre">varEqK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.varEqK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.varEqK" title="Link to this definition"></a></dt>
+<dd><p>a*v==kを表す命題変数を返す．</p>
+<p><a class="reference internal" href="#cspsat.csp.DirectEncoder" title="cspsat.csp.DirectEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DirectEncoder</span></code></a>, <a class="reference internal" href="#cspsat.csp.OrderEncoder" title="cspsat.csp.OrderEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderEncoder</span></code></a> で使用．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><em>Bool</em></a><em> | </em><a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 変数．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- 定数．</p></li>
+<li><p><strong>a</strong> (<em>int</em><em>, </em><em>optional</em>) -- 係数．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vがBoolオブジェクトの時，k=0なら~v，k=1ならv，その他ならFALSEを返す．vがVarオブジェクトの時，kがvのドメインに含まれればv==kを表す命題変数，その他ならFALSEを返す．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.varBitK">
+<span class="sig-name descname"><span class="pre">varBitK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.varBitK"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.varBitK" title="Link to this definition"></a></dt>
+<dd><p>与えられた整数変数vのkビット目を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p></li>
+<li><p><strong>k</strong> (<em>int</em>) -- ビット位置．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vのkビット目を表す命題変数 (<a class="reference internal" href="cspsat.util.html#cspsat.util.Bool" title="cspsat.util.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>)．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.getBools">
+<span class="sig-name descname"><span class="pre">getBools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.getBools"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.getBools" title="Link to this definition"></a></dt>
+<dd><p>与えられた整数変数を表現するビット列を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>vを表現するビット列．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.varToBool">
+<span class="sig-name descname"><span class="pre">varToBool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.varToBool"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.varToBool" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#cspsat.csp.Encoder.varToBool" title="cspsat.csp.Encoder.varToBool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Encoder.varToBool</span></code></a> の <a class="reference internal" href="#cspsat.csp.LogEncoder" title="cspsat.csp.LogEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogEncoder</span></code></a> での実装</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.encodeInt">
+<span class="sig-name descname"><span class="pre">encodeInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.encodeInt"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.encodeInt" title="Link to this definition"></a></dt>
+<dd><p>整数変数をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Var" title="cspsat.util.Var"><em>Var</em></a>) -- 整数変数．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.encodeWsumEq0">
+<span class="sig-name descname"><span class="pre">encodeWsumEq0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.encodeWsumEq0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.encodeWsumEq0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w==0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.encodeWsumNe0">
+<span class="sig-name descname"><span class="pre">encodeWsumNe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.encodeWsumNe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.encodeWsumNe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w!=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.encodeWsumLe0">
+<span class="sig-name descname"><span class="pre">encodeWsumLe0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.encodeWsumLe0"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.encodeWsumLe0" title="Link to this definition"></a></dt>
+<dd><p>線形和の式 w&lt;=0 をSAT符号化したCNF式をyieldするジェネレータ関数．</p>
+<p>Encoderの派生クラスで実装する必要がある．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference internal" href="cspsat.util.html#cspsat.util.Wsum" title="cspsat.util.Wsum"><em>Wsum</em></a>) -- 線形和．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>CNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeAux</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.decode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.decode" title="Link to this definition"></a></dt>
+<dd><p>SATのモデルを制約充足問題のモデルに変換する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>satModel</strong> (<em>dict</em>) -- SATのモデル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>制約充足問題のモデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.csp.LogEncoder.getBlock">
+<span class="sig-name descname"><span class="pre">getBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satModel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/csp.html#LogEncoder.getBlock"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.csp.LogEncoder.getBlock" title="Link to this definition"></a></dt>
+<dd><p>制約充足問題のモデルを否定する条件をCNF式として返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) -- 制約充足問題のモデル．</p></li>
+<li><p><strong>satModel</strong> (<em>dict</em>) -- SATソルバーのモデル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデルを否定したCNF式．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cspsat.html" class="btn btn-neutral float-left" title="cspsat package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cspsat.dpll.html" class="btn btn-neutral float-right" title="cspsat.dpll module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

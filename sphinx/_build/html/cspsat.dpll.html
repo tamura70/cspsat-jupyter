@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cspsat.dpll module &mdash; cspsat  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c033477b"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=4dbe4bdc"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="cspsat.functions module" href="cspsat.functions.html" />
+    <link rel="prev" title="cspsat.csp module" href="cspsat.csp.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cspsat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目次:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cspsat.dpll module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cspsat.dpll.DPLL"><code class="docutils literal notranslate"><span class="pre">DPLL</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cspsat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cspsat.html">cspsat package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cspsat.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cspsat.csp.html">cspsat.csp module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cspsat.dpll module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.functions.html">cspsat.functions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.hooks.html">cspsat.hooks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.sat.html">cspsat.sat module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cspsat.util.html">cspsat.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cspsat.html#module-cspsat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cspsat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cspsat.html">cspsat package</a></li>
+      <li class="breadcrumb-item active">cspsat.dpll module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cspsat.dpll.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cspsat.dpll">
+<span id="cspsat-dpll-module"></span><h1>cspsat.dpll module<a class="headerlink" href="#module-cspsat.dpll" title="Link to this heading"></a></h1>
+<p>DPLLソルバーのモジュール．</p>
+<p>以下のクラスからなる．</p>
+<ul class="simple">
+<li><p>DPLLクラス: 命題変数のクラス</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>本プログラムは学習用の目的で作成されている．
+実用上の問題への適用は想定していない．</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cspsat.dpll.</span></span><span class="sig-name descname"><span class="pre">DPLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL" title="Link to this definition"></a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DPLLソルバーのクラス．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 正ならDPLLソルバーの情報を表示する (デフォルト値は0)．</p></li>
+<li><p><strong>interactive</strong> (<em>bool</em><em>, </em><em>optional</em>) -- 真なら会話的に実行する (デフォルト値はFalse)．</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.nVars">
+<span class="sig-name descname"><span class="pre">nVars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.nVars"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.nVars" title="Link to this definition"></a></dt>
+<dd><p>命題変数の個数を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>命題変数の個数．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.nClauses">
+<span class="sig-name descname"><span class="pre">nClauses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.nClauses"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.nClauses" title="Link to this definition"></a></dt>
+<dd><p>節の個数を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>節の個数．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.toLit">
+<span class="sig-name descname"><span class="pre">toLit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.toLit"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.toLit" title="Link to this definition"></a></dt>
+<dd><p>変数番号vに対するリテラル番号を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>int</em>) -- 変数番号．</p></li>
+<li><p><strong>negative</strong> (<em>int</em><em>, </em><em>optional</em>) -- 1なら否定 (デフォールト値は0)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>リテラル番号．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.toVar">
+<span class="sig-name descname"><span class="pre">toVar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.toVar"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.toVar" title="Link to this definition"></a></dt>
+<dd><p>リテラルlitに対する変数と符号のタプルを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>変数と符号のタプル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.value"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.value" title="Link to this definition"></a></dt>
+<dd><p>リテラルlitの現在の真理値を返す．真理値が割当てられていなければNoneを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>litの真理値 (割当てられていなければNone)．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.newVar">
+<span class="sig-name descname"><span class="pre">newVar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.newVar"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.newVar" title="Link to this definition"></a></dt>
+<dd><p>新しい変数を追加する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vname</strong> (<em>str</em><em>, </em><em>optional</em>) -- 変数名 (デフォールト値はNone)．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>新しい変数番号．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.decisionLevel">
+<span class="sig-name descname"><span class="pre">decisionLevel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.decisionLevel"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.decisionLevel" title="Link to this definition"></a></dt>
+<dd><p>現在の決定レベルを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>決定レベル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.enqueue">
+<span class="sig-name descname"><span class="pre">enqueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.enqueue"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.enqueue" title="Link to this definition"></a></dt>
+<dd><p>リテラルlitを伝播用キューに追加する．</p>
+<p>リテラルlitの値がすでに1であればTrueを返し，伝播用キューには追加しない．
+リテラルlitの値がすでに0であればFalseを返し，伝播用キューには追加しない．
+リテラルlitの値が決まっていなければ伝播用キューには追加し，Trueを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p></li>
+<li><p><strong>reason</strong> (<em>list</em><em>, </em><em>optional</em>) -- 理由の節 (デフォールト値はNone)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>衝突が生じなければTrue，衝突があればFalse．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.assume">
+<span class="sig-name descname"><span class="pre">assume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.assume"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.assume" title="Link to this definition"></a></dt>
+<dd><p>リテラルlitを仮に真と決定する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>衝突が生じなければTrue，衝突があればFalse．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.propagateClause">
+<span class="sig-name descname"><span class="pre">propagateClause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.propagateClause"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.propagateClause" title="Link to this definition"></a></dt>
+<dd><p>num番目の節に対しリテラルlitの伝播処理を行う．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) -- 節の番号．</p></li>
+<li><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>衝突が生じなければTrue，衝突があればFalse．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.propagate">
+<span class="sig-name descname"><span class="pre">propagate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.propagate"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.propagate" title="Link to this definition"></a></dt>
+<dd><p>伝播処理を行う．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>衝突が生じなければNone，衝突が生じれば衝突のあった節の番号．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.cancel"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.cancel" title="Link to this definition"></a></dt>
+<dd><p>1レベルのバックトラック処理を行う．</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.cancelUntil">
+<span class="sig-name descname"><span class="pre">cancelUntil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.cancelUntil"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.cancelUntil" title="Link to this definition"></a></dt>
+<dd><p>決定レベルlevelまでバックトラック処理を行う．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em>) -- 決定レベル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.newDecision">
+<span class="sig-name descname"><span class="pre">newDecision</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.newDecision"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.newDecision" title="Link to this definition"></a></dt>
+<dd><p>値が未割当ての変数を選択し，それを偽と仮に決定する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>負リテラル．未割当ての変数がなければNone．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.backtrack">
+<span class="sig-name descname"><span class="pre">backtrack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.backtrack"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.backtrack" title="Link to this definition"></a></dt>
+<dd><p>バックトラック処理を行う．</p>
+<p>最後の決定まで戻り，それが正リテラルの決定の間はさらに前の決定に戻る．
+負リテラルの決定なら，正リテラルにして決定する．</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.getModel">
+<span class="sig-name descname"><span class="pre">getModel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.getModel"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.getModel" title="Link to this definition"></a></dt>
+<dd><p>モデルを返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>モデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.search"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.search" title="Link to this definition"></a></dt>
+<dd><p>モデルの探索を行い，見つかったモデルをyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num</strong> (<em>int</em><em>,</em><em>optional</em>) -- 探索するモデルの個数 (0なら全解を探索)．</p>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.getStat">
+<span class="sig-name descname"><span class="pre">getStat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.getStat"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.getStat" title="Link to this definition"></a></dt>
+<dd><p>実行の統計情報を返す．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>統計情報．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.solutions">
+<span class="sig-name descname"><span class="pre">solutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clauses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.solutions"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.solutions" title="Link to this definition"></a></dt>
+<dd><p>与えられた節を追加し，モデルをyieldするジェネレータ関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clauses</strong> (<em>list</em><em>,</em><em>optional</em>) -- 追加する節のリスト．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>,</em><em>optional</em>) -- 探索するモデルの個数 (0なら全解を探索)．</p></li>
+</ul>
+</dd>
+<dt class="field-even">列挙<span class="colon">:</span></dt>
+<dd class="field-even"><p>モデル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clauses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.solve"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.solve" title="Link to this definition"></a></dt>
+<dd><p>与えられた節を追加し，モデルを表示する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clauses</strong> (<em>list</em><em>,</em><em>optional</em>) -- 追加する節のリスト．</p></li>
+<li><p><strong>num</strong> (<em>int</em><em>,</em><em>optional</em>) -- 探索するモデルの個数 (0なら全解を探索)．</p></li>
+<li><p><strong>stat</strong> (<em>bool</em><em>,</em><em>optional</em>) -- 真なら統計情報も表示する．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.info"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.info" title="Link to this definition"></a></dt>
+<dd><p>メッセージを表示する．</p>
+<p>表示レベルが self.verbose より大きければ表示しない．
+self.interactive が真ならユーザ入力を待つ．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l</strong> (<em>int</em>) -- 表示レベル．</p></li>
+<li><p><strong>msg</strong> (<em>str</em>) -- メッセージ．</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.var2repr">
+<span class="sig-name descname"><span class="pre">var2repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.var2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.var2repr" title="Link to this definition"></a></dt>
+<dd><p>変数の表記文字列を返す関数．</p>
+<p>newVarで変数名が与えられていればそれを使用する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>int</em>) -- 変数番号．</p></li>
+<li><p><strong>negative</strong> (<em>int</em><em>,</em><em>optional</em>) -- 1なら負リテラル．</p></li>
+</ul>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>変数の表記文字列．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.lit2repr">
+<span class="sig-name descname"><span class="pre">lit2repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.lit2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.lit2repr" title="Link to this definition"></a></dt>
+<dd><p>リテラルの表記文字列を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lit</strong> (<em>int</em>) -- リテラル．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>リテラルの表記文字列．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.clause2repr">
+<span class="sig-name descname"><span class="pre">clause2repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.clause2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.clause2repr" title="Link to this definition"></a></dt>
+<dd><p>節の表記 (リテラルの表記文字列のリスト)を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clause</strong> (<em>list</em>) -- 節．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>節の表記．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.assigns2repr">
+<span class="sig-name descname"><span class="pre">assigns2repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.assigns2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.assigns2repr" title="Link to this definition"></a></dt>
+<dd><p>現在の値割当ての表記を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>値割当ての表記．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.decisions2repr">
+<span class="sig-name descname"><span class="pre">decisions2repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.decisions2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.decisions2repr" title="Link to this definition"></a></dt>
+<dd><p>現在の決定リストの表記を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>決定リストの表記．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.watches2repr">
+<span class="sig-name descname"><span class="pre">watches2repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.watches2repr"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.watches2repr" title="Link to this definition"></a></dt>
+<dd><p>現在の監視リストの表記を返す関数．</p>
+<dl class="field-list simple">
+<dt class="field-odd">戻り値<span class="colon">:</span></dt>
+<dd class="field-odd"><p>監視リストの表記．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.addInternalClause">
+<span class="sig-name descname"><span class="pre">addInternalClause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.addInternalClause"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.addInternalClause" title="Link to this definition"></a></dt>
+<dd><p>内部表現の節 (リテラル番号のリスト)を追加する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clause</strong> (<em>list</em>) -- 節．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.addDimacsClause">
+<span class="sig-name descname"><span class="pre">addDimacsClause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimacsLits</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.addDimacsClause"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.addDimacsClause" title="Link to this definition"></a></dt>
+<dd><p>DIMACS形式の節 (正負の変数番号のリスト)を追加する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dimacsLits</strong> (<em>list</em>) -- DIMACS形式の節．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.toDimacsLit">
+<span class="sig-name descname"><span class="pre">toDimacsLit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.toDimacsLit"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.toDimacsLit" title="Link to this definition"></a></dt>
+<dd><p>変数名がvnameの変数をDIMACS形式のリテラル (正負の変数番号)に変換する．</p>
+<p>変数名が <a href="#id1"><span class="problematic" id="id2">`</span></a>~' から始まれば負リテラルとする．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vname</strong> (<em>str</em>) -- 変数名．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>DIMACS形式のリテラル．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.toDimacsLits">
+<span class="sig-name descname"><span class="pre">toDimacsLits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.toDimacsLits"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.toDimacsLits" title="Link to this definition"></a></dt>
+<dd><p>変数名のリストをDIMACS形式の節に変換する．</p>
+<p>変数名が <a href="#id3"><span class="problematic" id="id4">`</span></a>~' から始まれば負リテラルとする．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clause</strong> (<em>list</em>) -- 変数名のリスト．</p>
+</dd>
+<dt class="field-even">戻り値<span class="colon">:</span></dt>
+<dd class="field-even"><p>DIMACS形式の節．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.addClause">
+<span class="sig-name descname"><span class="pre">addClause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.addClause"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.addClause" title="Link to this definition"></a></dt>
+<dd><p>変数名のリストの形式の節を追加する．</p>
+<p>変数名が <a href="#id5"><span class="problematic" id="id6">`</span></a>~' から始まれば負リテラルとする．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clause</strong> (<em>list</em>) -- 変数名のリスト．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">clauses</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.add"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.add" title="Link to this definition"></a></dt>
+<dd><p>節のリスト (変数名のリストの形式)を追加する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clauses</strong> (<em>list</em>) -- 節のリスト．</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cspsat.dpll.DPLL.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cspsat/dpll.html#DPLL.load"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#cspsat.dpll.DPLL.load" title="Link to this definition"></a></dt>
+<dd><p>ファイルから節を読込んで追加する．</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) -- ファイル名 (Noneなら標準入力)．</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cspsat.csp.html" class="btn btn-neutral float-left" title="cspsat.csp module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cspsat.functions.html" class="btn btn-neutral float-right" title="cspsat.functions module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Naoyuki Tamura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
