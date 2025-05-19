@@ -1,9 +1,8 @@
 *~
 __pycache__
 /.pytest_cache
+/sphinx
 /work
 /tmp*.cnf
 /tmp*.out
 /tmp*.sat
-
-
