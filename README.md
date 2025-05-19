@@ -1,8 +1,13 @@
 # README
 
-- [Binderで開く](https://mybinder.org/v2/gl/sat-book-jp%2Fprogram/master?urlpath=lab/tree/index.ipynb)
-- [Gitpodで開く](https://gitpod.io/#https://gitlab.com/sat-book-jp/program)
-- [nbviewrで開く](https://nbviewer.org/urls/gitlab.com/sat-book-jp/program/-/raw/master/index.ipynb)
+- [Binderで開く](https://mybinder.org/v2/gh/tamura70/cspsat-jupyter/master?urlpath=lab/tree/index.ipynb)
+- [Google Colabで開く](https://colab.research.google.com/github/tamura70/cspsat-jupyter/blob/master/index.ipynb)
+- [Gitpodで開く](https://gitpod.io/#https://github.com/tamura70/cspsat-jupyter)
+    - 2025年秋でサービス終了予定
+
+## ドキュメント
+
+- https://tamura70.github.io/cspsat-jupyter/
 
 ## リンク
 
