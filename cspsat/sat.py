@@ -274,18 +274,16 @@ class SAT():
             procData["proc"].kill()
             procData["killed"] = True
         timer = threading.Timer(self.limit, kill)
+        time0 = time.time()
         try:
             timer.start()
             if self.verbose >= 1:
-                print(f"# SATソルバー開始: {cmd}", file=sys.stderr)
+                print(f"# SATソルバー開始: {cmd} ({time.time()-time0:.2f}秒)", file=sys.stderr)
             proc = procData["proc"] = subprocess.Popen(cmd, stdout=out, stderr=subprocess.STDOUT, text=True)
-            (c, t) = (5, time.time())
+            c = 0
             while proc.poll() is None:
-                if int(time.time() - t) < c:
-                    time.sleep(0.1)
-                    continue
-                if self.verbose >= 1 and c%10 == 0:
-                    print(f"# SATソルバー動作中 ({time.time() - t}秒)", file=sys.stderr)
+                if self.verbose >= 1 and c > 0 and c%10 == 0:
+                    print(f"# SATソルバー動作中 ({time.time()-time0:.2f}秒)", file=sys.stderr)
                 time.sleep(1)
                 c += 1
             proc = procData["proc"] = None
@@ -296,7 +294,7 @@ class SAT():
             if procData.get("proc"):
                 procData["proc"].kill()
                 if self.verbose >= 1:
-                    print(f"# 制限時間を超えたためSATソルバーを停止", file=sys.stderr)
+                    print(f"# SATソルバー強制停止 ({time.time()-time0:.2f}秒)", file=sys.stderr)
             out.close()
         return not procData["killed"]
 
