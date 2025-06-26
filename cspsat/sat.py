@@ -24,7 +24,7 @@ class SAT():
         outFile (str, optional): SATソルバーの出力ファイル名を指定する．指定しなければ一時ファイルが作成される．
         delete (bool, optional): TrueならSATオブジェクトが削除される際にcnfFile, outFileを削除する (デフォルト値はTrue)．
         maxClauses (int, optional): 節数がこの値を超えたら例外を発生する．指定しなければ :obj:`defaultMaxClauses` を使用する (デフォルト値は10000000)．
-        limit (int, optional): 実行時間の制限秒数を指定する．指定しなければ :obj:`defaultLimit` を使用する (デフォルト値は600秒)．
+        limit (int, optional): 実行時間の制限秒数を指定する．指定しなければ :obj:`defaultLimit` を使用する (デフォルト値は3600秒)．
         positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．
         includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．
         verbose (int, optional): 正ならSATソルバーの情報を表示する (デフォルト値は0)．
@@ -63,12 +63,12 @@ class SAT():
     """一時ファイルのディレクトリ名のデフォルト値．Noneならシステム設定にしたがう．
     """
 
-    defaultLimit = 600
-    """実行時間の制限秒数のデフォルト値 (600秒)．
+    defaultLimit = 3600
+    """実行時間の制限秒数のデフォルト値 (3600秒)．
 
     Examples:
         >>> SAT.defaultLimit
-        600
+        3600
         >>> SAT.defaultLimit = 100
     """
 
