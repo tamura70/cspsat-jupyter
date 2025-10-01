@@ -2,8 +2,6 @@
 
 - [Binderで開く](https://mybinder.org/v2/gh/tamura70/cspsat-jupyter/master?urlpath=lab/tree/index.ipynb)
 - [Google Colabで開く](https://colab.research.google.com/github/tamura70/cspsat-jupyter/blob/master/index.ipynb)
-- [Gitpodで開く](https://gitpod.io/#https://github.com/tamura70/cspsat-jupyter)
-    - 2025年秋でサービス終了予定
 
 ## ドキュメント
 
