@@ -130,10 +130,10 @@ class DPLL():
         Returns:
             衝突が生じなければTrue，衝突があればFalse．
         """
-        if reason is not None:
-            self.info(1, f"propagate '{self.lit2repr(lit)}' by {self.clause2repr(reason)}")
         if self.value(lit) is not None:
             return self.value(lit) == 1
+        if reason is not None:
+            self.info(1, f"propagate '{self.lit2repr(lit)}' by {self.clause2repr(reason)}")
         (v, n) = self.toVar(lit)
         assert self.vAssigns[v] is None
         self.vAssigns[v] = n ^ 1
