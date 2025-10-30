@@ -3,15 +3,15 @@
 - [Binderで開く](https://mybinder.org/v2/gh/tamura70/cspsat-jupyter/master?urlpath=lab/tree/index.ipynb)
 - [Google Colabで開く](https://colab.research.google.com/github/tamura70/cspsat-jupyter/blob/master/index.ipynb)
 
-## テキスト
+## ドラフト
 
 - https://tamura70.org/docs/satbook202510.pdf (認証必要)
 
-## ドキュメント
+## cspsat library reference manual
 
 - https://tamura70.github.io/cspsat-jupyter/
 
-## リンク
+## Links
 
 - Sat4j (2.3.6)
     - https://www.sat4j.org/
