@@ -1,4 +1,10 @@
 """新規関数と新規制約に対応するためのフック関数を提供．
+
+Note:
+    本プログラムは学習用の目的で作成されている．
+    実用上の問題への適用は想定していない．
+    Copyright (c) 2025-- Naoyuki Tamura
+    Licensed under the MIT License
 """
 
 def defaultFunctionHook(function, encoder):
