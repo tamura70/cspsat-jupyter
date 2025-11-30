@@ -79,6 +79,8 @@
 <span class="sd">Note:</span>
 <span class="sd">    本プログラムは学習用の目的で作成されている．</span>
 <span class="sd">    実用上の問題への適用は想定していない．</span>
+<span class="sd">    Copyright (c) 2025-- Naoyuki Tamura</span>
+<span class="sd">    Licensed under the MIT License</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -98,7 +100,7 @@
 <span class="sd">        outFile (str, optional): SATソルバーの出力ファイル名を指定する．指定しなければ一時ファイルが作成される．</span>
 <span class="sd">        delete (bool, optional): TrueならSATオブジェクトが削除される際にcnfFile, outFileを削除する (デフォルト値はTrue)．</span>
 <span class="sd">        maxClauses (int, optional): 節数がこの値を超えたら例外を発生する．指定しなければ :obj:`defaultMaxClauses` を使用する (デフォルト値は10000000)．</span>
-<span class="sd">        limit (int, optional): 実行時間の制限秒数を指定する．指定しなければ :obj:`defaultLimit` を使用する (デフォルト値は600秒)．</span>
+<span class="sd">        limit (int, optional): 実行時間の制限秒数を指定する．指定しなければ :obj:`defaultLimit` を使用する (デフォルト値は3600秒)．</span>
 <span class="sd">        positiveOnly (bool, optional): Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</span>
 <span class="sd">        includeAux (bool, optional): Trueならモデルに補助変数を含める (デフォルト値はFalse)．</span>
 <span class="sd">        verbose (int, optional): 正ならSATソルバーの情報を表示する (デフォルト値は0)．</span>
@@ -137,12 +139,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;一時ファイルのディレクトリ名のデフォルト値．Noneならシステム設定にしたがう．</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">defaultLimit</span> <span class="o">=</span> <span class="mi">600</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;実行時間の制限秒数のデフォルト値 (600秒)．</span>
+    <span class="n">defaultLimit</span> <span class="o">=</span> <span class="mi">3600</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;実行時間の制限秒数のデフォルト値 (3600秒)．</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; SAT.defaultLimit</span>
-<span class="sd">        600</span>
+<span class="sd">        3600</span>
 <span class="sd">        &gt;&gt;&gt; SAT.defaultLimit = 100</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -360,18 +362,16 @@
             <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
             <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;killed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span> <span class="n">kill</span><span class="p">)</span>
+        <span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー開始: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー開始: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">time0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">秒)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="n">proc</span> <span class="o">=</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">while</span> <span class="n">proc</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">:</span>
-                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-                    <span class="k">continue</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">c</span><span class="o">%</span><span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー動作中 (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="si">}</span><span class="s2">秒)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">c</span><span class="o">%</span><span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー動作中 (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">time0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">秒)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">proc</span> <span class="o">=</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -382,7 +382,7 @@
             <span class="k">if</span> <span class="n">procData</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;proc&quot;</span><span class="p">):</span>
                 <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;proc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# 制限時間を超えたためSATソルバーを停止&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# SATソルバー強制停止 (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">time0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">秒)&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">procData</span><span class="p">[</span><span class="s2">&quot;killed&quot;</span><span class="p">]</span>
 

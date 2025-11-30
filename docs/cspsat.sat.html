@@ -113,7 +113,9 @@
 <div class="admonition note">
 <p class="admonition-title">注釈</p>
 <p>本プログラムは学習用の目的で作成されている．
-実用上の問題への適用は想定していない．</p>
+実用上の問題への適用は想定していない．
+Copyright (c) 2025-- Naoyuki Tamura
+Licensed under the MIT License</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="cspsat.sat.SAT">
@@ -131,7 +133,7 @@ SATソルバーとしては，DIMACS CNFを入力形式とし，SAT solver compe
 <li><p><strong>outFile</strong> (<em>str</em><em>, </em><em>optional</em>) -- SATソルバーの出力ファイル名を指定する．指定しなければ一時ファイルが作成される．</p></li>
 <li><p><strong>delete</strong> (<em>bool</em><em>, </em><em>optional</em>) -- TrueならSATオブジェクトが削除される際にcnfFile, outFileを削除する (デフォルト値はTrue)．</p></li>
 <li><p><strong>maxClauses</strong> (<em>int</em><em>, </em><em>optional</em>) -- 節数がこの値を超えたら例外を発生する．指定しなければ <a class="reference internal" href="#cspsat.sat.SAT.defaultMaxClauses" title="cspsat.sat.SAT.defaultMaxClauses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultMaxClauses</span></code></a> を使用する (デフォルト値は10000000)．</p></li>
-<li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) -- 実行時間の制限秒数を指定する．指定しなければ <a class="reference internal" href="#cspsat.sat.SAT.defaultLimit" title="cspsat.sat.SAT.defaultLimit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultLimit</span></code></a> を使用する (デフォルト値は600秒)．</p></li>
+<li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) -- 実行時間の制限秒数を指定する．指定しなければ <a class="reference internal" href="#cspsat.sat.SAT.defaultLimit" title="cspsat.sat.SAT.defaultLimit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultLimit</span></code></a> を使用する (デフォルト値は3600秒)．</p></li>
 <li><p><strong>positiveOnly</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに正リテラルのみを含める (デフォルト値はFalse)．</p></li>
 <li><p><strong>includeAux</strong> (<em>bool</em><em>, </em><em>optional</em>) -- Trueならモデルに補助変数を含める (デフォルト値はFalse)．</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) -- 正ならSATソルバーの情報を表示する (デフォルト値は0)．</p></li>
@@ -247,11 +249,11 @@ SATソルバーとしては，DIMACS CNFを入力形式とし，SAT solver compe
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cspsat.sat.SAT.defaultLimit">
-<span class="sig-name descname"><span class="pre">defaultLimit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">600</span></em><a class="headerlink" href="#cspsat.sat.SAT.defaultLimit" title="Link to this definition"></a></dt>
-<dd><p>実行時間の制限秒数のデフォルト値 (600秒)．</p>
+<span class="sig-name descname"><span class="pre">defaultLimit</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3600</span></em><a class="headerlink" href="#cspsat.sat.SAT.defaultLimit" title="Link to this definition"></a></dt>
+<dd><p>実行時間の制限秒数のデフォルト値 (3600秒)．</p>
 <p class="rubric">サンプル</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SAT</span><span class="o">.</span><span class="n">defaultLimit</span>
-<span class="go">600</span>
+<span class="go">3600</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">SAT</span><span class="o">.</span><span class="n">defaultLimit</span> <span class="o">=</span> <span class="mi">100</span>
 </pre></div>
 </div>
