@@ -110,7 +110,7 @@ class Solver():
     """
 
     def __init__(self, encoder=None, sat=None, command=None, positiveOnly=False, includeAux=False, verbose=0):
-        self.startTime = time.time()
+        self.startTime = time.monotonic()
         self.encoder = encoder or OrderEncoder(verbose=verbose)
         self.encoder.solver = self
         self.sat = sat or SAT(command=command)
@@ -142,7 +142,7 @@ class Solver():
         Args:
             constraints (list): 制約のリスト．
         """
-        t = time.time()
+        t = time.monotonic()
         for constraint in constraints:
             match constraint:
                 case ["comment", *_] | ["#", *_]:
@@ -155,7 +155,7 @@ class Solver():
                     self.stats["constraints"] += 1
             self.encoder.put(constraint)
             self.sat.add(*self.encoder.encode())
-        t = time.time() - t
+        t = time.monotonic() - t
         self.stats["encoding"] = self.stats.get("encoding", 0) + t
 
     def find(self):
@@ -173,7 +173,7 @@ class Solver():
             self.model = model = self.encoder.decode(self.sat.model, includeAux=self.includeAux)
             if self.positiveOnly:
                 model = dict(filter(lambda kv: not (isinstance(kv[0], Bool) and kv[1] == 0), model.items()))
-        self.stats["time"] = time.time() - self.startTime
+        self.stats["time"] = time.monotonic() - self.startTime
         return model
 
     def _solutionsSat(self, num=1):

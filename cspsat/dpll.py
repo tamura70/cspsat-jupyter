@@ -328,7 +328,7 @@ class DPLL():
         """
         if clauses:
             self.add(*clauses)
-        t = time.time()
+        t = time.monotonic()
         self.trail_lim = []
         self.trail = []
         self.isSat = None
@@ -339,11 +339,11 @@ class DPLL():
         self.stat["conflicts"] = 0
         self.stat["propagations"] = 0
         for model in self.search(num=num):
-            self.stat["solving"] = time.time() - t
+            self.stat["solving"] = time.monotonic() - t
             yield model
         if self.decisionLevel() > 0:
             self.cancelUntil(0)
-        self.stat["solving"] = time.time() - t
+        self.stat["solving"] = time.monotonic() - t
 
     def solve(self, clauses=None, num=1, stat=False):
         """与えられた節を追加し，モデルを表示する．

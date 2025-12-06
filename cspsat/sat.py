@@ -95,7 +95,7 @@ class SAT():
         return path
 
     def __init__(self, command=None, tempdir=None, cnfFile=None, outFile=None, delete=True, maxClauses=None, limit=None, positiveOnly=False, includeAux=False, verbose=0):
-        self.startTime = time.time()
+        self.startTime = time.monotonic()
         self.command = command or SAT.defaultCommand
         self.cnfFile = cnfFile or SAT._tempfileName(suffix=".cnf", tempdir=tempdir)
         self.cnf = open(self.cnfFile, mode="w+b")
@@ -276,16 +276,16 @@ class SAT():
             procData["proc"].kill()
             procData["killed"] = True
         timer = threading.Timer(self.limit, kill)
-        time0 = time.time()
+        time0 = time.monotonic()
         try:
             timer.start()
             if self.verbose >= 1:
-                print(f"# SATソルバー開始: {cmd} ({time.time()-time0:.2f}秒)", file=sys.stderr)
+                print(f"# SATソルバー開始: {cmd} ({time.monotonic()-time0:.2f}秒)", file=sys.stderr)
             proc = procData["proc"] = subprocess.Popen(cmd, stdout=out, stderr=subprocess.STDOUT, text=True)
             c = 0
             while proc.poll() is None:
                 if self.verbose >= 1 and c > 0 and c%10 == 0:
-                    print(f"# SATソルバー動作中 ({time.time()-time0:.2f}秒)", file=sys.stderr)
+                    print(f"# SATソルバー動作中 ({time.monotonic()-time0:.2f}秒)", file=sys.stderr)
                 time.sleep(1)
                 c += 1
             proc = procData["proc"] = None
@@ -296,7 +296,7 @@ class SAT():
             if procData.get("proc"):
                 procData["proc"].kill()
                 if self.verbose >= 1:
-                    print(f"# SATソルバー強制停止 ({time.time()-time0:.2f}秒)", file=sys.stderr)
+                    print(f"# SATソルバー強制停止 ({time.monotonic()-time0:.2f}秒)", file=sys.stderr)
             out.close()
         return not procData["killed"]
 
@@ -319,7 +319,7 @@ class SAT():
             >>> model[p(2)] # 求めたモデルにおける p(2) の値
             0
         """
-        t = time.time()
+        t = time.monotonic()
         self.updateDimacsHeader()
         self.cnf.close()
         self.cnf = None
@@ -360,11 +360,11 @@ class SAT():
                         m = re.match(r"c (conflicts|decisions|propagations)\s*:\s*(\d+)", line)
                         if m:
                             info[m.group(1)] = int(m.group(2))
-        t = time.time() - t
+        t = time.monotonic() - t
         info["solving"] = t
         info["result"] = result = result if ok else "TIMEOUT"
         self.stats["solving"] += t
-        self.stats["time"] = time.time() - self.startTime
+        self.stats["time"] = time.monotonic() - self.startTime
         if not self.stats.get("result"):
             self.stats["result"] = result
         if not ok:
