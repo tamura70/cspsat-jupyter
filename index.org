@@ -5,3 +5,7 @@
 - [[file:06-csp.ipynb][6. 制約充足問題とは]]
 - [[file:07-csp-examples.ipynb][7. 制約充足問題の例]]
 
+** リンク
+
+- [[https://tamura70.github.io/cspsat-jupyter/][cspsatライブラリマニュアル]]
+
