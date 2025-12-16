@@ -206,7 +206,7 @@ def hamiltonianPath(vertices, edges, e=Bool("e"), a=Bool("a"), x=Var("x")):
 
 """Single cycle CSP
 """
-def singleCycle(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x"):
+def singleCycle(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x")):
     (a, d, r) = (Bool(), Bool(), Bool())
     def adj(v):
         return [ edge[1-i] for edge in edges for i in [0,1] if edge[i] == v ]
