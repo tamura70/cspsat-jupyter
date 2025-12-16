@@ -1,13 +1,21 @@
-# README
+# 概要
+
+書籍『...』のためのリポジトリです．
 
 - [Binderで開く](https://mybinder.org/v2/gh/tamura70/cspsat-jupyter/master?urlpath=lab/tree/index.ipynb)
 - [Google Colabで開く](https://colab.research.google.com/github/tamura70/cspsat-jupyter/blob/master/index.ipynb)
 
-## cspsat library reference manual
+# マニュアルなど
 
-- https://tamura70.github.io/cspsat-jupyter/
+- [cspsat library reference manual](https://tamura70.github.io/cspsat-jupyter/)
 
-## Links
+# 補足
+
+- MITライセンスで公開しています．
+- 学習用の目的で作成されています．実用上の問題への適用は想定していません．
+- バグなどの報告は，GitHubのIssuesでお願いします．
+
+# リンク
 
 - Sat4j (2.3.6)
     - https://www.sat4j.org/
