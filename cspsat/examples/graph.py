@@ -142,7 +142,7 @@ def sudokuGraph(n):
             edges.append(((i,j), (k,l)))
     return (vertices, edges)
 
-"""Graph (vertex) coloring CNF
+"""Graph vertex coloring CNF
 """
 def vertexColoringCNF(vertices, edges, k, x=Bool("x")):
     for v in vertices:
@@ -151,7 +151,7 @@ def vertexColoringCNF(vertices, edges, k, x=Bool("x")):
         for c in range(1,k+1):
             yield [ ~x(u,c), ~x(v,c) ]
 
-"""Graph (vertex) coloring CSP
+"""Graph vertex coloring CSP
 """
 def vertexColoring(vertices, edges, k, x=Var("x")):
     for v in vertices:
@@ -180,7 +180,8 @@ def edgeColoring(vertices, edges, k, x=Var("x")):
 
 """Hamiltonian cycle CSP
 """
-def hamiltonianCycle(vertices, edges, e=Bool("e"), a=Bool("a"), x=Var("x")):
+def hamiltonianCycle(vertices, edges, e=Bool("e"), a=None, x=None):
+    (a, x) = (a or Bool(), x or Var())
     def adj(v):
         return [ edge[1-i] for edge in edges for i in [0,1] if edge[i] == v ]
     for (u,v) in edges:
@@ -198,7 +199,8 @@ def hamiltonianCycle(vertices, edges, e=Bool("e"), a=Bool("a"), x=Var("x")):
 
 """Hamiltonian path CSP
 """
-def hamiltonianPath(vertices, edges, e=Bool("e"), a=Bool("a"), x=Var("x")):
+def hamiltonianPath(vertices, edges, e=Bool("e"), a=None, x=None):
+    (a, x) = (a or Bool(), x or Var())
     s = None
     edges1 = edges + [ (s,v) for v in vertices ]
     vertices1 = [s] + vertices
@@ -206,8 +208,8 @@ def hamiltonianPath(vertices, edges, e=Bool("e"), a=Bool("a"), x=Var("x")):
 
 """Single cycle CSP
 """
-def singleCycle(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x")):
-    (a, d, r) = (Bool(), Bool(), Bool())
+def singleCycle(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), a=None, d=None, r=None, x=None):
+    (a, d, r, x) = (a or Bool(), d or Bool(), r or Bool(), x or Var())
     def adj(v):
         return [ edge[1-i] for edge in edges for i in [0,1] if edge[i] == v ]
     for (u,v) in edges:
@@ -235,8 +237,8 @@ def singleCycle(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x
 
 """Single path CSP
 """
-def singlePath(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x")):
-    (a, d, r) = (Bool(), Bool(), Bool())
+def singlePath(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), a=None, d=None, r=None, x=None):
+    (a, d, r, x) = (a or Bool(), d or Bool(), r or Bool(), x or Var())
     maxLen = maxLen or len(vertices)-1
     s = None
     edges1 = edges + [ (s,v) for v in vertices ]
@@ -248,7 +250,8 @@ def singlePath(vertices, edges, minLen=None, maxLen=None, e=Bool("e"), x=Var("x"
 
 """Digraph Hamiltonian cycle CSP
 """
-def digraphHamiltonianCycle(vertices, arcs, a=Bool("a"), x=Var("x")):
+def digraphHamiltonianCycle(vertices, arcs, a=Bool("a"), x=None):
+    x = x or Var()
     def inAdj(v): return [ arc[0] for arc in arcs if arc[1] == v ]
     def outAdj(v): return [ arc[1] for arc in arcs if arc[0] == v ]
     for v in vertices:
@@ -264,7 +267,8 @@ def digraphHamiltonianCycle(vertices, arcs, a=Bool("a"), x=Var("x")):
 
 """Digraph Hamiltonian path CSP
 """
-def digraphHamiltonianPath(vertices, arcs, a=Bool("a"), x=Var("x")):
+def digraphHamiltonianPath(vertices, arcs, a=Bool("a"), x=None):
+    x = x or Var()
     s = None
     arcs1 = arcs + [ (s,v) for v in vertices ] + [ (v,s) for v in vertices ]
     vertices1 = [s] + vertices
